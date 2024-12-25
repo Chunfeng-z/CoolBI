@@ -73,7 +73,7 @@ module.exports = {
                 emoji: ':hammer:'
             }
         ],
-        useEmoji: false,
+        useEmoji: true,
         emojiAlign: 'center',
         useAI: false,
         //option...
