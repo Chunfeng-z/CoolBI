@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .stylelintcache
+.VSCodeCounter
 
 # Editor directories and files
 .vscode/*

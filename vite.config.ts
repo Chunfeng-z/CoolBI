@@ -17,5 +17,6 @@ export default defineConfig({
       "@":  path.resolve(__dirname, 'src'),
       "@comp": path.resolve(__dirname, 'src/components'),
     }
-  }
+  },
+  envDir: './env',
 })
