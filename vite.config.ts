@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 import react from '@vitejs/plugin-react-swc'
+import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,7 +14,8 @@ export default defineConfig({
   ],
   resolve:{
     alias:{
-      "@":'/src'
+      "@":  path.resolve(__dirname, 'src'),
+      "@comp": path.resolve(__dirname, 'src/components'),
     }
   }
 })

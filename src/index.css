@@ -1,5 +1,8 @@
+/* stylelint-disable-next-line scss/at-rule-no-unknown */
 @tailwind base;
+/* stylelint-disable-next-line scss/at-rule-no-unknown */
 @tailwind components;
+/* stylelint-disable-next-line scss/at-rule-no-unknown */
 @tailwind utilities;
 
 :root {
@@ -12,16 +15,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-
-body {
-  display: flex;
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  place-items: center;
-}
-
 
 @media (prefers-color-scheme: light) {
   :root {

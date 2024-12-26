@@ -1,11 +1,16 @@
-import './App.css'
+import React from 'react'
+import { ConfigProvider } from 'antd'
 
-function App() {
-
+export default function App() {
   return (
-    <>
-    </>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#1890ff',
+        },
+      }}
+    >
+      <div>App</div>
+    </ConfigProvider >
   )
 }
-
-export default App
