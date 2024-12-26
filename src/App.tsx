@@ -1,7 +1,6 @@
 import React from 'react'
 import { ConfigProvider } from 'antd'
-import PageNotAuthorized from './pages/Error/PageNotAuthorized'
-
+import Login from './pages/Login'
 export default function App() {
   return (
     <ConfigProvider
@@ -11,8 +10,7 @@ export default function App() {
         },
       }}
     >
-      <div>App</div>
-      <PageNotAuthorized />
+      <Login />
     </ConfigProvider >
   )
 }
