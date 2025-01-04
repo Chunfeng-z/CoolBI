@@ -3,7 +3,8 @@ import { ConfigProvider } from 'antd'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import PageNotFound from './pages/Error/PageNotFound'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 const base = import.meta.env.VITE_BASE
 export default function App() {
@@ -17,9 +18,12 @@ export default function App() {
     >
       <BrowserRouter>
         <Routes>
+          <Route path={`${base}/`} element={<Navigate to={`${base}/home`}></Navigate>} />
+          <Route path={`${base}/home`} element={<Home />} />
           <Route path={`${base}/login`} element={<Login />} />
           <Route path={`${base}/register`} element={<Register />} />
-          <Route path={`${base}/`} element={<Home />} />
+          <Route path={`${base}/404`} element={<PageNotFound />} />
+          <Route path="*" element={<Navigate to={`${base}/404`}></Navigate>} />
         </Routes>
       </BrowserRouter>
     </ConfigProvider >
