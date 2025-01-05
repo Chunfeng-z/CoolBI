@@ -1,9 +1,8 @@
 import React, { useLayoutEffect } from "react";
 import RecommendCard from "./recommendCard";
-import RecommendDashboardTitle from "./recommendDashboardTitle";
 import { recommendData as TempData } from "./test";
 import { debounce } from "lodash-es";
-import { Divider, Space } from "antd";
+import { Button, Flex, Space } from "antd";
 
 const CommendDashboard: React.FC = () => {
   // 默认显示4个卡片
@@ -34,16 +33,38 @@ const CommendDashboard: React.FC = () => {
     };
   }, []);
 
+  const [displayRecommendData, setDisplayRecommendData] = React.useState(true);
+
+  const handleRecommendDataDisplay = () => {
+    setDisplayRecommendData(!displayRecommendData);
+  };
+
   return (
     <div className="commendDashboard-container">
-      <RecommendDashboardTitle />
-      <div className="commendDashboard-content">
+      <div className="commendDashboard-title-container">
+        <Flex justify="space-between">
+          <div>获取灵感</div>
+          <Button
+            variant="text"
+            color="primary"
+            onClick={handleRecommendDataDisplay}
+          >
+            {displayRecommendData ? "收起" : "展开"}
+          </Button>
+        </Flex>
+      </div>
+      <div
+        className="commendDashboard-content"
+        style={{
+          visibility: displayRecommendData ? "visible" : "hidden",
+          position: displayRecommendData ? "relative" : "absolute",
+        }}
+      >
         <Space>
           {recommendData.map((item, index) => (
             <RecommendCard key={index} {...item} />
           ))}
         </Space>
-        <Divider />
       </div>
     </div>
   );
