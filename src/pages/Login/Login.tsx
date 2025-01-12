@@ -10,6 +10,7 @@ import {
 import { Tabs, message, theme } from "antd";
 import logo from "../../../public/icons/logo-dark.svg";
 import { useState } from "react";
+import StarrySky from "../../components/starrysky/StarrySky";
 
 type LoginType = "phone" | "account";
 
@@ -20,6 +21,7 @@ const Login: React.FC = () => {
   return (
     <ProConfigProvider hashed={false}>
       <div style={{ backgroundColor: token.colorBgContainer }}>
+        <StarrySky />
         <LoginForm
           logo={logo}
           title="Cool BI"

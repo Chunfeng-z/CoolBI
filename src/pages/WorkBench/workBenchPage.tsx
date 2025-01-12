@@ -12,6 +12,7 @@ import {
 } from "antd";
 import RecommendDashboard from "../../components/dashboard/commendDashboard";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
+import DashboardTable from "../../components/dashboard/dashboardTable";
 
 const items: MenuProps["items"] = [
   {
@@ -113,7 +114,10 @@ const WorkBenchPage: React.FC = () => {
       >
         <RecommendDashboard />
         <Divider />
-        <QuickActionsBar />
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+          <QuickActionsBar />
+          <DashboardTable />
+        </Space>
       </ProCard>
     </PageContainer>
   );
