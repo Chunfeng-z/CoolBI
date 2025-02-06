@@ -7,13 +7,13 @@ import { RecommendCardProps } from "../utils";
 
 const { Paragraph } = Typography;
 // 组件的类型前缀
-const prefix = "recommend-card";
+const prefixCls = "recommend-card";
 
 /** 推荐卡片hover时展示的操作栏 */
 const OperationalDetails: React.FC = () => {
   return (
     <div
-      className={`${prefix}-operational-details flex justify-between gap-2`}
+      className={`${prefixCls}-operational-details flex justify-between gap-2`}
       style={{ width: "100%" }}
     >
       <Button icon={<EyeOutlined />} size="small" block>
@@ -42,7 +42,7 @@ const RecommendCard: React.FC<RecommendCardProps> = ({
         hoverable
         style={{ width: 260 }}
         loading={false}
-        className={`${prefix}-container`}
+        className={`${prefixCls}-container`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         cover={
@@ -65,7 +65,7 @@ const RecommendCard: React.FC<RecommendCardProps> = ({
           </div>
         }
       >
-        <div className={`${prefix}-content`}>
+        <div className={`${prefixCls}-content`}>
           <Flex justify="space-between">
             <EllipsisText text={title} width={120} />
             <div className="data-container">

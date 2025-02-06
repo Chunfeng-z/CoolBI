@@ -5,7 +5,7 @@ import { debounce } from "lodash-es";
 import { Button, Flex, Space } from "antd";
 import { RecommendCardProps } from "../utils";
 
-const prefix = "recommend-card-list";
+const prefixCls = "recommend-card-list";
 // 每个卡片的宽度+gap
 const cardWidth = 268;
 
@@ -20,7 +20,7 @@ const RecommendCardList: React.FC = () => {
 
   const updateCardCount = () => {
     const containerWidth =
-      document.querySelector(`.${prefix}-content`)?.clientWidth || 0;
+      document.querySelector(`.${prefixCls}-content`)?.clientWidth || 0;
     const count = Math.min(
       Math.floor((containerWidth + 8) / cardWidth),
       TempData.length
@@ -47,8 +47,8 @@ const RecommendCardList: React.FC = () => {
   };
 
   return (
-    <div className={`${prefix}-container`}>
-      <div className={`${prefix}-title`}>
+    <div className={`${prefixCls}-container`}>
+      <div className={`${prefixCls}-title`}>
         <Flex justify="space-between">
           <span>获取灵感</span>
           <Button
@@ -61,7 +61,7 @@ const RecommendCardList: React.FC = () => {
         </Flex>
       </div>
       <div
-        className={`${prefix}-content`}
+        className={`${prefixCls}-content`}
         style={{
           visibility: displayRecommendCardList ? "visible" : "hidden",
           position: displayRecommendCardList ? "relative" : "absolute",

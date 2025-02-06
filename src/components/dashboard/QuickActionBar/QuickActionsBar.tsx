@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react";
 import { DropdownItems } from "../utils/index";
 
-const prefix = "quick-action-bar";
+const prefixCls = "quick-action-bar";
 
 // 下拉菜单内容
 const items: MenuProps["items"] = [
@@ -81,12 +81,12 @@ const QuickActionsBar: React.FC = () => {
   return (
     <>
       {contextHolder}
-      <div className={`${prefix}-container`}>
+      <div className={`${prefixCls}-container`}>
         <Flex justify="space-between">
-          <div className={`${prefix}-nav`}>
+          <div className={`${prefixCls}-nav`}>
             <Segmented options={segments}></Segmented>
           </div>
-          <div className={`${prefix}-extra-content`}>
+          <div className={`${prefixCls}-extra-content`}>
             <Space size="middle">
               <Input prefix={<SearchOutlined />}></Input>
               <Dropdown

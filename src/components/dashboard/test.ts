@@ -1,6 +1,6 @@
 export const recommendCardListData = [
   {
-    id: 1,
+    id: "1",
     imageUrl: "https://picsum.photos/id/1/240/120",
     title: "示例推荐内容",
     description:
@@ -10,7 +10,7 @@ export const recommendCardListData = [
     source: "官方推荐",
   },
   {
-    id: 2,
+    id: "2",
     imageUrl: "https://picsum.photos/id/2/240/120",
     title: "这个是超长的文本内容测试，这个是超长的文本内容测试",
     description: "示例推荐内容",
@@ -19,7 +19,7 @@ export const recommendCardListData = [
     source: "Chunfeng-z",
   },
   {
-    id: 3,
+    id: "3",
     imageUrl: "https://picsum.photos/id/3/240/120",
     title: "示例推荐内容",
     description: "详细的描述信息",
@@ -28,7 +28,7 @@ export const recommendCardListData = [
     source: "示例来源",
   },
   {
-    id: 4,
+    id: "4",
     imageUrl: "https://picsum.photos/id/4/240/120",
     title: "示例推荐内容",
     description: "详细的描述信息",
@@ -37,7 +37,7 @@ export const recommendCardListData = [
     source: "示例来源",
   },
   {
-    id: 5,
+    id: "5",
     imageUrl: "https://picsum.photos/id/5/240/120",
     title: "示例推荐内容",
     description: "详细的描述信息",
@@ -49,6 +49,7 @@ export const recommendCardListData = [
 
 export const dashboardTableEditData = [
   {
+    key: "1",
     name: "cool bi 数据1",
     kind: "数据类型1",
     creator: "creator1",
@@ -70,6 +71,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "2",
     name: "cool bi 数据2",
     kind: "数据类型2",
     creator: "creator2",
@@ -91,6 +93,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "3",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -112,6 +115,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "4",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -133,6 +137,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "5",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -154,6 +159,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "6",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -175,6 +181,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "7",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -196,6 +203,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "8",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -217,6 +225,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "9",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -238,6 +247,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "10",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -259,6 +269,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "11",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -280,6 +291,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "12",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",
@@ -301,6 +313,7 @@ export const dashboardTableEditData = [
     ],
   },
   {
+    key: "13",
     name: "cool bi 数据3",
     kind: "数据类型3",
     creator: "creator3",

@@ -2,7 +2,7 @@ import { Space, Table, TableProps, Tag } from "antd";
 import React from "react";
 import { DashBoardTableDataType, DashBoardTableDataKeys } from "../utils/index";
 import { dashboardTableEditData } from "../test";
-const prefix = "dashboard-table";
+const prefixCls = "dashboard-table";
 
 /** 表格表头配置 */
 const columns: TableProps<DashBoardTableDataType>["columns"] = [
@@ -48,7 +48,7 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
 /** 仪表板的展示表格-最近编辑-我创建的-我收藏的 */
 const DashboardTable: React.FC = () => {
   return (
-    <div className={`${prefix}-container`}>
+    <div className={`${prefixCls}-container`}>
       <Table<DashBoardTableDataType>
         size="middle"
         columns={columns}
