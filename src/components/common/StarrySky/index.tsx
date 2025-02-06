@@ -1,5 +1,7 @@
 import React from "react";
 import "./index.scss";
+
+/** 登录页背景气泡 */
 const StarrySky: React.FC = () => {
   return (
     <div className="starry-sky">

@@ -1,34 +1,32 @@
 import React from "react";
-import styles from "./recommendCard.module.scss";
+
 import { Button, Card, Flex, Typography } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import EllipsisText from "../common/EllipsisText";
+import EllipsisText from "../../common/EllipsisText";
+import { RecommendCardProps } from "../utils";
 
 const { Paragraph } = Typography;
+// 组件的类型前缀
+const prefix = "recommend-card";
 
-interface RecommendCardProps {
-  imageUrl: string;
-  title: string;
-  description: string;
-  viewsCount: number | string;
-  usesCount: number | string;
-  source: string;
-}
-
+/** 推荐卡片hover时展示的操作栏 */
 const OperationalDetails: React.FC = () => {
   return (
-    <>
+    <div
+      className={`${prefix}-operational-details flex justify-between gap-2`}
+      style={{ width: "100%" }}
+    >
       <Button icon={<EyeOutlined />} size="small" block>
         预览
       </Button>
-      <div className="empty" style={{ width: 10 }}></div>
       <Button icon={<EditOutlined />} size="small" block type="primary">
         使用
       </Button>
-    </>
+    </div>
   );
 };
 
+/** 首页仪表板推荐卡片 */
 const RecommendCard: React.FC<RecommendCardProps> = ({
   imageUrl,
   title,
@@ -44,21 +42,21 @@ const RecommendCard: React.FC<RecommendCardProps> = ({
         hoverable
         style={{ width: 260 }}
         loading={false}
-        className={styles["recommend-card"]}
+        className={`${prefix}-container`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         cover={
-          <div style={{ position: "relative" }}>
+          <div className="relative">
             <img
               alt="recommend card"
               style={{ width: "100%", height: 140 }}
               src={imageUrl}
             />
             {isHovered && (
-              <div className={styles["description-overlay"]}>
+              <div className={"description-overlay"}>
                 <Paragraph
                   ellipsis={{ rows: 2, tooltip: description }}
-                  style={{ color: "white" }}
+                  style={{ color: "white", marginBottom: 0 }}
                 >
                   {description}
                 </Paragraph>
@@ -67,7 +65,7 @@ const RecommendCard: React.FC<RecommendCardProps> = ({
           </div>
         }
       >
-        <div className="card-content">
+        <div className={`${prefix}-content`}>
           <Flex justify="space-between">
             <EllipsisText text={title} width={120} />
             <div className="data-container">
@@ -81,10 +79,7 @@ const RecommendCard: React.FC<RecommendCardProps> = ({
               </span>
             </div>
           </Flex>
-          <div
-            className="card-content-bottom-detail"
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
+          <div className="flex items-center justify-between h-8">
             {isHovered ? (
               <OperationalDetails />
             ) : (

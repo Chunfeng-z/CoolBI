@@ -6,26 +6,24 @@ $n: 400;
 $color: rgb(153 226 255 / 78.7%);
 
 @function get-shadows($n) {
-  $result: "#{random(100)}vw #{random(100)}vh 0 #{$color}";
+  $result: "#{math.random(100)}vw #{math.random(100)}vh 0 #{$color}";
 
   @for $i from 2 through $n {
-    $result: "#{$result}, #{random(100)}vw #{random(100)}vh 0 #{$color}";
+    $result: "#{$result}, #{math.random(100)}vw #{math.random(100)}vh 0 #{$color}";
   }
 
   @return string.unquote($string: $result);
 }
 
 @for $i from 1 through 5 {
-  $duration: $duration / 2;
-  $n: math.floor($n / 2);
+  $duration: calc($duration / 2);
+  $n: math.floor(calc($n / 2));
   .starry-sky-layer#{$i} {
     $size: #{$i}px;
 
     position: fixed;
     top: 0;
     left: 0;
-
-    //   z-index: -1;
     width: $size;
     height: $size;
     border-radius: 50%;

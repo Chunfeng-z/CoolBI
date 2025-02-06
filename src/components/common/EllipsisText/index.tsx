@@ -15,6 +15,7 @@ interface EllipsisTextProps {
   color?: string;
 }
 
+/** 文本溢出省略与tooltip提示 */
 const EllipsisText: React.FC<EllipsisTextProps> = (props) => {
   const { text, width, marginLeft, ellipsis = true, color } = props;
   const ellipsisConfig =

@@ -1,13 +1,6 @@
-.recommend-card {
-  /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
-  :global {
-    .ant-card-body {
-      padding: 10px;
-    }
-
-    .ant-typography {
-      margin-bottom: 0;
-    }
+.recommend-card-container {
+  .ant-card-body {
+    padding: 10px;
   }
 
   .description-overlay {
