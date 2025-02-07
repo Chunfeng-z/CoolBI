@@ -48,12 +48,13 @@ const RecommendCardList: React.FC = () => {
 
   return (
     <div className={`${prefixCls}-container`}>
-      <div className={`${prefixCls}-title`}>
+      <div className={`${prefixCls}-title h-8`}>
         <Flex justify="space-between">
           <span>获取灵感</span>
           <Button
             variant="text"
             color="primary"
+            size="small"
             onClick={handleRecommendDataDisplay}
           >
             {displayRecommendCardList ? "收起" : "展开"}

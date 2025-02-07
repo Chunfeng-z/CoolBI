@@ -24,6 +24,13 @@ export enum DropdownItems {
   "i_collected" = "我收藏的",
 }
 
+/** 首页-分段的切换选项 */
+export enum SegmentedItems {
+  "recently_edited" = "recently_edited",
+  "i_created" = "i_created",
+  "i_collected" = "i_collected",
+}
+
 /** 工作台表格数据类型 */
 export interface DashBoardTableDataType {
   /** 报表名称 */

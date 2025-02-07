@@ -9,7 +9,7 @@ import {
   Space,
 } from "antd";
 import React, { useState } from "react";
-import { DropdownItems } from "../utils/index";
+import { DropdownItems, SegmentedItems } from "../utils/index";
 
 const prefixCls = "quick-action-bar";
 
@@ -52,23 +52,29 @@ const items: MenuProps["items"] = [
   },
 ];
 
+interface QuickActionsBarProps {
+  /** 切换segment执行的操作 */
+  onSegmentedChange: (key: SegmentedItems) => void;
+}
+
 /** 仪表板分类&检索操作栏 */
-const QuickActionsBar: React.FC = () => {
+const QuickActionsBar: React.FC<QuickActionsBarProps> = (props) => {
+  const { onSegmentedChange } = props;
   const [messageApi, contextHolder] = message.useMessage();
-  //   选中展示内容后前端展示效果
+  // 选中展示内容后前端展示效果
   const [menuLabel, setMenuLabel] = useState<DropdownItems>(
     DropdownItems.all_kinds
   );
   // 仪表板的分段类型
   const segments = [
-    { label: "最近编辑", value: "1" },
+    { label: "最近编辑", value: SegmentedItems.recently_edited },
     {
       label: "我创建的",
-      value: "2",
+      value: SegmentedItems.i_created,
     },
     {
       label: "我收藏的",
-      value: "3",
+      value: SegmentedItems.i_collected,
     },
   ];
   // 下拉菜单的点击事件
@@ -84,7 +90,12 @@ const QuickActionsBar: React.FC = () => {
       <div className={`${prefixCls}-container`}>
         <Flex justify="space-between">
           <div className={`${prefixCls}-nav`}>
-            <Segmented options={segments}></Segmented>
+            <Segmented
+              options={segments}
+              onChange={(value) => {
+                onSegmentedChange(value as SegmentedItems);
+              }}
+            ></Segmented>
           </div>
           <div className={`${prefixCls}-extra-content`}>
             <Space size="middle">
