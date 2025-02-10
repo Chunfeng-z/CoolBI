@@ -112,7 +112,7 @@ const QuickActionsBar: React.FC<QuickActionsBarProps> = (props) => {
                 trigger={["click"]}
               >
                 <a onClick={(e) => e.preventDefault()}>
-                  <Space className="hover:text-sky-700">
+                  <Space className="hover:text-sky-600">
                     <EllipsisText
                       text={menuLabel}
                       width={60}

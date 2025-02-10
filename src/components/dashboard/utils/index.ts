@@ -53,7 +53,7 @@ export interface DashBoardTableDataType {
   }[];
 }
 
-// 工作台表格的表头项
+/** 工作台表格的表头项 */
 export enum DashBoardTableDataKeys {
   Name = "name",
   Kind = "kind",
@@ -61,4 +61,11 @@ export enum DashBoardTableDataKeys {
   BelongSpace = "belongSpace",
   LastEdited = "lastEdited",
   Actions = "actions",
+}
+
+/** 工作台操作枚举 */
+export enum DashBoardTableActions {
+  NewWindow = "newWindow",
+  CopyLink = "copyLink",
+  Collect = "collect",
 }

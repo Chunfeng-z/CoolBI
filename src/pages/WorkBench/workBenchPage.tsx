@@ -12,6 +12,7 @@ const WorkBenchPage: React.FC = () => {
     React.useState<SegmentedItems>(SegmentedItems.recently_edited);
   // 切换segmented
   const handleSegmentedChange = useCallback((key: SegmentedItems) => {
+    console.log("segmented changed:", key);
     setSelectedSegmented(key);
   }, []);
   const quickActions = [

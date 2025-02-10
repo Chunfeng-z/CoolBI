@@ -1,7 +1,12 @@
-import { Space, Table, TableProps, Tag } from "antd";
+import { Space, Table, TableProps, Tag, Tooltip } from "antd";
 import React, { useState } from "react";
-import { DashBoardTableDataType, DashBoardTableDataKeys } from "../utils/index";
+import {
+  DashBoardTableDataType,
+  DashBoardTableDataKeys,
+  DashBoardTableActions,
+} from "../utils/index";
 import { dashboardTableEditData } from "../test";
+import { CopyOutlined, DesktopOutlined, StarOutlined } from "@ant-design/icons";
 const prefixCls = "dashboard-table";
 
 /** 表格表头配置 */
@@ -38,13 +43,39 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
   },
   {
     title: "操作",
-    width: 200,
+    width: 100,
     key: DashBoardTableDataKeys.Actions,
     render: (_, record) => (
       <Space size="small">
-        {record.actions.map((action) => (
-          <Tag key={action.action}>{action.name}</Tag>
-        ))}
+        {record.actions.map((action) => {
+          switch (action.action) {
+            case DashBoardTableActions.NewWindow:
+              return (
+                <div className="mr-2 action-group-item" key={action.action}>
+                  <Tooltip title={action.name}>
+                    <DesktopOutlined />
+                  </Tooltip>
+                </div>
+              );
+            case DashBoardTableActions.CopyLink:
+              return (
+                <div className="mr-2 action-group-item" key={action.action}>
+                  <Tooltip title={action.name}>
+                    <CopyOutlined />
+                  </Tooltip>
+                </div>
+              );
+            case DashBoardTableActions.Collect:
+              return (
+                <div className="action-group-item">
+                  <Tooltip title={action.name}>
+                    <StarOutlined />
+                  </Tooltip>
+                </div>
+              );
+          }
+          // <Tag key={action.action}>{action.name}</Tag>
+        })}
       </Space>
     ),
   },

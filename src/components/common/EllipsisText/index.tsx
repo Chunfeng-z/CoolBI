@@ -2,7 +2,7 @@ import React from "react";
 import { Typography } from "antd";
 const { Text } = Typography;
 
-interface EllipsisTextProps {
+interface IEllipsisTextProps {
   /** 展示的内容 */
   text: string | number;
   /** 内容宽度 */
@@ -20,7 +20,7 @@ interface EllipsisTextProps {
 }
 
 /** 文本溢出省略与tooltip提示 */
-const EllipsisText: React.FC<EllipsisTextProps> = (props) => {
+const EllipsisText: React.FC<IEllipsisTextProps> = (props) => {
   const {
     text,
     width,
