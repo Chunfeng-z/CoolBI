@@ -13,11 +13,23 @@ interface EllipsisTextProps {
   ellipsis?: boolean | { tooltip: string | number };
   /** 字体颜色 */
   color?: string;
+  /** 类名 */
+  className?: string;
+  /** 样式,优先级高于前面的样式属性 */
+  style?: React.CSSProperties;
 }
 
 /** 文本溢出省略与tooltip提示 */
 const EllipsisText: React.FC<EllipsisTextProps> = (props) => {
-  const { text, width, marginLeft, ellipsis = true, color } = props;
+  const {
+    text,
+    width,
+    marginLeft,
+    ellipsis = true,
+    color,
+    className,
+    style,
+  } = props;
   const ellipsisConfig =
     typeof ellipsis === "object"
       ? {
@@ -27,7 +39,11 @@ const EllipsisText: React.FC<EllipsisTextProps> = (props) => {
       ? { tooltip: text }
       : false;
   return (
-    <Text style={{ width, marginLeft, color }} ellipsis={ellipsisConfig}>
+    <Text
+      style={{ width, marginLeft, color, ...style }}
+      ellipsis={ellipsisConfig}
+      className={className}
+    >
       {text}
     </Text>
   );

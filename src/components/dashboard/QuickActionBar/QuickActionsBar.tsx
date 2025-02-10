@@ -9,6 +9,7 @@ import {
   Space,
 } from "antd";
 import React, { useState } from "react";
+import EllipsisText from "../../common/EllipsisText";
 import { DropdownItems, SegmentedItems } from "../utils/index";
 
 const prefixCls = "quick-action-bar";
@@ -111,8 +112,12 @@ const QuickActionsBar: React.FC<QuickActionsBarProps> = (props) => {
                 trigger={["click"]}
               >
                 <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    {menuLabel}
+                  <Space className="hover:text-sky-700">
+                    <EllipsisText
+                      text={menuLabel}
+                      width={60}
+                      style={{ color: "inherit" }}
+                    />
                     <DownOutlined />
                   </Space>
                 </a>
