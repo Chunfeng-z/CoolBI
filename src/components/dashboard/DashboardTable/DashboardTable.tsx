@@ -67,7 +67,7 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
               );
             case DashBoardTableActions.Collect:
               return (
-                <div className="action-group-item">
+                <div className="action-group-item" key={action.action}>
                   <Tooltip title={action.name}>
                     <StarOutlined />
                   </Tooltip>
@@ -86,7 +86,7 @@ const DashboardTable: React.FC = () => {
   // 分页大小控制
   const [pageSize, setPageSize] = useState(10);
   // 总共的数据量
-  const [totalPage, setTotalPage] = useState(500);
+  const [totalPage, setTotalPage] = useState(dashboardTableEditData.length);
   return (
     <div className={`${prefixCls}-container`}>
       <Table<DashBoardTableDataType>
