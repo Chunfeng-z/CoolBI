@@ -14,7 +14,7 @@ export const recommendCardListData = [
     imageUrl: "https://picsum.photos/id/2/240/120",
     title: "这个是超长的文本内容测试，这个是超长的文本内容测试",
     description: "示例推荐内容",
-    viewsCount: 100,
+    viewsCount: 110,
     usesCount: 511110,
     source: "Chunfeng-z",
   },
