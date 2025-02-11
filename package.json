@@ -37,7 +37,7 @@
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
-    "code-inspector-plugin": "^0.18.3",
+    "code-inspector-plugin": "^0.20.0",
     "cz-git": "^1.11.0",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",

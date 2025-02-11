@@ -1,11 +1,38 @@
 import React, { useCallback } from "react";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
-import { Button, Divider, Dropdown, MenuProps, Space } from "antd";
+import { Button, Divider, Popover, Space } from "antd";
 import RecommendCardList from "../../components/dashboard/RecommendCardList/RecommendCardList";
 import DashboardTable from "../../components/dashboard/DashboardTable/DashboardTable";
 import QuickActionsBar from "../../components/dashboard/QuickActionBar/QuickActionsBar";
 import { SegmentedItems } from "../../components/dashboard/utils";
-import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
+import {
+  CaretDownOutlined,
+  CaretUpOutlined,
+  FundOutlined,
+  FundProjectionScreenOutlined,
+} from "@ant-design/icons";
+const prefixCls = "workbench-page";
+/** 创建报表的pop提示框内容 */
+const content = (
+  <div className={`${prefixCls}-popover-content`} style={{ width: 220 }}>
+    <div className="create-report-title">{"快捷创建"}</div>
+    <div
+      className="create-report-items"
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        marginTop: 10,
+      }}
+    >
+      <Button icon={<FundOutlined />} type="text">
+        {"仪表板"}
+      </Button>
+      <Button icon={<FundProjectionScreenOutlined />} type="text">
+        {"数据大屏"}
+      </Button>
+    </div>
+  </div>
+);
 /** 工作台页面：创建和管理仪表板等内容 */
 const WorkBenchPage: React.FC = () => {
   // 创建表报的hover状态
@@ -18,30 +45,16 @@ const WorkBenchPage: React.FC = () => {
     console.log("segmented changed:", key);
     setSelectedSegmented(key);
   }, []);
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          1st menu item
-        </a>
-      ),
-    },
-    {
-      key: "4",
-      danger: true,
-      label: "a danger item",
-    },
-  ];
 
   return (
     <PageContainer
       extra={
-        <Dropdown menu={{ items }} placement="bottomRight">
+        <Popover
+          content={content}
+          trigger={["hover"]}
+          arrow={false}
+          placement="bottomRight"
+        >
           <Button
             type="primary"
             icon={
@@ -53,7 +66,7 @@ const WorkBenchPage: React.FC = () => {
           >
             {"创建报表"}
           </Button>
-        </Dropdown>
+        </Popover>
       }
     >
       <ProCard
@@ -63,7 +76,7 @@ const WorkBenchPage: React.FC = () => {
         bordered
       >
         <RecommendCardList />
-        <Divider />
+        <Divider style={{ margin: "15px 0" }} />
         <Space direction="vertical" size="middle" style={{ width: "100%" }}>
           <QuickActionsBar onSegmentedChange={handleSegmentedChange} />
           <DashboardTable />
