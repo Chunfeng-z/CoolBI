@@ -5,6 +5,8 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import PageNotFound from "./pages/Error/PageNotFound";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import PageNotAuthorized from "./pages/Error/PageNotAuthorized";
+import ServerError from "./pages/Error/ServerError";
 
 const base = import.meta.env.VITE_BASE;
 export default function App() {
@@ -26,6 +28,8 @@ export default function App() {
           <Route path={`${base}/login`} element={<Login />} />
           <Route path={`${base}/register`} element={<Register />} />
           <Route path={`${base}/404`} element={<PageNotFound />} />
+          <Route path={`${base}/403`} element={<PageNotAuthorized />} />
+          <Route path={`${base}/500`} element={<ServerError />} />
           <Route path="*" element={<Navigate to={`${base}/404`}></Navigate>} />
         </Routes>
       </BrowserRouter>
