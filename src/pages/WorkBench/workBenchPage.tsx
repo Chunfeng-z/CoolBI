@@ -11,7 +11,6 @@ import {
   FundOutlined,
   FundProjectionScreenOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
 const base = import.meta.env.VITE_BASE;
 const prefixCls = "workbench-page";
 interface contentProps {
@@ -48,7 +47,6 @@ const Content: React.FC<contentProps> = (props) => {
 };
 /** 工作台页面：创建和管理仪表板等内容 */
 const WorkBenchPage: React.FC = () => {
-  const navigate = useNavigate();
   // 创建表报的hover状态
   const [isHoverCreateReport, setIsHoverCreateReport] = React.useState(false);
   // 当前选中的segmented
@@ -61,8 +59,8 @@ const WorkBenchPage: React.FC = () => {
   }, []);
   // 点击跳转到创建仪表板界面
   const handleCreateDashboard = useCallback(() => {
-    navigate(`${base}/dashboard`);
-  }, [navigate]);
+    window.open(`${base}/dashboard`, "_blank");
+  }, []);
 
   return (
     <PageContainer
