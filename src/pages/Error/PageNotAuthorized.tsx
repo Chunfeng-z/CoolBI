@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Result } from "antd";
-import { useNavigateToHome } from "./utils/index";
+import { useNavigateToHome } from "./utils/hooks";
 const prefixCls = "page-not-authorized";
 const PageNotAuthorized: React.FC = () => {
   /** 返回主页 */

@@ -10,7 +10,7 @@ import {
 } from "antd";
 import React, { useState } from "react";
 import EllipsisText from "../../common/EllipsisText";
-import { DropdownItems, SegmentedItems } from "../utils/index";
+import { DropdownItems, SegmentedItems } from "../utils/types";
 
 const prefixCls = "quick-action-bar";
 

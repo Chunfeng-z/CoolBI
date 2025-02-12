@@ -4,7 +4,7 @@ import {
   DashBoardTableDataType,
   DashBoardTableDataKeys,
   DashBoardTableActions,
-} from "../utils/index";
+} from "../utils/types";
 import { dashboardTableEditData } from "../test";
 import { CopyOutlined, DesktopOutlined, StarOutlined } from "@ant-design/icons";
 const prefixCls = "dashboard-table";

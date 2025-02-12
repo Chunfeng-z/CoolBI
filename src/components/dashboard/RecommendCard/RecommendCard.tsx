@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Card, Flex, Typography } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import EllipsisText from "../../common/EllipsisText";
-import { RecommendCardProps } from "../utils";
+import { RecommendCardProps } from "../utils/types";
 
 const { Paragraph } = Typography;
 // 组件的类型前缀

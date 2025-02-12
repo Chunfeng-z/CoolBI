@@ -4,7 +4,7 @@ import { Button, Divider, Popover, Space } from "antd";
 import RecommendCardList from "../../components/dashboard/RecommendCardList/RecommendCardList";
 import DashboardTable from "../../components/dashboard/DashboardTable/DashboardTable";
 import QuickActionsBar from "../../components/dashboard/QuickActionBar/QuickActionsBar";
-import { SegmentedItems } from "../../components/dashboard/utils";
+import { SegmentedItems } from "../../components/dashboard/utils/types";
 import {
   CaretDownOutlined,
   CaretUpOutlined,

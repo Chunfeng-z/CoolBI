@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Result } from "antd";
-import { useNavigateToHome } from "./utils";
+import { useNavigateToHome } from "./utils/hooks";
 const prefixCls = "server-error";
 const ServerError: React.FC = () => {
   const handleBackClick = useNavigateToHome();
