@@ -1,0 +1,23 @@
+.left-chart-menu-scroll-wrapper {
+  overflow: hidden auto;
+  height: 100vh;
+
+  .left-chart-menu-container {
+    width: 290px;
+    min-height: 1200px;
+
+    .left-chart-menu-title {
+      position: sticky;
+      top: 0;
+      padding: 0 10px;
+      height: 30px;
+      background-color: white;
+      border-bottom: 1px solid #f0f0f0;
+      line-height: 30px;
+    }
+
+    .left-chart-menu-body {
+      padding: 0 10px;
+    }
+  }
+}
