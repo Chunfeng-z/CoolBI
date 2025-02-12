@@ -1,0 +1,33 @@
+.chart-category-container {
+  .chart-category-title {
+    line-height: 30px;
+  }
+
+  .chart-category-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+
+    .chart-items {
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      width: 60px;
+      height: 70px;
+      font-size: 12px;
+      text-align: center;
+      background-color: #eee;
+      border-radius: 5px;
+      flex-direction: column;
+
+      .chart-items-icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      .chart-items-name {
+        line-height: 18px;
+      }
+    }
+  }
+}
