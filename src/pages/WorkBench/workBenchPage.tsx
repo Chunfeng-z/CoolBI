@@ -11,30 +11,44 @@ import {
   FundOutlined,
   FundProjectionScreenOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+const base = import.meta.env.VITE_BASE;
 const prefixCls = "workbench-page";
+interface contentProps {
+  /** 点击创建仪表板的回调 */
+  onCreateDashBoardClick: () => void;
+}
 /** 创建报表的pop提示框内容 */
-const content = (
-  <div className={`${prefixCls}-popover-content`} style={{ width: 220 }}>
-    <div className="create-report-title">{"快捷创建"}</div>
-    <div
-      className="create-report-items"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        marginTop: 10,
-      }}
-    >
-      <Button icon={<FundOutlined />} type="text">
-        {"仪表板"}
-      </Button>
-      <Button icon={<FundProjectionScreenOutlined />} type="text">
-        {"数据大屏"}
-      </Button>
+const Content: React.FC<contentProps> = (props) => {
+  const { onCreateDashBoardClick } = props;
+  return (
+    <div className={`${prefixCls}-popover-content`} style={{ width: 220 }}>
+      <div className="create-report-title">{"快捷创建"}</div>
+      <div
+        className="create-report-items"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: 10,
+        }}
+      >
+        <Button
+          icon={<FundOutlined />}
+          type="text"
+          onClick={onCreateDashBoardClick}
+        >
+          {"仪表板"}
+        </Button>
+        <Button icon={<FundProjectionScreenOutlined />} type="text">
+          {"数据大屏"}
+        </Button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 /** 工作台页面：创建和管理仪表板等内容 */
 const WorkBenchPage: React.FC = () => {
+  const navigate = useNavigate();
   // 创建表报的hover状态
   const [isHoverCreateReport, setIsHoverCreateReport] = React.useState(false);
   // 当前选中的segmented
@@ -45,12 +59,16 @@ const WorkBenchPage: React.FC = () => {
     console.log("segmented changed:", key);
     setSelectedSegmented(key);
   }, []);
+  // 点击跳转到创建仪表板界面
+  const handleCreateDashboard = useCallback(() => {
+    navigate(`${base}/dashboard`);
+  }, [navigate]);
 
   return (
     <PageContainer
       extra={
         <Popover
-          content={content}
+          content={<Content onCreateDashBoardClick={handleCreateDashboard} />}
           trigger={["hover"]}
           arrow={false}
           placement="bottomRight"
