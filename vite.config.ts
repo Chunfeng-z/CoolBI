@@ -21,4 +21,7 @@ export default defineConfig({
     },
   },
   envDir: "./env",
+  server: {
+    host: "0.0.0.0",
+  },
 });
