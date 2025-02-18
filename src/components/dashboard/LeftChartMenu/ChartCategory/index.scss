@@ -1,4 +1,6 @@
 .chart-category-container {
+  margin-bottom: 8px;
+
   .chart-category-title {
     line-height: 30px;
   }
@@ -12,13 +14,16 @@
       display: flex;
       align-items: center;
       padding: 6px;
-      width: 60px;
-      height: 70px;
+      width: 56px;
+      height: 65px;
       font-size: 12px;
       text-align: center;
-      background-color: #eee;
       border-radius: 5px;
       flex-direction: column;
+
+      &:hover {
+        background-color: #f1f6ff;
+      }
 
       .chart-items-icon {
         width: 40px;
@@ -27,6 +32,8 @@
 
       .chart-items-name {
         line-height: 18px;
+        font-size: 12px;
+        color: #787878;
       }
     }
   }

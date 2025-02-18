@@ -4,7 +4,6 @@
   height: 100%;
 
   .left-chart-menu-container {
-    width: 275px;
     min-height: 1000px;
 
     .left-chart-menu-title {
@@ -19,7 +18,6 @@
 
     .left-chart-menu-body {
       padding: 0 10px;
-      margin-top: 5px;
       width: 100%;
     }
 
@@ -29,13 +27,15 @@
       display: flex;
       padding: 10px;
       width: 275px;
+      height: 150px;
       font-size: 14px;
-      flex-direction: column;
       background-color: white;
+      flex-direction: column;
       border-top: 1px solid #f0f0f0;
       border-right: 1px solid #f0f0f0;
 
       .description-detail {
+        margin-top: 10px;
         font-size: 12px;
       }
     }

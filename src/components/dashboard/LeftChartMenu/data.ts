@@ -16,8 +16,8 @@ export const ChartCategoryData = [
           "用来展示在一定时间内数据的趋势走向以及他们所占的面积比例。",
       },
       {
-        shortName: "堆叠面积图",
-        name: "堆叠图",
+        shortName: "堆叠图",
+        name: "堆叠面积图",
         icon: "icon3",
         description:
           "用来显示每个数值所占大小随时间或类别变化的趋势线，展示的是部分与整体的关系。",
