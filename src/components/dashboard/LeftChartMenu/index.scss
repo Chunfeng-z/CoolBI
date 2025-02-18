@@ -1,10 +1,10 @@
 .left-chart-menu-scroll-wrapper {
   overflow: hidden auto;
-  height: 100vh;
-  border: 1px solid #f0f0f0;
+  width: 100%;
+  height: 100%;
 
   .left-chart-menu-container {
-    width: 280px;
+    width: 275px;
     min-height: 1000px;
 
     .left-chart-menu-title {
@@ -28,11 +28,12 @@
       bottom: 0;
       display: flex;
       padding: 10px;
-      width: 280px;
+      width: 275px;
       font-size: 14px;
       flex-direction: column;
       background-color: white;
       border-top: 1px solid #f0f0f0;
+      border-right: 1px solid #f0f0f0;
 
       .description-detail {
         font-size: 12px;

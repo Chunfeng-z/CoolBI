@@ -9,6 +9,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@comp/*": ["src/components/*"]
-    }
-  },
+    },
+    "forceConsistentCasingInFileNames": true,
+    "strict": true
+  }
 }

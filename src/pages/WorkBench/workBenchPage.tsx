@@ -5,6 +5,7 @@ import RecommendCardList from "../../components/workbench/RecommendCardList/Reco
 import DashboardTable from "../../components/workbench/DashboardTable/DashboardTable";
 import QuickActionsBar from "../../components/workbench/QuickActionBar/QuickActionsBar";
 import { SegmentedItems } from "../../components/workbench/utils/types";
+import "./index.scss";
 import {
   CaretDownOutlined,
   CaretUpOutlined,
@@ -21,16 +22,9 @@ interface contentProps {
 const Content: React.FC<contentProps> = (props) => {
   const { onCreateDashBoardClick } = props;
   return (
-    <div className={`${prefixCls}-popover-content`} style={{ width: 220 }}>
+    <div className={`${prefixCls}-popover-content`}>
       <div className="create-report-title">{"快捷创建"}</div>
-      <div
-        className="create-report-items"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginTop: 10,
-        }}
-      >
+      <div className="create-report-items">
         <Button
           icon={<FundOutlined />}
           type="text"
@@ -64,12 +58,14 @@ const WorkBenchPage: React.FC = () => {
 
   return (
     <PageContainer
+      className={`${prefixCls}-container`}
       extra={
         <Popover
           content={<Content onCreateDashBoardClick={handleCreateDashboard} />}
           trigger={["hover"]}
           arrow={false}
           placement="bottomRight"
+          className={`${prefixCls}-popover`}
         >
           <Button
             type="primary"
