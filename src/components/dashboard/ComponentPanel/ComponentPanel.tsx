@@ -44,6 +44,12 @@ const ComponentPanel: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    const selectedScale =
+      ScaleValue[`level${e.key}` as keyof typeof ScaleValue];
+    setScale(selectedScale);
+  };
+
   return (
     <div className={`${prefixCls}-container`}>
       <div className={`${prefixCls}-left`}>
@@ -60,7 +66,10 @@ const ComponentPanel: React.FC = () => {
       </div>
       <div className={`${prefixCls}-right`}>
         <Tooltip title="布局缩放">
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown
+            menu={{ items, onClick: handleMenuClick }}
+            trigger={["click"]}
+          >
             <Button type="text" size="small">
               {scale}
               <DownOutlined />

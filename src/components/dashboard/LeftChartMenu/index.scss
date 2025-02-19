@@ -4,11 +4,14 @@
   height: 100%;
 
   .left-chart-menu-container {
-    min-height: 1000px;
+    min-height: 1050px;
 
     .left-chart-menu-title {
       position: sticky;
       top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 0 10px;
       height: 40px;
       background-color: white;
