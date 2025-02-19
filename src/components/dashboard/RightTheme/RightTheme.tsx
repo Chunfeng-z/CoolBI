@@ -4,6 +4,7 @@ import classNames from "classnames";
 import React from "react";
 import CoolCollapse from "../../common/CoolCollapse";
 import GlobalStyle from "./GlobalStyle";
+import PageLayout from "./PageLayout";
 const prefixCls = "right-theme";
 const text = `
   A dog is a type of domesticated animal.
@@ -20,7 +21,7 @@ const items: CollapseProps["items"] = [
   {
     key: "2",
     label: "页面布局",
-    children: <p>{text}</p>,
+    children: <PageLayout />,
   },
   {
     key: "3",
@@ -62,7 +63,10 @@ const RightTheme: React.FC = () => {
       {!isCollapsed && (
         <div className={`${prefixCls}-collapse-body`}>
           <div className={`${prefixCls}-collapse-content`}>
-            <CoolCollapse items={items} defaultActiveKey={["1"]}></CoolCollapse>
+            <CoolCollapse
+              items={items}
+              defaultActiveKey={["1", "2"]}
+            ></CoolCollapse>
           </div>
         </div>
       )}
