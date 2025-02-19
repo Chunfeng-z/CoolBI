@@ -1,4 +1,47 @@
 .right-theme-container {
-  width: 100%;
+  display: flex;
+  width: 420px;
   height: 100%;
+  flex-direction: column;
+
+  &.is-collapsed {
+    width: 45px;
+  }
+
+  .right-theme-collapse-header {
+    position: sticky;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 0 12px;
+    height: 40px;
+    border-bottom: 1px solid #e0e0e0;
+
+    &.is-collapsed {
+      display: flex;
+      justify-content: flex-start;
+      height: 100%;
+      flex-direction: column;
+
+      & .collapse-btn {
+        margin: 10px 0;
+      }
+
+      & .right-theme-title {
+        writing-mode: vertical-lr;
+        text-align: center;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .right-theme-collapse-body {
+    overflow: hidden auto;
+    flex: 1;
+
+    .right-theme-collapse-content {
+      min-height: 1000px;
+    }
+  }
 }

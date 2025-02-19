@@ -1,0 +1,63 @@
+.right-theme-global-style-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+
+  // 修改全局样式下单选框的字号
+  .ant-radio-group {
+    span {
+      font-size: 13px;
+    }
+  }
+
+  .global-style-item {
+    height: 32px;
+
+    .global-style-item-title {
+      min-width: 80px;
+    }
+  }
+
+  .theme-mode {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .semantic-color {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .global-style-item-title {
+      // 信息图标
+      span {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .card-radius {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-space {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-space-custom {
+    display: flex;
+    padding: 10px 12px;
+    width: 100%;
+    height: 200px;
+    background-color: #f7f7f7;
+    border-radius: 4px;
+    gap: 4px;
+    flex-direction: column;
+  }
+}
