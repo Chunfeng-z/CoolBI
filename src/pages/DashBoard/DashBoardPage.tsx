@@ -4,6 +4,7 @@ import ActionPanel from "../../components/dashboard/ActionPanel";
 import ComponentPanel from "../../components/dashboard/ComponentPanel";
 import RightTheme from "../../components/dashboard/RightTheme";
 import LeftChartMenu from "../../components/dashboard/LeftChartMenu";
+import DashBoardDesign from "../../components/dashboard/DashBoardDesign";
 
 const prefixCls = "dashboard-page";
 const enum LeftChartMenuState {
@@ -30,7 +31,9 @@ const DashBoardPage: React.FC = () => {
       <div className={`${prefixCls}-left-chart-menu`}>
         <LeftChartMenu />
       </div>
-      <div className={`${prefixCls}-chart-content`}> </div>
+      <div className={`${prefixCls}-chart-content`}>
+        <DashBoardDesign />
+      </div>
     </div>
   );
 };
