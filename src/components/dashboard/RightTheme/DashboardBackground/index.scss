@@ -1,0 +1,28 @@
+.right-theme-dashboard-background-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .dashboard-background-checkbox {
+    display: flex;
+    align-items: center;
+    height: 32px;
+
+    // 修改页面布局下面的多选框的字号
+    .ant-checkbox-wrapper {
+      span {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .image-picker {
+    padding-left: 24px;
+    height: 40px;
+    background-color: aliceblue;
+
+    &.picker-disabled {
+      display: none;
+    }
+  }
+}

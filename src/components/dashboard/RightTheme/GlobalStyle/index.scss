@@ -12,42 +12,23 @@
   }
 
   .global-style-item {
+    display: flex;
+    align-items: center;
     height: 32px;
+    gap: 4px;
 
     .global-style-item-title {
       min-width: 80px;
     }
   }
 
-  .theme-mode {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
   .semantic-color {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
     .global-style-item-title {
       // 信息图标
       span {
         margin-left: 5px;
       }
     }
-  }
-
-  .card-radius {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .card-space {
-    display: flex;
-    align-items: center;
-    gap: 4px;
   }
 
   .card-space-custom {

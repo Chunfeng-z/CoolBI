@@ -5,13 +5,9 @@ import React from "react";
 import CoolCollapse from "../../common/CoolCollapse";
 import GlobalStyle from "./GlobalStyle";
 import PageLayout from "./PageLayout";
+import DashboardBackground from "./DashboardBackground";
+import ComponentStyle from "./ComponentStyle";
 const prefixCls = "right-theme";
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
 const items: CollapseProps["items"] = [
   {
     key: "1",
@@ -25,13 +21,13 @@ const items: CollapseProps["items"] = [
   },
   {
     key: "3",
-    label: "组件",
-    children: <p>{text}</p>,
+    label: "仪表板背景",
+    children: <DashboardBackground />,
   },
   {
     key: "4",
-    label: "通用内容样式",
-    children: <p>{text}</p>,
+    label: "组件",
+    children: <ComponentStyle />,
   },
 ];
 const RightTheme: React.FC = () => {
@@ -65,7 +61,7 @@ const RightTheme: React.FC = () => {
           <div className={`${prefixCls}-collapse-content`}>
             <CoolCollapse
               items={items}
-              defaultActiveKey={["1", "2"]}
+              defaultActiveKey={["1", "2", "3"]}
             ></CoolCollapse>
           </div>
         </div>

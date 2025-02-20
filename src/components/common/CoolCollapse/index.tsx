@@ -1,8 +1,21 @@
 import { Collapse } from "antd";
+import { CollapsibleType } from "antd/es/collapse/CollapsePanel";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { ItemType } from "rc-collapse/es/interface";
 import React from "react";
 const prefixCls = "cool-collapse";
+interface PanelProps {
+  isActive?: boolean;
+  header?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  showArrow?: boolean;
+  forceRender?: boolean;
+  /** @deprecated Use `collapsible="disabled"` instead */
+  disabled?: boolean;
+  extra?: React.ReactNode;
+  collapsible?: CollapsibleType;
+}
 interface CoolCollapseProps {
   /** 当前激活 tab 面板的 key */
   activeKey?: Array<string | number> | string | number;
@@ -14,6 +27,10 @@ interface CoolCollapseProps {
   accordion?: boolean;
   /** 折叠项目内容 */
   items?: ItemType[];
+  /** 自定义切换图标 */
+  expandIcon?: (panelProps: PanelProps) => React.ReactNode;
+  /** css样式 */
+  style?: React.CSSProperties;
 }
 /** Cool BI 风格的折叠面板 */
 const CoolCollapse: React.FC<CoolCollapseProps> = (props) => {
@@ -23,7 +40,14 @@ const CoolCollapse: React.FC<CoolCollapseProps> = (props) => {
     size = "small",
     accordion,
     items,
+    expandIcon,
+    style,
   } = props;
+  const defaultStyle: React.CSSProperties = {
+    borderRadius: 0,
+    backgroundColor: "transparent",
+  };
+  const mergedStyle = { ...defaultStyle, ...style };
   return (
     <div className={`${prefixCls}-container`}>
       <Collapse
@@ -31,9 +55,10 @@ const CoolCollapse: React.FC<CoolCollapseProps> = (props) => {
         defaultActiveKey={defaultActiveKey}
         size={size}
         bordered={false}
+        expandIcon={expandIcon}
         accordion={accordion}
         items={items}
-        style={{ borderRadius: 0, backgroundColor: "transparent" }}
+        style={{ ...mergedStyle }}
       ></Collapse>
     </div>
   );
