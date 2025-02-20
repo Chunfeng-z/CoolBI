@@ -56,3 +56,18 @@ export enum CardSpace {
   normal = "normal",
   custom = "custom",
 }
+
+/**
+ * 页面栅格数的选择项
+ */
+export const pageRasterOptions = [
+  "4",
+  "6",
+  "8",
+  "10",
+  "12",
+  "14",
+  "16",
+  "18",
+  "20",
+];

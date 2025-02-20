@@ -6,8 +6,16 @@ import RightTheme from "../../components/dashboard/RightTheme";
 import LeftChartMenu from "../../components/dashboard/LeftChartMenu";
 
 const prefixCls = "dashboard-page";
+const enum LeftChartMenuState {
+  "close" = "close",
+  "open" = "open",
+  "pin" = "pin",
+}
 /** 创建、编辑仪表板界面,独立于home页面（独立的功能） */
 const DashBoardPage: React.FC = () => {
+  /** 左侧图表菜单的显示状态 */
+  const [leftChartMenuState, setLeftChartMenuState] =
+    React.useState<LeftChartMenuState>(LeftChartMenuState.close);
   return (
     <div className={`${prefixCls}-container`}>
       <div className={`${prefixCls}-action-panel`}>

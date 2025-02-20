@@ -3,11 +3,20 @@ import {
   UpOutlined,
   LineChartOutlined,
   TableOutlined,
+  InfoCircleOutlined,
+  CheckCircleOutlined,
 } from "@ant-design/icons";
-import { Button, Tooltip, Dropdown, MenuProps } from "antd";
+import {
+  Button,
+  Tooltip,
+  Dropdown,
+  MenuProps,
+  Select,
+  InputNumber,
+} from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
-
+import { pageRasterOptions as options } from "../utils";
 const prefixCls = "component-panel";
 enum ScaleValue {
   "level1" = "25%",
@@ -49,37 +58,118 @@ const ComponentPanel: React.FC = () => {
       ScaleValue[`level${e.key}` as keyof typeof ScaleValue];
     setScale(selectedScale);
   };
+  /** 页面栅格设置的显示状态 */
+  const [isPageRasterSettingOpen, setIsPageRasterSettingOpen] = useState(false);
+  /** 页面栅格显隐设置 */
+  const handlePageRasterClick = () => {
+    setIsPageRasterSettingOpen(!isPageRasterSettingOpen);
+  };
+  /** 页面栅格列数控制 */
+  const handleRasterNumberChange = (value: string) => {
+    console.log(value);
+  };
+  const pageRasterOptions = options.map((item) => ({
+    value: item,
+    label: item.toString(),
+  }));
 
   return (
     <div className={`${prefixCls}-container`}>
-      <div className={`${prefixCls}-left`}>
-        <div
-          className={classNames(`${prefixCls}-add-chart-btn`, {
-            selected: isMenuOpen,
-          })}
-          onClick={toggleMenu}
-        >
-          <LineChartOutlined />
-          <span className={`${prefixCls}-btn-text`}>添加图表</span>
-          {isMenuOpen ? <UpOutlined /> : <DownOutlined />}
-        </div>
-      </div>
-      <div className={`${prefixCls}-right`}>
-        <Tooltip title="布局缩放">
-          <Dropdown
-            menu={{ items, onClick: handleMenuClick }}
-            trigger={["click"]}
-          >
-            <Button type="text" size="small">
-              {scale}
-              <DownOutlined />
+      {isPageRasterSettingOpen ? (
+        <div className={`${prefixCls}-layout-menu`}>
+          <div className="layout-menu-label">页面栅格设置</div>
+          <div className="layout-menu">
+            <div className="layout-menu-item">
+              栅格列数
+              <Tooltip title="在栅格布局下，每个卡片的宽度由栅格列数决定，栅格列数越多，卡片宽度可设置的颗粒度越细。">
+                <InfoCircleOutlined />
+              </Tooltip>
+              <Select
+                size="small"
+                defaultValue="12"
+                style={{ width: 60 }}
+                variant="filled"
+                onChange={handleRasterNumberChange}
+                options={pageRasterOptions}
+              />
+            </div>
+            <div className="layout-menu-item">
+              列间距
+              <InputNumber
+                size="small"
+                variant="filled"
+                min={0}
+                max={30}
+                defaultValue={8}
+                style={{ width: 60 }}
+              />
+              px
+            </div>
+            <div className="layout-menu-item">
+              行间距
+              <InputNumber
+                size="small"
+                variant="filled"
+                min={0}
+                max={30}
+                defaultValue={8}
+                style={{ width: 60 }}
+              />
+              px
+            </div>
+          </div>
+          <div className="layout-button">
+            <Button
+              size="small"
+              type="primary"
+              variant="solid"
+              onClick={handlePageRasterClick}
+            >
+              完成
             </Button>
-          </Dropdown>
-        </Tooltip>
-        <Tooltip title="页面栅格设置">
-          <Button type="text" icon={<TableOutlined />} size="small"></Button>
-        </Tooltip>
-      </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className={`${prefixCls}-left`}>
+            <div
+              className={classNames(`${prefixCls}-add-chart-btn`, {
+                selected: isMenuOpen,
+              })}
+              onClick={toggleMenu}
+            >
+              <LineChartOutlined />
+              <span className={`${prefixCls}-btn-text`}>添加图表</span>
+              {isMenuOpen ? (
+                <UpOutlined style={{ fontSize: 12 }} />
+              ) : (
+                <DownOutlined style={{ fontSize: 12 }} />
+              )}
+            </div>
+          </div>
+          <div className={`${prefixCls}-right`}>
+            <Tooltip title="布局缩放">
+              <Dropdown
+                menu={{ items, onClick: handleMenuClick }}
+                trigger={["click"]}
+              >
+                <Button type="text" size="small">
+                  {scale}
+                  <DownOutlined />
+                </Button>
+              </Dropdown>
+            </Tooltip>
+            <Tooltip title="页面栅格设置">
+              <Button
+                type="text"
+                icon={<TableOutlined />}
+                size="small"
+                onClick={handlePageRasterClick}
+              />
+            </Tooltip>
+          </div>
+        </>
+      )}
     </div>
   );
 };
