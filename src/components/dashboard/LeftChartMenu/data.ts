@@ -5,7 +5,7 @@ export const ChartCategoryData = [
       {
         shortName: "折线图",
         name: "折线图",
-        icon: "icon1",
+        icon: "line",
         description: "用来展示在一定时间间隔下数据的趋势走向。",
       },
       {
