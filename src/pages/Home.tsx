@@ -16,7 +16,7 @@ import {
 import { Button, ConfigProvider, Divider, Dropdown, Input, theme } from "antd";
 import React, { useState } from "react";
 import defaultProps from "./_defaultProps";
-import logo from "@/assets/images/logo-dark.svg";
+import logo from "@/assets/icons/logo-dark.svg";
 import WorkBenchPage from "./WorkBench/workBenchPage.tsx";
 
 const SearchInput: React.FC = () => {
