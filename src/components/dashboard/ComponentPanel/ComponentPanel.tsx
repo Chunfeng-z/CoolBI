@@ -4,7 +4,6 @@ import {
   LineChartOutlined,
   TableOutlined,
   InfoCircleOutlined,
-  CheckCircleOutlined,
 } from "@ant-design/icons";
 import {
   Button,

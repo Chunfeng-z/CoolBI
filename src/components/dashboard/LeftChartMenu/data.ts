@@ -152,7 +152,7 @@ export const ChartCategoryData = [
       },
       {
         shortName: "雷达图",
-        name: "雷大图",
+        name: "雷达图",
         icon: "radar",
         description: "用来展示分析所得的数字或比率，多用于展示维度值的分布。",
       },
