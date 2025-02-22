@@ -4,7 +4,7 @@
   height: 100%;
 
   .left-chart-menu-container {
-    min-height: 1050px;
+    min-height: 1300px;
 
     .left-chart-menu-title {
       position: sticky;
@@ -30,16 +30,26 @@
       display: flex;
       padding: 10px;
       width: 265px;
-      height: 150px;
+      height: 220px;
       font-size: 14px;
       background-color: white;
       flex-direction: column;
       border-top: 1px solid #f0f0f0;
       border-right: 1px solid #f0f0f0;
 
-      .description-detail {
+      .detail {
+        display: flex;
         margin-top: 10px;
         font-size: 12px;
+        gap: 10px;
+
+        .chart-icon-image {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-width: 65px;
+          max-height: 65px;
+        }
       }
     }
   }

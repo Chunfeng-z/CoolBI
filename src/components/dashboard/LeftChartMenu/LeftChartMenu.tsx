@@ -4,6 +4,7 @@ import { ChartCategoryData } from "./data";
 import { ChartItem } from "../utils";
 import { PushpinOutlined } from "@ant-design/icons";
 import { Button, Tooltip } from "antd";
+import { CHART_ICON_MAP } from "../utils/index";
 const prefixCls = "left-chart-menu";
 
 /** 仪表板左侧的图表菜单 */
@@ -40,9 +41,19 @@ const LeftChartMenu: React.FC = () => {
         {currentHoverChart && (
           <div className={`${prefixCls}-description`}>
             <span>{currentHoverChart.name}</span>
-            <span className="description-detail">
-              {currentHoverChart.description}
-            </span>
+            <div className="detail">
+              <div className="chart-icon-image">
+                <img
+                  src={CHART_ICON_MAP[currentHoverChart.icon]}
+                  alt="icon"
+                  width={60}
+                  height={60}
+                />
+              </div>
+              <span className="description-detail">
+                {currentHoverChart.description}
+              </span>
+            </div>
           </div>
         )}
       </div>

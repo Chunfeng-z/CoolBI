@@ -28,6 +28,14 @@ import IconFunnelCompare from "../../../assets/dashboard/funnel-compare.svg";
 import IconSankey from "../../../assets/dashboard/sankey.svg";
 import IconArc from "../../../assets/dashboard/arc.svg";
 import IconTreeMap from "../../../assets/dashboard/treemap.svg";
+import IconIndicatorCard from "../../../assets/dashboard/indicator-card.svg";
+import IconIndicatorTrend from "../../../assets/dashboard/indicator-trend.svg";
+import IconFlipper from "../../../assets/dashboard/flipper.svg";
+import IconProgress from "../../../assets/dashboard/progress.svg";
+import IconGauge from "../../../assets/dashboard/gauge.svg";
+import IconWaterWave from "../../../assets/dashboard/waterwave.svg";
+import IconDecompositionTree from "../../../assets/dashboard/decomposition-tree.svg";
+import IconIndicatorRelation from "../../../assets/dashboard/indicator-relation.svg";
 /** 每个图表项的数据结构
  * @param shortName 图表项的简称
  * @param name 图表项的全称
@@ -134,4 +142,12 @@ export const CHART_ICON_MAP: Record<string, string> = {
   sankey: IconSankey,
   arc: IconArc,
   treemap: IconTreeMap,
+  indicatorCard: IconIndicatorCard,
+  indicatorTrend: IconIndicatorTrend,
+  flipper: IconFlipper,
+  progress: IconProgress,
+  gauge: IconGauge,
+  waterwave: IconWaterWave,
+  decompositionTree: IconDecompositionTree,
+  indicatorRelation: IconIndicatorRelation,
 };
