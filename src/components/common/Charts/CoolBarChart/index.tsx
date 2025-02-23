@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { BarChart, Bar, Legend, Axis } from "@visactor/react-vchart";
-
+const prefixCls = "cool-bar-chart";
 /** 柱状图 */
 const CoolBarChart: React.FC = () => {
   const chartRef = useRef(null);
@@ -32,10 +32,10 @@ const CoolBarChart: React.FC = () => {
   ];
 
   return (
-    <div>
+    <div className={prefixCls}>
       <BarChart
         ref={chartRef}
-        data={[{ id: "id0", values: barData }]}
+        data={[{ values: barData }]}
         onClick={handleChartClick}
       >
         <Bar

@@ -1,0 +1,17 @@
+.dashboard-chart-card-container {
+  .dashboard-chart-card-content {
+    width: 400px;
+    border-radius: 4px;
+
+    .chart-card-header {
+      display: flex;
+      justify-content: space-between;
+      color: white;
+    }
+
+    .dashboard-chart-card-chart {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
