@@ -2,6 +2,7 @@ import React from "react";
 import "./index.scss";
 import CoolCollapse from "../../../common/CoolCollapse";
 import TitleCard from "./TitleCard";
+import DrawArea from "./DrawArea";
 const prefixCls = "component-style-config";
 const componentStyleItems = [
   {
@@ -16,7 +17,11 @@ const componentStyleItems = [
   {
     key: "2",
     label: "绘图区域",
-    children: <div className="style-item">颜色</div>,
+    children: (
+      <div className="style-item">
+        <DrawArea />
+      </div>
+    ),
   },
   {
     key: "3",
@@ -53,7 +58,7 @@ const componentStyleItems = [
 const ComponentStyleConfig: React.FC = () => {
   return (
     <div className={`${prefixCls}-container`}>
-      <CoolCollapse items={componentStyleItems} defaultActiveKey={[1]} />
+      <CoolCollapse items={componentStyleItems} defaultActiveKey={[2]} />
     </div>
   );
 };

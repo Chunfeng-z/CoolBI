@@ -20,5 +20,14 @@
         gap: 5px;
       }
     }
+
+    .draw-area-container {
+      .draw-area-text {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        gap: 5px;
+      }
+    }
   }
 }

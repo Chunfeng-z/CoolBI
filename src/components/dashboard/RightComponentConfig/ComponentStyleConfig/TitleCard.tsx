@@ -42,6 +42,13 @@ const TitleCard: React.FC = () => {
   const [isEndNoteChecked, setIsEndNoteChecked] = useState<boolean>(false);
   /** 尾注内容 */
   const [endNote, setEndNote] = useState<string>("");
+  /** 组件背景填充状态 */
+  const [isBackgroundColorChecked, setIsBackgroundColorChecked] =
+    useState<boolean>(false);
+  /** 组件背景填充颜色 */
+  const [backgroundColor, setBackgroundColor] = useState<Color>("#fff");
+  /** 组件容器的圆角 */
+  const [borderRadius, setBorderRadius] = useState<number>(12);
   const handleTitleChecked: CheckboxProps["onChange"] = (e) => {
     setIsTitleChecked(e.target.checked);
   };
@@ -182,20 +189,40 @@ const TitleCard: React.FC = () => {
           label: "组件容器",
           children: (
             <div className="title-card-item">
-              <Checkbox>组件背景填充</Checkbox>
+              <Checkbox
+                checked={isBackgroundColorChecked}
+                onChange={(e) => {
+                  setIsBackgroundColorChecked(e.target.checked);
+                }}
+              >
+                组件背景填充
+              </Checkbox>
               <div className="title-card-text">
                 <span>卡片颜色</span>
-                <ColorPicker size="small" />
+                <ColorPicker
+                  size="small"
+                  value={backgroundColor}
+                  disabled={!isBackgroundColorChecked}
+                  onChange={setBackgroundColor}
+                />
               </div>
-              <div className="title-card-text">
+              <div className="title-card-text" style={{ marginLeft: 0 }}>
                 <span>圆角</span>
                 <InputNumber
                   size="small"
                   addonAfter="px"
+                  min={0}
+                  max={20}
+                  defaultValue={12}
+                  step={1}
+                  changeOnWheel
                   style={{ width: 100 }}
+                  onChange={(value) => {
+                    setBorderRadius(value || 0);
+                  }}
                 />
               </div>
-              <div className="title-card-text">
+              <div className="title-card-text" style={{ marginLeft: 0 }}>
                 <DesktopOutlined />
                 <span>卡片内边距</span>
               </div>
@@ -206,6 +233,10 @@ const TitleCard: React.FC = () => {
                     key={direction}
                     addonBefore={direction}
                     addonAfter="px"
+                    min={0}
+                    max={20}
+                    changeOnWheel
+                    defaultValue={12}
                     style={{ width: 140 }}
                     value={[1, 2, 3, 4][index]}
                   />
@@ -225,6 +256,8 @@ const TitleCard: React.FC = () => {
         remarkPosition,
         isEndNoteChecked,
         endNote,
+        isBackgroundColorChecked,
+        backgroundColor,
       ]
     );
   return (
