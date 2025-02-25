@@ -5,6 +5,7 @@ import ComponentPanel from "../../components/dashboard/ComponentPanel";
 import RightTheme from "../../components/dashboard/RightTheme";
 import LeftChartMenu from "../../components/dashboard/LeftChartMenu";
 import DashBoardDesign from "../../components/dashboard/DashBoardDesign";
+import RightComponentConfig from "../../components/dashboard/RightComponentConfig";
 
 const prefixCls = "dashboard-page";
 const enum LeftChartMenuState {
@@ -17,16 +18,23 @@ const DashBoardPage: React.FC = () => {
   /** 左侧图表菜单的显示状态 */
   const [leftChartMenuState, setLeftChartMenuState] =
     React.useState<LeftChartMenuState>(LeftChartMenuState.close);
+  /** 显示图表组件的配置菜单 */
+  const [isShowChartConfig, setIsShowChartConfig] = React.useState(true);
   return (
     <div className={`${prefixCls}-container`}>
       <div className={`${prefixCls}-action-panel`}>
-        <ActionPanel />
+        <ActionPanel
+          onShowComponentConfig={() => {
+            setIsShowChartConfig(!isShowChartConfig);
+          }}
+        />
       </div>
       <div className={`${prefixCls}-component-panel`}>
         <ComponentPanel />
       </div>
       <div className={`${prefixCls}-right-theme`}>
-        <RightTheme />
+        {!isShowChartConfig && <RightTheme />}
+        {isShowChartConfig && <RightComponentConfig />}
       </div>
       <div className={`${prefixCls}-left-chart-menu`}>
         <LeftChartMenu />

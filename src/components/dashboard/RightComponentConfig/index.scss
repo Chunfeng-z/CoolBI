@@ -1,0 +1,20 @@
+.right-component-config-container {
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  height: 100%;
+
+  .right-component-config-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 12px;
+    height: 44px;
+  }
+
+  .right-component-config-content {
+    .ant-tabs-nav {
+      margin-bottom: 0;
+    }
+  }
+}

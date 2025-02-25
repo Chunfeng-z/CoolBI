@@ -30,7 +30,12 @@ const items: CollapseProps["items"] = [
     children: <ComponentStyle />,
   },
 ];
-const RightTheme: React.FC = () => {
+interface IRightThemeProps {
+  /** 组件样式 */
+  style?: React.CSSProperties;
+}
+const RightTheme: React.FC<IRightThemeProps> = (props) => {
+  const { style } = props;
   /** 折叠面板提示内容 */
   const [isCollapsed, setIsCollapsed] = React.useState<boolean>(false);
 
@@ -39,6 +44,7 @@ const RightTheme: React.FC = () => {
       className={classNames(`${prefixCls}-container`, {
         "is-collapsed": isCollapsed,
       })}
+      style={style}
     >
       <div
         className={classNames(`${prefixCls}-collapse-header`, {

@@ -100,9 +100,9 @@ const ComponentPanel: React.FC = () => {
                 min={0}
                 max={30}
                 defaultValue={8}
-                style={{ width: 60 }}
+                style={{ width: 90 }}
+                addonAfter="px"
               />
-              px
             </div>
             <div className="layout-menu-item">
               行间距
@@ -112,9 +112,9 @@ const ComponentPanel: React.FC = () => {
                 min={0}
                 max={30}
                 defaultValue={8}
-                style={{ width: 60 }}
+                style={{ width: 90 }}
+                addonAfter="px"
               />
-              px
             </div>
           </div>
           <div className="layout-button">

@@ -1,0 +1,24 @@
+.component-style-config-container {
+  .style-item {
+    .title-card-container {
+      .title-card-text {
+        display: flex;
+        align-items: center;
+        margin-left: 25px;
+        height: 32px;
+        gap: 5px;
+
+        > span {
+          white-space: nowrap;
+        }
+      }
+
+      .title-card-text-large {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 25px;
+        gap: 5px;
+      }
+    }
+  }
+}

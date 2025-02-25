@@ -1,42 +1,73 @@
 import React, { useRef } from "react";
 import { BarChart, Bar, Legend, Axis } from "@visactor/react-vchart";
+import { barData } from "./data";
 const prefixCls = "cool-bar-chart";
+
+interface ICoolBarChartProps {
+  width?: number;
+  height?: number;
+  /** 背景设置-暂时只支持颜色 */
+  background?: string;
+  /** 内边距 */
+  padding?:
+    | number
+    | { top?: number; right?: number; bottom?: number; left?: number };
+  /** 图表颜色映射配置 - 目前仅支持色值数组 - 连续映射和离散映射暂不支持*/
+  color?: string[];
+  /** 图表的hover交互配置 - 设置为false可以直接关闭hover效果 */
+  hover?:
+    | boolean
+    | {
+        enabled?: boolean;
+        trigger?: string | string[];
+        triggerOff?: string | string[];
+      };
+  /** 图表的select配置 - 设置为false直接关闭 */
+  select?:
+    | boolean
+    | {
+        enabled?: boolean;
+        mode?: "single" | "multiple";
+        trigger?: string | string[];
+        triggerOff?: string | string[];
+      };
+  /** 图表的方向配置 */
+  direction?: "horizontal" | "vertical";
+  /** 标签配置 */
+}
+
 /** 柱状图 */
-const CoolBarChart: React.FC = () => {
+const CoolBarChart: React.FC<ICoolBarChartProps> = (props) => {
+  const {
+    width = 400,
+    height = 300,
+    background = "#383639",
+    padding,
+    color,
+    hover,
+    select,
+    direction = "vertical",
+  } = props;
   const chartRef = useRef(null);
   const handleChartClick = () => {
     console.log("图表被点击了");
   };
 
-  const barData = [
-    { type: "Autocracies", year: "1930", value: 129 },
-    { type: "Autocracies", year: "1940", value: 133 },
-    { type: "Autocracies", year: "1950", value: 130 },
-    { type: "Autocracies", year: "1960", value: 126 },
-    { type: "Autocracies", year: "1970", value: 117 },
-    { type: "Autocracies", year: "1980", value: 114 },
-    { type: "Autocracies", year: "1990", value: 111 },
-    { type: "Autocracies", year: "2000", value: 89 },
-    { type: "Autocracies", year: "2010", value: 80 },
-    { type: "Autocracies", year: "2018", value: 80 },
-    { type: "Democracies", year: "1930", value: 22 },
-    { type: "Democracies", year: "1940", value: 13 },
-    { type: "Democracies", year: "1950", value: 25 },
-    { type: "Democracies", year: "1960", value: 29 },
-    { type: "Democracies", year: "1970", value: 38 },
-    { type: "Democracies", year: "1980", value: 41 },
-    { type: "Democracies", year: "1990", value: 57 },
-    { type: "Democracies", year: "2000", value: 87 },
-    { type: "Democracies", year: "2010", value: 98 },
-    { type: "Democracies", year: "2018", value: 99 },
-  ];
-
   return (
-    <div className={prefixCls}>
+    <div
+      className={prefixCls}
+      style={{ width: `${width}px`, height: `${height}px` }}
+    >
       <BarChart
         ref={chartRef}
         data={[{ values: barData }]}
         onClick={handleChartClick}
+        background={background}
+        padding={padding}
+        color={color}
+        hover={hover}
+        select={select}
+        direction={direction}
       >
         <Bar
           seriesField="type"

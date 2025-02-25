@@ -4,8 +4,14 @@ import DashBoardIcon from "../../../assets/dashboard/dashboard-icon.svg";
 import React, { useState } from "react";
 
 const prefixCls = "action-panel";
+
+interface IActionPanelProps {
+  /** 测试-切换组件配置 */
+  onShowComponentConfig: () => void;
+}
 /** 仪表板操作栏 */
-const ActionPanel: React.FC = () => {
+const ActionPanel: React.FC<IActionPanelProps> = (props) => {
+  const { onShowComponentConfig } = props;
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = () => {
@@ -45,6 +51,7 @@ const ActionPanel: React.FC = () => {
           <Button type="text" size="small">
             撤销
           </Button>
+          <Button onClick={onShowComponentConfig}>切换配置-测试</Button>
           <Button type="text" size="small">
             重做
           </Button>
