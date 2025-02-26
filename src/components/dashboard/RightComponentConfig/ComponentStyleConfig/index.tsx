@@ -5,6 +5,7 @@ import TitleCard from "./TitleCard";
 import DrawArea from "./DrawArea";
 import ChartAxis from "./ChartAxis";
 import ChartLegend from "./ChartLegend";
+import DataLabel from "./DataLabel";
 const prefixCls = "component-style-config";
 const componentStyleItems = [
   {
@@ -46,7 +47,11 @@ const componentStyleItems = [
   {
     key: "5",
     label: "数据标签",
-    children: <div className="style-item">颜色</div>,
+    children: (
+      <div className="style-item">
+        <DataLabel />
+      </div>
+    ),
   },
   {
     key: "6",
@@ -68,7 +73,7 @@ const componentStyleItems = [
 const ComponentStyleConfig: React.FC = () => {
   return (
     <div className={`${prefixCls}-container`}>
-      <CoolCollapse items={componentStyleItems} defaultActiveKey={[4]} />
+      <CoolCollapse items={componentStyleItems} defaultActiveKey={[5]} />
     </div>
   );
 };

@@ -6,7 +6,15 @@ import {
   RightSquareOutlined,
   UpSquareOutlined,
 } from "@ant-design/icons";
-import { Button, ColorPicker, Flex, InputNumber, Radio, Tooltip } from "antd";
+import {
+  Button,
+  Checkbox,
+  ColorPicker,
+  Flex,
+  InputNumber,
+  Radio,
+  Tooltip,
+} from "antd";
 import React, { useState } from "react";
 const prefixCls = "chart-legend";
 /** 图例方位 */
@@ -87,6 +95,9 @@ const ChartLegend: React.FC = () => {
   };
   return (
     <div className={`${prefixCls}-container`}>
+      <Flex style={{ height: 32 }} align="center">
+        <Checkbox>显示图例</Checkbox>
+      </Flex>
       <Flex style={{ height: 32 }} align="center" gap="small">
         <span>位置</span>
         {directions.map(({ position, icon, tooltip }) => (
