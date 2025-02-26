@@ -3,6 +3,7 @@ import "./index.scss";
 import CoolCollapse from "../../../common/CoolCollapse";
 import TitleCard from "./TitleCard";
 import DrawArea from "./DrawArea";
+import ChartAxis from "./ChartAxis";
 const prefixCls = "component-style-config";
 const componentStyleItems = [
   {
@@ -26,7 +27,11 @@ const componentStyleItems = [
   {
     key: "3",
     label: "坐标轴",
-    children: <div className="style-item">边框</div>,
+    children: (
+      <div className="style-item">
+        <ChartAxis />
+      </div>
+    ),
   },
   {
     key: "4",
@@ -58,7 +63,7 @@ const componentStyleItems = [
 const ComponentStyleConfig: React.FC = () => {
   return (
     <div className={`${prefixCls}-container`}>
-      <CoolCollapse items={componentStyleItems} defaultActiveKey={[2]} />
+      <CoolCollapse items={componentStyleItems} defaultActiveKey={[3]} />
     </div>
   );
 };

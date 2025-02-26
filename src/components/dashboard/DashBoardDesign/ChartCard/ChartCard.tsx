@@ -22,7 +22,7 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
   return (
     <div
       className={`${prefixCls}-container`}
-      style={{ backgroundColor: "yellow" }}
+      style={{ backgroundColor: "#E9E7E0" }}
     >
       <div
         className={`${prefixCls}-content`}

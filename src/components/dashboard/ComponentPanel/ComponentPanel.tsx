@@ -152,9 +152,13 @@ const ComponentPanel: React.FC = () => {
                 menu={{ items, onClick: handleMenuClick }}
                 trigger={["click"]}
               >
-                <Button type="text" size="small">
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<DownOutlined />}
+                  iconPosition="end"
+                >
                   {scale}
-                  <DownOutlined />
                 </Button>
               </Dropdown>
             </Tooltip>

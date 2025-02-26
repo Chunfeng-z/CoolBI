@@ -1,5 +1,17 @@
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { InputNumber, InputNumberProps, Slider, Tooltip } from "antd";
+import {
+  AlignLeftOutlined,
+  AlignRightOutlined,
+  InfoCircleOutlined,
+  LineChartOutlined,
+} from "@ant-design/icons";
+import {
+  Flex,
+  InputNumber,
+  InputNumberProps,
+  Radio,
+  Slider,
+  Tooltip,
+} from "antd";
 import React, { useState } from "react";
 const prefixCls = "draw-area";
 interface IDrawAreaProps {
@@ -9,11 +21,13 @@ interface IDrawAreaProps {
 /** 组件样式配置-绘制区域 */
 const DrawArea: React.FC<IDrawAreaProps> = (props) => {
   const { chartType = "bar" } = props;
-  const [inputValue, setInputValue] = useState(1);
-
-  const onChange: InputNumberProps["onChange"] = (newValue) => {
-    setInputValue(newValue as number);
+  /** 柱体宽度百分比 */
+  const [barWidthPercent, setBarWidthPercent] = useState(10);
+  const handleBarWidthChange: InputNumberProps["onChange"] = (newValue) => {
+    setBarWidthPercent(newValue as number);
   };
+  /** 图表对齐方式 */
+  const [chartAlign, setChartAlign] = useState<"left" | "right">("left");
   /** 根据不同的图表类型返回不同的配置 */
   const renderChart = () => {
     switch (chartType) {
@@ -25,25 +39,54 @@ const DrawArea: React.FC<IDrawAreaProps> = (props) => {
               <Tooltip title="当前配置的柱体宽度超过最大范围之后将不再生效">
                 <InfoCircleOutlined />
               </Tooltip>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Slider
-                  min={1}
-                  max={20}
-                  style={{ width: 200, marginRight: 10 }}
-                  onChange={onChange}
-                  value={typeof inputValue === "number" ? inputValue : 0}
-                />
-                <InputNumber
-                  min={1}
-                  max={20}
-                  value={inputValue}
-                  onChange={onChange}
-                />
-              </div>
+              <Slider
+                min={1}
+                max={100}
+                style={{ width: 180, marginInline: 10 }}
+                onChange={handleBarWidthChange}
+                value={
+                  typeof barWidthPercent === "number" ? barWidthPercent : 0
+                }
+              />
+              <InputNumber
+                size="small"
+                min={0}
+                max={100}
+                addonAfter="%"
+                style={{ width: 90 }}
+                value={barWidthPercent}
+                changeOnWheel
+                onChange={handleBarWidthChange}
+              />
             </div>
             <div className="draw-area-text">
               <span>图表对其方式</span>
             </div>
+            <Radio.Group
+              onChange={(e) => setChartAlign(e.target.value)}
+              value={chartAlign}
+              options={[
+                {
+                  value: "left",
+                  label: (
+                    <Flex gap="small">
+                      <AlignLeftOutlined />
+                      左对齐
+                    </Flex>
+                  ),
+                },
+                {
+                  value: "right",
+                  label: (
+                    <Flex gap="small">
+                      <AlignRightOutlined />
+                      右对齐
+                    </Flex>
+                  ),
+                },
+              ]}
+              style={{ marginLeft: 25 }}
+            />
           </div>
         );
       case "pie":
