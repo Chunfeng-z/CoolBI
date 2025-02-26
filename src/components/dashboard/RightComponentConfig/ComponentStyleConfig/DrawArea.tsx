@@ -2,7 +2,6 @@ import {
   AlignLeftOutlined,
   AlignRightOutlined,
   InfoCircleOutlined,
-  LineChartOutlined,
 } from "@ant-design/icons";
 import {
   Flex,

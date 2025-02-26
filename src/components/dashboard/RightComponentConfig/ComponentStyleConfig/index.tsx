@@ -4,6 +4,7 @@ import CoolCollapse from "../../../common/CoolCollapse";
 import TitleCard from "./TitleCard";
 import DrawArea from "./DrawArea";
 import ChartAxis from "./ChartAxis";
+import ChartLegend from "./ChartLegend";
 const prefixCls = "component-style-config";
 const componentStyleItems = [
   {
@@ -36,7 +37,11 @@ const componentStyleItems = [
   {
     key: "4",
     label: "图例",
-    children: <div className="style-item">背景</div>,
+    children: (
+      <div className="style-item">
+        <ChartLegend />
+      </div>
+    ),
   },
   {
     key: "5",
@@ -63,7 +68,7 @@ const componentStyleItems = [
 const ComponentStyleConfig: React.FC = () => {
   return (
     <div className={`${prefixCls}-container`}>
-      <CoolCollapse items={componentStyleItems} defaultActiveKey={[3]} />
+      <CoolCollapse items={componentStyleItems} defaultActiveKey={[4]} />
     </div>
   );
 };
