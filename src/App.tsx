@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PageNotAuthorized from "./pages/Error/PageNotAuthorized";
 import ServerError from "./pages/Error/ServerError";
 import DashBoardPage from "./pages/DashBoard/DashBoardPage";
+import AIChat from "./pages/AIChat/AIChat";
 
 const base = import.meta.env.VITE_BASE;
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
             element={<Navigate to={`${base}/home`}></Navigate>}
           />
           <Route path={`${base}/home`} element={<Home />} />
+          <Route path={`${base}/home/ai`} element={<AIChat />} />
           <Route path={`${base}/dashboard`} element={<DashBoardPage />} />
           <Route path={`${base}/login`} element={<Login />} />
           <Route path={`${base}/register`} element={<Register />} />

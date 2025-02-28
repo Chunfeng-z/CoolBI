@@ -1,4 +1,4 @@
-import { Space, Table, TableProps, Tag, Tooltip } from "antd";
+import { Button, Space, Table, TableProps, Tag, Tooltip } from "antd";
 import React, { useState } from "react";
 import {
   DashBoardTableDataType,
@@ -51,17 +51,17 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
           switch (action.action) {
             case DashBoardTableActions.NewWindow:
               return (
-                <div className="mr-2 action-group-item" key={action.action}>
+                <div className="action-group-item" key={action.action}>
                   <Tooltip title={action.name}>
-                    <DesktopOutlined />
+                    <Button type="text" icon={<DesktopOutlined />} />
                   </Tooltip>
                 </div>
               );
             case DashBoardTableActions.CopyLink:
               return (
-                <div className="mr-2 action-group-item" key={action.action}>
+                <div className="action-group-item" key={action.action}>
                   <Tooltip title={action.name}>
-                    <CopyOutlined />
+                    <Button type="text" icon={<CopyOutlined />} />
                   </Tooltip>
                 </div>
               );
@@ -69,7 +69,7 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
               return (
                 <div className="action-group-item" key={action.action}>
                   <Tooltip title={action.name}>
-                    <StarOutlined />
+                    <Button type="text" icon={<StarOutlined />} />
                   </Tooltip>
                 </div>
               );
