@@ -6,6 +6,8 @@ import RightTheme from "../../components/dashboard/RightTheme";
 import LeftChartMenu from "../../components/dashboard/LeftChartMenu";
 import DashBoardDesign from "../../components/dashboard/DashBoardDesign";
 import RightComponentConfig from "../../components/dashboard/RightComponentConfig";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const prefixCls = "dashboard-page";
 const enum LeftChartMenuState {
@@ -21,28 +23,30 @@ const DashBoardPage: React.FC = () => {
   /** 显示图表组件的配置菜单 */
   const [isShowChartConfig, setIsShowChartConfig] = React.useState(true);
   return (
-    <div className={`${prefixCls}-container`}>
-      <div className={`${prefixCls}-action-panel`}>
-        <ActionPanel
-          onShowComponentConfig={() => {
-            setIsShowChartConfig(!isShowChartConfig);
-          }}
-        />
-      </div>
-      <div className={`${prefixCls}-component-panel`}>
-        <ComponentPanel />
-      </div>
-      <div className={`${prefixCls}-right-theme`}>
-        {!isShowChartConfig && <RightTheme />}
-        {isShowChartConfig && <RightComponentConfig />}
-      </div>
-      <div className={`${prefixCls}-left-chart-menu`}>
-        <LeftChartMenu />
-      </div>
-      <div className={`${prefixCls}-chart-content`}>
-        <DashBoardDesign />
-      </div>
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className={`${prefixCls}-container`}>
+        <div className={`${prefixCls}-action-panel`}>
+          <ActionPanel
+            onShowComponentConfig={() => {
+              setIsShowChartConfig(!isShowChartConfig);
+            }}
+          />
+        </div>
+        <div className={`${prefixCls}-component-panel`}>
+          <ComponentPanel />
+        </div>
+        <div className={`${prefixCls}-right-theme`}>
+          {!isShowChartConfig && <RightTheme />}
+          {isShowChartConfig && <RightComponentConfig />}
+        </div>
+        <div className={`${prefixCls}-left-chart-menu`}>
+          <LeftChartMenu />
+        </div>
+        <div className={`${prefixCls}-chart-content`}>
+          <DashBoardDesign />
+        </div>
+      </div>{" "}
+    </DndProvider>
   );
 };
 

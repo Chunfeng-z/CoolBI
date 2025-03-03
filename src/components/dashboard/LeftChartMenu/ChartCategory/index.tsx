@@ -3,6 +3,7 @@ import "./index.scss";
 import { Tooltip } from "antd";
 import { ChartItem } from "../../utils/index";
 import { CHART_ICON_MAP } from "../../utils/index";
+import ChartItemIcon from "../ChartItemIcon";
 const prefixCls = "chart-category";
 
 /** 图表分类属性 */
@@ -32,23 +33,14 @@ const ChartCategory: React.FC<IChartCategoryProps> = (props) => {
         {ChartItemsData.map((item, index) => {
           const { shortName, name, icon } = item;
           return (
-            <Tooltip title={name} key={index}>
-              <div
-                className="chart-items"
-                onMouseEnter={() => handleMouseEnter(item)}
-                onMouseLeave={onItemMouseLeave}
-              >
-                <div className="chart-items-icon">
-                  <img
-                    src={CHART_ICON_MAP[icon]}
-                    alt=""
-                    height={30}
-                    width={30}
-                  />
-                </div>
-                <div className="chart-items-name">{shortName}</div>
-              </div>
-            </Tooltip>
+            <ChartItemIcon
+              key={index}
+              name={name}
+              shortName={shortName}
+              icon={icon}
+              onMouseEnter={() => handleMouseEnter(item)}
+              onMouseLeave={onItemMouseLeave}
+            />
           );
         })}
       </div>
