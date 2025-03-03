@@ -22,7 +22,7 @@ const ChartItemIcon: React.FC<IChartItemIconProps> = (props) => {
   const { name, icon, shortName, onMouseEnter, onMouseLeave } = props;
   const ref = useRef<HTMLDivElement | null>(null);
   const [, drag] = useDrag({
-    type: "chart-item-icon",
+    type: icon,
     item: {
       chart: icon,
     },

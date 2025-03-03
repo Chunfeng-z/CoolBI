@@ -151,3 +151,9 @@ export const CHART_ICON_MAP: Record<string, string> = {
   decompositionTree: IconDecompositionTree,
   indicatorRelation: IconIndicatorRelation,
 };
+
+/** 支持托拽的图表类型 */
+export enum ChartEnum {
+  line = "line",
+  bar = "bar",
+}

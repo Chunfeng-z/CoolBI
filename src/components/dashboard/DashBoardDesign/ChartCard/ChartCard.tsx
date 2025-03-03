@@ -1,12 +1,13 @@
 import { HolderOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import React from "react";
+import useChartStore from "../../../../stores/useChartStore";
 import "./index.scss";
 
 const prefixCls = "dashboard-chart-card";
 
 interface ChartCardProps {
-  /** 开篇的垂直间距 */
+  /** 卡片的垂直间距 */
   marginBottom?: number;
   /** 卡片标题-图表的标题 */
   cardTitle?: string;
@@ -14,15 +15,27 @@ interface ChartCardProps {
   children?: React.ReactNode;
   /** 卡片的背景颜色 */
   bgColor?: string;
+  /** 当前图表的id */
+  chartId: number;
 }
 /** 仪表板设计-图表卡片 */
 const ChartCard: React.FC<ChartCardProps> = (props) => {
-  const { marginBottom = 10, cardTitle, children, bgColor = "#2F2E31" } = props;
+  const setCurChartId = useChartStore((state) => state.setCurChartId);
+  const {
+    marginBottom = 10,
+    cardTitle,
+    children,
+    bgColor = "#2F2E31",
+    chartId,
+  } = props;
 
   return (
     <div
       className={`${prefixCls}-container`}
       style={{ backgroundColor: "#E9E7E0" }}
+      onClick={() => {
+        setCurChartId(chartId);
+      }}
     >
       <div
         className={`${prefixCls}-content`}

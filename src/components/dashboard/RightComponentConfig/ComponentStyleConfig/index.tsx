@@ -73,7 +73,10 @@ const componentStyleItems = [
 const ComponentStyleConfig: React.FC = () => {
   return (
     <div className={`${prefixCls}-container`}>
-      <CoolCollapse items={componentStyleItems} defaultActiveKey={[5]} />
+      <CoolCollapse
+        items={componentStyleItems}
+        defaultActiveKey={[1, 2, 3, 4, 5]}
+      />
     </div>
   );
 };

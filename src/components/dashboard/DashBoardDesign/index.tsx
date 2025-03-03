@@ -4,6 +4,7 @@ import CoolBarChart from "../../common/Charts/CoolBarChart";
 import ChartCard from "./ChartCard/ChartCard";
 import CoolLineChart from "../../common/Charts/CoolLineChart";
 import { useDrop } from "react-dnd";
+import { ChartEnum } from "../utils";
 const prefixCls = "dashboard-design";
 /** 仪表板设计组件 */
 const DashBoardDesign = () => {
@@ -12,7 +13,7 @@ const DashBoardDesign = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [, drop] = useDrop(() => {
     return {
-      accept: "chart-item-icon",
+      accept: [ChartEnum.line, ChartEnum.bar],
       drop(item: { chart: string }) {
         // 确保最新的状态
         setCharts((charts) => [...charts, item.chart]);
@@ -38,7 +39,7 @@ const DashBoardDesign = () => {
     <div className={`${prefixCls}-container`} ref={ref}>
       {charts.map((chart, index) => {
         return (
-          <ChartCard cardTitle={chart} key={index}>
+          <ChartCard cardTitle={chart} key={index} chartId={index}>
             {renderChart(chart)}
           </ChartCard>
         );

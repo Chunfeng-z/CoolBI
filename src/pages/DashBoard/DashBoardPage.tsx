@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.scss";
 import ActionPanel from "../../components/dashboard/ActionPanel";
 import ComponentPanel from "../../components/dashboard/ComponentPanel";
@@ -19,9 +19,9 @@ const enum LeftChartMenuState {
 const DashBoardPage: React.FC = () => {
   /** 左侧图表菜单的显示状态 */
   const [leftChartMenuState, setLeftChartMenuState] =
-    React.useState<LeftChartMenuState>(LeftChartMenuState.close);
+    useState<LeftChartMenuState>(LeftChartMenuState.close);
   /** 显示图表组件的配置菜单 */
-  const [isShowChartConfig, setIsShowChartConfig] = React.useState(true);
+  const [isShowChartConfig, setIsShowChartConfig] = useState(true);
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={`${prefixCls}-container`}>

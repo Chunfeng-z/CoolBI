@@ -263,7 +263,7 @@ const TitleCard: React.FC = () => {
   return (
     <div className={`${prefixCls}-container`}>
       <CoolCollapse
-        defaultActiveKey={["2", "3"]}
+        defaultActiveKey={["1", "2", "3"]}
         expandIcon={({ isActive }) => (
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
