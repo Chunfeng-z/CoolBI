@@ -5,9 +5,20 @@ import ChartCard from "./ChartCard/ChartCard";
 import CoolLineChart from "../../common/Charts/CoolLineChart";
 import { useDrop } from "react-dnd";
 import { ChartEnum } from "../utils";
+import useChartStore, { ChartConfig } from "../../../stores/useChartStore";
 const prefixCls = "dashboard-design";
-/** 仪表板设计组件 */
-const DashBoardDesign = () => {
+
+const DashBoardDesign: React.FC = () => {
+  /** 全局的仪表板图表配置-当前仪表板存在已设计的图表 */
+  const chartsConfig: ChartConfig[] = useChartStore(
+    (state) => state.chartsConfig
+  );
+  const setCurChartId = useChartStore((state) => state.setCurChartId);
+  const curChartId = useChartStore((state) => state.curChartId);
+  /** 更新选中的图表 */
+  const handleChartCardClick = (chartId: string) => {
+    setCurChartId(chartId);
+  };
   /** 当前仪表板展示的图表 */
   const [charts, setCharts] = useState<string[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -37,10 +48,15 @@ const DashBoardDesign = () => {
 
   return (
     <div className={`${prefixCls}-container`} ref={ref}>
-      {charts.map((chart, index) => {
+      {chartsConfig.map((config: ChartConfig) => {
         return (
-          <ChartCard cardTitle={chart} key={index} chartId={index}>
-            {renderChart(chart)}
+          <ChartCard
+            cardTitle={config.title}
+            key={config.chartId}
+            isSelected={config.chartId === curChartId}
+            onClick={() => handleChartCardClick(config.chartId)}
+          >
+            {renderChart(config.type)}
           </ChartCard>
         );
       })}

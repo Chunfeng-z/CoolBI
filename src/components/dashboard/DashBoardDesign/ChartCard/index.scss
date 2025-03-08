@@ -1,13 +1,45 @@
 .dashboard-chart-card-container {
+  margin-bottom: 10px;
   width: fit-content;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
 
   .dashboard-chart-card-content {
-    border-radius: 5px;
+    overflow: hidden;
+    border-radius: 4px;
 
     .chart-card-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
       color: white;
+
+      &-title {
+        overflow: hidden;
+        max-width: 80%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #fff;
+        font-weight: 500;
+      }
+
+      &-tail {
+        color: #fff;
+        cursor: move;
+      }
     }
   }
+}
+
+.dashboard-chart-card-selected {
+  box-shadow: 0 0 8px rgb(24 144 255 / 70%);
+}
+
+.dashboard-chart-card-chart {
+  min-height: 200px;
 }

@@ -1,7 +1,6 @@
 import { HolderOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import React from "react";
-import useChartStore from "../../../../stores/useChartStore";
 import "./index.scss";
 
 const prefixCls = "dashboard-chart-card";
@@ -11,31 +10,33 @@ interface ChartCardProps {
   marginBottom?: number;
   /** 卡片标题-图表的标题 */
   cardTitle?: string;
-  /** 外部传入的内容 */
-  children?: React.ReactNode;
   /** 卡片的背景颜色 */
   bgColor?: string;
-  /** 当前图表的id */
-  chartId: number;
+  /** 是否选中状态 */
+  isSelected?: boolean;
+  /** 外部传入的内容 */
+  children?: React.ReactNode;
+  /** 被点击的时候需要展开右侧的配置栏目 */
+  onClick?: () => void;
 }
 /** 仪表板设计-图表卡片 */
 const ChartCard: React.FC<ChartCardProps> = (props) => {
-  const setCurChartId = useChartStore((state) => state.setCurChartId);
   const {
     marginBottom = 10,
     cardTitle,
-    children,
     bgColor = "#2F2E31",
-    chartId,
+    isSelected,
+    children,
+    onClick,
   } = props;
 
   return (
     <div
-      className={`${prefixCls}-container`}
+      className={`${prefixCls}-container ${
+        isSelected ? `${prefixCls}-selected` : ""
+      }`}
       style={{ backgroundColor: "#E9E7E0" }}
-      onClick={() => {
-        setCurChartId(chartId);
-      }}
+      onClick={onClick}
     >
       <div
         className={`${prefixCls}-content`}
@@ -43,6 +44,7 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
           marginBottom: `${marginBottom}px`,
           padding: 10,
           backgroundColor: bgColor,
+          border: isSelected ? "2px solid #1890ff" : "none",
         }}
       >
         <div className="chart-card-header">
