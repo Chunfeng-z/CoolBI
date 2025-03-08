@@ -1,12 +1,21 @@
-.ai-container {
+.chat-page-container {
   display: flex;
-  justify-content: center;
+  align-items: center;
   width: 100vw;
   height: 100vh;
+  flex-direction: column;
 
-  .ai-content {
+  .message-container {
     display: flex;
+    overflow: hidden;
+    width: 520px;
+    flex: 1;
     flex-direction: column;
-    gap: 20px;
+  }
+
+  .send-container {
+    padding: 10px;
+    width: 500px;
+    height: 100px;
   }
 }
