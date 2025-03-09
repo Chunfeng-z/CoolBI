@@ -6,6 +6,7 @@ import CoolLineChart from "../../common/Charts/CoolLineChart";
 import { useDrop } from "react-dnd";
 import { ChartEnum } from "../utils";
 import useChartStore, { ChartConfig } from "../../../stores/useChartStore";
+import { generateUUID } from "../../../utils/uuid";
 const prefixCls = "dashboard-design";
 
 const DashBoardDesign: React.FC = () => {
@@ -15,19 +16,22 @@ const DashBoardDesign: React.FC = () => {
   );
   const setCurChartId = useChartStore((state) => state.setCurChartId);
   const curChartId = useChartStore((state) => state.curChartId);
+  const appendChartConfig = useChartStore((state) => state.appendChartConfig);
   /** 更新选中的图表 */
   const handleChartCardClick = (chartId: string) => {
     setCurChartId(chartId);
   };
-  /** 当前仪表板展示的图表 */
-  const [charts, setCharts] = useState<string[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
   const [, drop] = useDrop(() => {
     return {
       accept: [ChartEnum.line, ChartEnum.bar],
       drop(item: { chart: string }) {
-        // 确保最新的状态
-        setCharts((charts) => [...charts, item.chart]);
+        // 添加新的图表
+        appendChartConfig({
+          chartId: generateUUID(),
+          title: "",
+          type: item.chart,
+        });
       },
     };
   });

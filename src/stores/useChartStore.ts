@@ -11,15 +11,28 @@ interface Action {
   /** 设置当前选中的图表id */
   setCurChartId: (chartId: string) => void;
   /** 修改当前选中图表组件的配置信息 */
-  setChartsConfig: (chartId: string, config: ChartConfig) => boolean;
+  setChartsConfig: (chartId: string, config: object) => boolean;
   /** 获取当前选中图表的配置信息 */
   getCurrentChartConfig: () => ChartConfig | null;
+  /** 追加新的图表组件 */
+  appendChartConfig: (config: ChartConfig) => void;
 }
 
 /** 图表的配置类型 */
 export type ChartConfig = {
   chartId: string;
+  isShowTitle?: boolean;
   title?: string;
+  titleColor?: string;
+  titleFontSize?: number | string | null;
+  isShowRemark?: boolean;
+  remark?: string;
+  remarkPosition?: number;
+  isShowEndNote?: boolean;
+  endNote?: string;
+  isShowBackgroundColor?: boolean;
+  backgroundColor?: string;
+  borderRadius?: number;
   type: string;
   color?: string;
   showLegend?: boolean;
@@ -30,21 +43,43 @@ const useChartStore = create<State & Action>((set, get) => ({
   chartsConfig: [
     {
       chartId: "0",
+      isShowTitle: true,
       title: "图表1",
+      titleColor: "#1677ff",
+      titleFontSize: 14,
+      isShowRemark: false,
+      remark: "",
+      remarkPosition: 1,
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: false,
+      backgroundColor: "#f0f2f5",
+      borderRadius: 0,
       type: "bar",
       color: "#1890ff",
       showLegend: true,
     },
     {
       chartId: "1",
+      isShowTitle: true,
       title: "图表2",
+      titleColor: "#1677ff",
+      titleFontSize: 14,
+      isShowRemark: false,
+      remark: "",
+      remarkPosition: 1,
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: false,
+      backgroundColor: "#f0f2f5",
+      borderRadius: 0,
       type: "line",
       color: "#52c41a",
       showLegend: false,
     },
   ],
   setCurChartId: (chartId: string) => set({ curChartId: chartId }),
-  setChartsConfig: (chartId: string, config: ChartConfig) => {
+  setChartsConfig: (chartId: string, config: object) => {
     const state = get();
     const index = state.chartsConfig.findIndex(
       (chart: ChartConfig) => chart.chartId === chartId
@@ -67,6 +102,9 @@ const useChartStore = create<State & Action>((set, get) => ({
       chartsConfig.find((chart: ChartConfig) => chart.chartId === curChartId) ||
       null
     );
+  },
+  appendChartConfig: (config: ChartConfig) => {
+    set({ chartsConfig: [...get().chartsConfig, config] });
   },
 }));
 
