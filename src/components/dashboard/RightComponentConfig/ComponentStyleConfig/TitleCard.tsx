@@ -73,7 +73,7 @@ const TitleCard: React.FC = () => {
   useEffect(() => {
     const config = getCurrentChartConfig();
     setCurTitleCardConfig(pick(config, titleCardProps));
-  }, [getCurrentChartConfig, titleCardProps]);
+  }, [getCurrentChartConfig, titleCardProps, curChartId]);
   /** 处理CheckBox组件的变化 */
   const handleCheckboxChange =
     (
@@ -194,7 +194,7 @@ const TitleCard: React.FC = () => {
                   size="small"
                   disabled={!curTitleCardConfig?.isShowTitle}
                   changeOnWheel
-                  min={5}
+                  min={12}
                   max={30}
                   defaultValue={14}
                   step={1}

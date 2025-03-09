@@ -128,7 +128,7 @@ const ChartLegend: React.FC = () => {
       )}
       <Flex style={{ height: 32 }} align="center" gap="small">
         <span style={{ whiteSpace: "nowrap" }}>文本</span>
-        <ColorPicker size="small" />
+        <ColorPicker size="small" showText />
         <InputNumber
           size="small"
           addonAfter="px"

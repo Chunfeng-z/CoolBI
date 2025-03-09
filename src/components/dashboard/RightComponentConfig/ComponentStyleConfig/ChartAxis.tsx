@@ -56,7 +56,7 @@ const ChartAxis: React.FC = () => {
             gap="small"
           >
             <span style={{ whiteSpace: "nowrap" }}>文本</span>
-            <ColorPicker size="small" />
+            <ColorPicker size="small" showText />
             <InputNumber
               size="small"
               addonAfter="px"
@@ -83,7 +83,7 @@ const ChartAxis: React.FC = () => {
             gap="small"
           >
             <span style={{ whiteSpace: "nowrap" }}>文本</span>
-            <ColorPicker size="small" />
+            <ColorPicker size="small" showText />
             <InputNumber
               size="small"
               addonAfter="px"
@@ -122,7 +122,7 @@ const ChartAxis: React.FC = () => {
               changeOnWheel
               style={{ width: 100 }}
             />
-            <ColorPicker size="small" />
+            <ColorPicker size="small" showText />
           </Flex>
           <Flex style={{ height: 32 }} align="center">
             <Checkbox>显示网格线</Checkbox>
@@ -142,7 +142,7 @@ const ChartAxis: React.FC = () => {
               changeOnWheel
               style={{ width: 100 }}
             />
-            <ColorPicker size="small" />
+            <ColorPicker size="small" showText />
           </Flex>
         </div>
       ),

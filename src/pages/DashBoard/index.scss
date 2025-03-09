@@ -25,13 +25,15 @@
   }
 
   .dashboard-page-left-chart-menu {
+    overflow: hidden;
+    min-width: 260px;
     grid-area: 3 / 1 / 4 / 2;
     border-right: 1px solid #e0e0e0;
-    overflow: hidden;
   }
 
   .dashboard-page-chart-content {
-    grid-area: 3 / 2 / 4 / 3;
     overflow: auto;
+    min-width: 400px;
+    grid-area: 3 / 2 / 4 / 3;
   }
 }

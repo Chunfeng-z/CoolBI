@@ -11,7 +11,13 @@ interface ChartCardProps {
   /** 卡片标题-图表的标题 */
   cardTitle?: string;
   /** 标题字号 */
-  titleFontSize?: string | number | null;
+  titleFontSize?: string | number | undefined;
+  /** 标题颜色 */
+  titleColor?: string;
+  /** 是否展示备注 */
+  isShowRemark?: boolean;
+  /** 备注内容 */
+  remark?: string;
   /** 卡片的垂直间距 */
   marginBottom?: number;
   /** 卡片的背景颜色 */
@@ -29,9 +35,12 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
     isShowCardTitle = true,
     cardTitle = "这是图表卡片标题",
     titleFontSize = 14,
+    titleColor = "#1677ff",
+    isShowRemark = false,
+    remark = "",
     marginBottom = 10,
     bgColor = "#2F2E31",
-    isSelected,
+    isSelected = false,
     children,
     onClick,
   } = props;
@@ -57,8 +66,15 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
           <div className="chart-card-header-title">
             {isShowCardTitle && (
               <Tooltip title={cardTitle}>
-                <span style={{ fontSize: titleFontSize }}>{cardTitle}</span>
+                <span style={{ fontSize: titleFontSize, color: titleColor }}>
+                  {cardTitle}
+                </span>
               </Tooltip>
+            )}
+          </div>
+          <div className="chart-card-remark-container">
+            {isShowRemark && (
+              <span className="chart-card-remark">{remark}</span>
             )}
           </div>
           <div className="chart-card-header-tail">
