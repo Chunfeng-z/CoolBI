@@ -16,8 +16,6 @@ import {
   CheckboxProps,
   CollapseProps,
   ColorPicker,
-  ColorPickerProps,
-  GetProp,
   Input,
   InputNumber,
   InputNumberProps,
@@ -28,7 +26,6 @@ import {
 import useChartStore, { ChartConfig } from "../../../../stores/useChartStore";
 import { pick } from "lodash-es";
 const prefixCls = "title-card";
-type Color = GetProp<ColorPickerProps, "value">;
 
 type TitleCardProps = Pick<
   ChartConfig,
@@ -67,9 +64,12 @@ const TitleCard: React.FC = () => {
   const getCurrentChartConfig = useChartStore(
     (state) => state.getCurrentChartConfig
   );
+  const curChartId = useChartStore((state) => state.curChartId);
   /** 当前图表的标题与卡片配置 */
   const [curTitleCardConfig, setCurTitleCardConfig] =
     useState<TitleCardProps>();
+  /** 更新图表配置 */
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
   useEffect(() => {
     const config = getCurrentChartConfig();
     setCurTitleCardConfig(pick(config, titleCardProps));
@@ -88,6 +88,10 @@ const TitleCard: React.FC = () => {
         ...prev,
         [key]: e.target.checked,
       }));
+      // 更新全局的图表配置
+      setChartsConfig(curChartId!, {
+        [key]: e.target.checked,
+      });
     };
   /** 处理输入框组件的内容变化 */
   const handleInputChange =
@@ -98,6 +102,9 @@ const TitleCard: React.FC = () => {
           ...prev,
           [key]: e.target.value,
         };
+      });
+      setChartsConfig(curChartId!, {
+        [key]: e.target.value,
       });
     };
   /** 处理颜色选择的内容变化 */
@@ -111,6 +118,9 @@ const TitleCard: React.FC = () => {
         [key]: color,
       };
     });
+    setChartsConfig(curChartId!, {
+      [key]: color,
+    });
   };
   /** 处理输入数字输入框的内容变化 */
   const handleInputNumberChange =
@@ -121,6 +131,9 @@ const TitleCard: React.FC = () => {
           ...prev,
           [key]: value,
         };
+      });
+      setChartsConfig(curChartId!, {
+        [key]: value,
       });
     };
 

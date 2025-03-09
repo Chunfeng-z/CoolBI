@@ -6,10 +6,14 @@ import "./index.scss";
 const prefixCls = "dashboard-chart-card";
 
 interface ChartCardProps {
-  /** 卡片的垂直间距 */
-  marginBottom?: number;
+  /** 是否展示标题 */
+  isShowCardTitle?: boolean;
   /** 卡片标题-图表的标题 */
   cardTitle?: string;
+  /** 标题字号 */
+  titleFontSize?: string | number | null;
+  /** 卡片的垂直间距 */
+  marginBottom?: number;
   /** 卡片的背景颜色 */
   bgColor?: string;
   /** 是否选中状态 */
@@ -22,8 +26,10 @@ interface ChartCardProps {
 /** 仪表板设计-图表卡片 */
 const ChartCard: React.FC<ChartCardProps> = (props) => {
   const {
+    isShowCardTitle = true,
+    cardTitle = "这是图表卡片标题",
+    titleFontSize = 14,
     marginBottom = 10,
-    cardTitle,
     bgColor = "#2F2E31",
     isSelected,
     children,
@@ -49,7 +55,11 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
       >
         <div className="chart-card-header">
           <div className="chart-card-header-title">
-            <Tooltip title={cardTitle}>{cardTitle}</Tooltip>
+            {isShowCardTitle && (
+              <Tooltip title={cardTitle}>
+                <span style={{ fontSize: titleFontSize }}>{cardTitle}</span>
+              </Tooltip>
+            )}
           </div>
           <div className="chart-card-header-tail">
             <HolderOutlined />

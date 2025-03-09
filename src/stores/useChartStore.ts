@@ -46,7 +46,7 @@ const useChartStore = create<State & Action>((set, get) => ({
       isShowTitle: true,
       title: "图表1",
       titleColor: "#1677ff",
-      titleFontSize: 14,
+      titleFontSize: 18,
       isShowRemark: false,
       remark: "",
       remarkPosition: 1,

@@ -53,14 +53,17 @@ const DashBoardDesign: React.FC = () => {
   return (
     <div className={`${prefixCls}-container`} ref={ref}>
       {chartsConfig.map((config: ChartConfig) => {
+        const { title, chartId, type, isShowTitle, titleFontSize } = config;
         return (
           <ChartCard
-            cardTitle={config.title}
-            key={config.chartId}
-            isSelected={config.chartId === curChartId}
-            onClick={() => handleChartCardClick(config.chartId)}
+            key={chartId}
+            isShowCardTitle={isShowTitle}
+            cardTitle={title}
+            titleFontSize={titleFontSize}
+            isSelected={chartId === curChartId}
+            onClick={() => handleChartCardClick(chartId)}
           >
-            {renderChart(config.type)}
+            {renderChart(type)}
           </ChartCard>
         );
       })}
