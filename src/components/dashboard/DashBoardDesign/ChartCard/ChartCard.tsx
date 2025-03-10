@@ -18,10 +18,18 @@ interface ChartCardProps {
   isShowRemark?: boolean;
   /** 备注内容 */
   remark?: string;
+  /** 备注位置 */
+  remarkPosition?: "afterTitle" | "belowTitle";
+  /** 是否展示尾注 */
+  isShowEndNote?: boolean;
+  /** 尾注内容 */
+  endNote?: string;
   /** 卡片的垂直间距 */
   marginBottom?: number;
   /** 卡片的背景颜色 */
   bgColor?: string;
+  /** 卡片圆角 */
+  borderRadius?: number;
   /** 是否选中状态 */
   isSelected?: boolean;
   /** 外部传入的内容 */
@@ -38,8 +46,12 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
     titleColor = "#1677ff",
     isShowRemark = false,
     remark = "",
+    remarkPosition = "afterTitle",
+    isShowEndNote = false,
+    endNote = "",
     marginBottom = 10,
     bgColor = "#2F2E31",
+    borderRadius = 0,
     isSelected = false,
     children,
     onClick,
@@ -60,6 +72,7 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
           padding: 10,
           backgroundColor: bgColor,
           border: isSelected ? "2px solid #1890ff" : "none",
+          borderRadius: `${borderRadius}px`,
         }}
       >
         <div className="chart-card-header">
@@ -72,16 +85,24 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
               </Tooltip>
             )}
           </div>
-          <div className="chart-card-remark-container">
-            {isShowRemark && (
-              <span className="chart-card-remark">{remark}</span>
-            )}
-          </div>
+          {isShowRemark && remarkPosition === "afterTitle" && (
+            <span className="chart-card-remark">{remark}</span>
+          )}
           <div className="chart-card-header-tail">
             <HolderOutlined />
           </div>
         </div>
+        {isShowRemark && remarkPosition === "belowTitle" && (
+          <div className="chart-card-remark-container">
+            <span className="chart-card-remark">{remark}</span>
+          </div>
+        )}
         <div className={`${prefixCls}-chart`}>{children}</div>
+        {isShowEndNote && (
+          <div className="chart-card-endnote-container">
+            <span>{endNote}</span>
+          </div>
+        )}
       </div>
     </div>
   );

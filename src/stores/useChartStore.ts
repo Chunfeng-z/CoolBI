@@ -27,7 +27,7 @@ export type ChartConfig = {
   titleFontSize?: number | string | undefined;
   isShowRemark?: boolean;
   remark?: string;
-  remarkPosition?: number;
+  remarkPosition?: "afterTitle" | "belowTitle";
   isShowEndNote?: boolean;
   endNote?: string;
   isShowBackgroundColor?: boolean;
@@ -49,7 +49,7 @@ const useChartStore = create<State & Action>((set, get) => ({
       titleFontSize: 18,
       isShowRemark: false,
       remark: "备注1",
-      remarkPosition: 1,
+      remarkPosition: "afterTitle",
       isShowEndNote: false,
       endNote: "",
       isShowBackgroundColor: false,
@@ -67,7 +67,7 @@ const useChartStore = create<State & Action>((set, get) => ({
       titleFontSize: 14,
       isShowRemark: false,
       remark: "备注2",
-      remarkPosition: 1,
+      remarkPosition: "belowTitle",
       isShowEndNote: false,
       endNote: "",
       isShowBackgroundColor: false,

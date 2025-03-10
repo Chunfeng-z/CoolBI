@@ -145,6 +145,9 @@ const TitleCard: React.FC = () => {
         remarkPosition: e.target.value,
       };
     });
+    setChartsConfig(curChartId!, {
+      remarkPosition: e.target.value,
+    });
   };
 
   const panelStyle: React.CSSProperties = {
@@ -235,8 +238,8 @@ const TitleCard: React.FC = () => {
                   onChange={handleRemarkPositionChange}
                   value={curTitleCardConfig?.remarkPosition}
                   options={[
-                    { value: 1, label: "标题后方" },
-                    { value: 2, label: "标题下方" },
+                    { value: "afterTitle", label: "标题后方" },
+                    { value: "belowTitle", label: "标题下方" },
                   ]}
                 />
               </div>

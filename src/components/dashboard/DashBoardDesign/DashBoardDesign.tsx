@@ -90,6 +90,10 @@ const DashBoardDesign: React.FC = () => {
           titleColor,
           isShowRemark,
           remark,
+          remarkPosition,
+          isShowEndNote,
+          endNote,
+          borderRadius,
         } = config;
         return (
           <ChartCard
@@ -100,6 +104,10 @@ const DashBoardDesign: React.FC = () => {
             titleColor={titleColor}
             isShowRemark={isShowRemark}
             remark={remark}
+            remarkPosition={remarkPosition}
+            isShowEndNote={isShowEndNote}
+            endNote={endNote}
+            borderRadius={borderRadius}
             isSelected={chartId === curChartId}
             onClick={() => handleChartCardClick(chartId)}
           >
