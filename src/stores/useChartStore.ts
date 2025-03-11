@@ -20,19 +20,34 @@ interface Action {
 
 /** 图表的配置类型 */
 export type ChartConfig = {
+  /** 图表组件id */
   chartId: string;
+  /** 是否展示图表标题 */
   isShowTitle?: boolean;
+  /** 图表标题 */
   title?: string;
+  /** 标题文本颜色 */
   titleColor?: string;
+  /** 标题字号 */
   titleFontSize?: number | string | undefined;
+  /** 是否显示备注 */
   isShowRemark?: boolean;
+  /** 备注内容 */
   remark?: string;
+  /** 备注位置 */
   remarkPosition?: "afterTitle" | "belowTitle";
+  /** 是否显示尾注 */
   isShowEndNote?: boolean;
+  /** 尾注内容 */
   endNote?: string;
+  /** 是否显示组件背景颜色 */
   isShowBackgroundColor?: boolean;
+  /** 组件背景颜色 */
   backgroundColor?: string;
+  /** 组件圆角 */
   borderRadius?: number;
+  /** 图表卡片的内边距-上、左、下、右 */
+  chartCardPadding?: number[];
   type: string;
   color?: string;
   showLegend?: boolean;
@@ -52,9 +67,10 @@ const useChartStore = create<State & Action>((set, get) => ({
       remarkPosition: "afterTitle",
       isShowEndNote: false,
       endNote: "",
-      isShowBackgroundColor: false,
-      backgroundColor: "#f0f2f5",
+      isShowBackgroundColor: true,
+      backgroundColor: "#90b3e7",
       borderRadius: 0,
+      chartCardPadding: [10, 10, 10, 10],
       type: "bar",
       color: "#1890ff",
       showLegend: true,
@@ -70,9 +86,10 @@ const useChartStore = create<State & Action>((set, get) => ({
       remarkPosition: "belowTitle",
       isShowEndNote: false,
       endNote: "",
-      isShowBackgroundColor: false,
-      backgroundColor: "#f0f2f5",
+      isShowBackgroundColor: true,
+      backgroundColor: "#90b3e7",
       borderRadius: 0,
+      chartCardPadding: [10, 10, 10, 10],
       type: "line",
       color: "#52c41a",
       showLegend: false,

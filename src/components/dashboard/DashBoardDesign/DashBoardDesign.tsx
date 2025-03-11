@@ -94,6 +94,9 @@ const DashBoardDesign: React.FC = () => {
           isShowEndNote,
           endNote,
           borderRadius,
+          isShowBackgroundColor,
+          backgroundColor,
+          chartCardPadding,
         } = config;
         return (
           <ChartCard
@@ -108,6 +111,9 @@ const DashBoardDesign: React.FC = () => {
             isShowEndNote={isShowEndNote}
             endNote={endNote}
             borderRadius={borderRadius}
+            backgroundColor={backgroundColor}
+            isShowBackgroundColor={isShowBackgroundColor}
+            chartCardPadding={chartCardPadding}
             isSelected={chartId === curChartId}
             onClick={() => handleChartCardClick(chartId)}
           >

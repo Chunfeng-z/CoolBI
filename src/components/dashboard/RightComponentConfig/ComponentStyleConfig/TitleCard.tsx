@@ -41,6 +41,7 @@ type TitleCardProps = Pick<
   | "isShowBackgroundColor"
   | "backgroundColor"
   | "borderRadius"
+  | "chartCardPadding"
 >;
 /** 标题与卡片 */
 const TitleCard: React.FC = () => {
@@ -58,6 +59,7 @@ const TitleCard: React.FC = () => {
       "isShowBackgroundColor",
       "backgroundColor",
       "borderRadius",
+      "chartCardPadding",
     ],
     []
   );
@@ -73,7 +75,7 @@ const TitleCard: React.FC = () => {
   useEffect(() => {
     const config = getCurrentChartConfig();
     setCurTitleCardConfig(pick(config, titleCardProps));
-  }, [getCurrentChartConfig, titleCardProps, curChartId]);
+  }, [getCurrentChartConfig, curChartId, titleCardProps]);
   /** 处理CheckBox组件的变化 */
   const handleCheckboxChange =
     (
@@ -124,17 +126,38 @@ const TitleCard: React.FC = () => {
   };
   /** 处理输入数字输入框的内容变化 */
   const handleInputNumberChange =
-    (key: "titleFontSize" | "borderRadius"): InputNumberProps["onChange"] =>
+    (
+      key: "titleFontSize" | "borderRadius" | number
+    ): InputNumberProps["onChange"] =>
     (value) => {
-      setCurTitleCardConfig((prev) => {
-        return {
-          ...prev,
+      if (key === "titleFontSize" || key === "borderRadius") {
+        setCurTitleCardConfig((prev) => {
+          return {
+            ...prev,
+            [key]: value,
+          };
+        });
+        setChartsConfig(curChartId!, {
           [key]: value,
-        };
-      });
-      setChartsConfig(curChartId!, {
-        [key]: value,
-      });
+        });
+      } else {
+        const padding = curTitleCardConfig?.chartCardPadding || [0, 0, 0, 0];
+        const newPadding = [...padding];
+        if (typeof key === "number" && key >= 0 && key < 4) {
+          newPadding[key] = value as number;
+        } else {
+          return;
+        }
+        setCurTitleCardConfig((pre) => {
+          return {
+            ...pre,
+            chartCardPadding: newPadding,
+          };
+        });
+        setChartsConfig(curChartId!, {
+          chartCardPadding: newPadding,
+        });
+      }
     };
 
   /**  备注位置 */
@@ -312,12 +335,13 @@ const TitleCard: React.FC = () => {
                     key={direction}
                     addonBefore={direction}
                     addonAfter="px"
-                    min={0}
-                    max={20}
+                    min={2}
+                    max={10}
                     changeOnWheel
-                    defaultValue={12}
+                    defaultValue={2}
                     style={{ width: 140 }}
-                    value={[1, 2, 3, 4][index]}
+                    value={curTitleCardConfig?.chartCardPadding?.[index]}
+                    onChange={handleInputNumberChange(index)}
                   />
                 ))}
               </div>

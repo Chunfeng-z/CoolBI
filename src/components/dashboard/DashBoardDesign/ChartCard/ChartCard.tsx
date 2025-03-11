@@ -26,10 +26,14 @@ interface ChartCardProps {
   endNote?: string;
   /** 卡片的垂直间距 */
   marginBottom?: number;
-  /** 卡片的背景颜色 */
-  bgColor?: string;
   /** 卡片圆角 */
   borderRadius?: number;
+  /** 是否展示组件背景 */
+  isShowBackgroundColor?: boolean;
+  /** 组件背景颜色 */
+  backgroundColor?: string;
+  /** 组件的内边距 */
+  chartCardPadding?: number[];
   /** 是否选中状态 */
   isSelected?: boolean;
   /** 外部传入的内容 */
@@ -50,9 +54,11 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
     isShowEndNote = false,
     endNote = "",
     marginBottom = 10,
-    bgColor = "#2F2E31",
     borderRadius = 0,
     isSelected = false,
+    isShowBackgroundColor = false,
+    chartCardPadding = [2, 2, 2, 2],
+    backgroundColor = "#f0f2f5",
     children,
     onClick,
   } = props;
@@ -69,8 +75,10 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
         className={`${prefixCls}-content`}
         style={{
           marginBottom: `${marginBottom}px`,
-          padding: 10,
-          backgroundColor: bgColor,
+          padding: `${chartCardPadding[0]}px ${chartCardPadding[3]}px ${chartCardPadding[2]}px ${chartCardPadding[1]}px`,
+          backgroundColor: isShowBackgroundColor
+            ? backgroundColor
+            : "transparent",
           border: isSelected ? "2px solid #1890ff" : "none",
           borderRadius: `${borderRadius}px`,
         }}
