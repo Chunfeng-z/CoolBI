@@ -1,12 +1,17 @@
-import { LeftOutlined, StarFilled } from "@ant-design/icons";
+import { LeftOutlined, RollbackOutlined, StarFilled } from "@ant-design/icons";
 import { Button, Divider, Space, Tooltip } from "antd";
 import DashBoardIcon from "../../../assets/dashboard/dashboard-icon.svg";
 import React, { useState } from "react";
+import useChartStore from "../../../stores/useChartStore";
 
 const prefixCls = "action-panel";
 
 /** 仪表板操作栏 */
 const ActionPanel: React.FC = () => {
+  const undo = useChartStore((state) => state.undo);
+  const redo = useChartStore((state) => state.redo);
+  const history = useChartStore((state) => state.history);
+  const redoStack = useChartStore((state) => state.redoStack);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = () => {
@@ -42,14 +47,31 @@ const ActionPanel: React.FC = () => {
           type="vertical"
           style={{ borderWidth: "2px", height: "30px" }}
         />
-        <div className="cancel-remake-btn">
-          <Button type="text" size="small">
-            撤销
-          </Button>
-          <Button type="text" size="small">
-            重做
-          </Button>
-        </div>
+        <Space>
+          <Tooltip placement="bottom" title="Ctrl / Cmd  +  Z">
+            <Button
+              type="text"
+              size="small"
+              icon={<RollbackOutlined />}
+              onClick={undo}
+              disabled={history.length === 0}
+            >
+              撤销
+            </Button>
+          </Tooltip>
+          <Tooltip placement="bottom" title="Ctrl / Cmd + Shift + Z">
+            <Button
+              type="text"
+              size="small"
+              icon={<RollbackOutlined style={{ transform: "scaleX(-1)" }} />}
+              iconPosition="end"
+              onClick={redo}
+              disabled={redoStack.length === 0}
+            >
+              重做
+            </Button>
+          </Tooltip>
+        </Space>
         <Divider
           type="vertical"
           style={{ borderWidth: "2px", height: "30px" }}
