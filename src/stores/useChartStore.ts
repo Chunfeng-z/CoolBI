@@ -22,6 +22,8 @@ interface Action {
 export type ChartConfig = {
   /** 图表组件id */
   chartId: string;
+  /** 图表类型 */
+  type: string;
   /** 是否展示图表标题 */
   isShowTitle?: boolean;
   /** 图表标题 */
@@ -48,7 +50,6 @@ export type ChartConfig = {
   borderRadius?: number;
   /** 图表卡片的内边距-上、左、下、右 */
   chartCardPadding?: number[];
-  type: string;
   color?: string;
   showLegend?: boolean;
 };
@@ -57,9 +58,94 @@ const useChartStore = create<State & Action>((set, get) => ({
   curChartId: null,
   chartsConfig: [
     {
+      chartId: "pie",
+      type: "pie",
+      isShowTitle: true,
+      title: "饼图",
+      titleColor: "#1677ff",
+      titleFontSize: 18,
+      isShowRemark: false,
+      remark: "备注1",
+      remarkPosition: "afterTitle",
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: true,
+      backgroundColor: "#90b3e7",
+      borderRadius: 0,
+      chartCardPadding: [10, 10, 10, 10],
+    },
+    {
+      chartId: "barStackPercent",
+      type: "barStackPercent",
+      isShowTitle: true,
+      title: "堆叠百分比图",
+      titleColor: "#1677ff",
+      titleFontSize: 18,
+      isShowRemark: false,
+      remark: "备注1",
+      remarkPosition: "afterTitle",
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: true,
+      backgroundColor: "#90b3e7",
+      borderRadius: 0,
+      chartCardPadding: [10, 10, 10, 10],
+    },
+    {
+      chartId: "barStack",
+      type: "barStack",
+      isShowTitle: true,
+      title: "堆叠柱状图",
+      titleColor: "#1677ff",
+      titleFontSize: 18,
+      isShowRemark: false,
+      remark: "备注1",
+      remarkPosition: "afterTitle",
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: true,
+      backgroundColor: "#90b3e7",
+      borderRadius: 0,
+      chartCardPadding: [10, 10, 10, 10],
+    },
+    {
+      chartId: "lineStackPercent",
+      type: "polylineStackPercent",
+      isShowTitle: true,
+      title: "堆叠百分比图面积图",
+      titleColor: "#1677ff",
+      titleFontSize: 14,
+      isShowRemark: false,
+      remark: "备注2",
+      remarkPosition: "belowTitle",
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: true,
+      backgroundColor: "#90b3e7",
+      borderRadius: 0,
+      chartCardPadding: [10, 10, 10, 10],
+    },
+    {
+      chartId: "lineStack",
+      type: "polylineStack",
+      isShowTitle: true,
+      title: "堆叠图面积图",
+      titleColor: "#1677ff",
+      titleFontSize: 14,
+      isShowRemark: false,
+      remark: "备注2",
+      remarkPosition: "belowTitle",
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: true,
+      backgroundColor: "#90b3e7",
+      borderRadius: 0,
+      chartCardPadding: [10, 10, 10, 10],
+    },
+    {
       chartId: "0",
       isShowTitle: true,
-      title: "图表1",
+      title: "柱状图",
       titleColor: "#1677ff",
       titleFontSize: 18,
       isShowRemark: false,
@@ -78,7 +164,7 @@ const useChartStore = create<State & Action>((set, get) => ({
     {
       chartId: "1",
       isShowTitle: true,
-      title: "图表2",
+      title: "折线图",
       titleColor: "#1677ff",
       titleFontSize: 14,
       isShowRemark: false,
@@ -91,6 +177,25 @@ const useChartStore = create<State & Action>((set, get) => ({
       borderRadius: 0,
       chartCardPadding: [10, 10, 10, 10],
       type: "line",
+      color: "#52c41a",
+      showLegend: false,
+    },
+    {
+      chartId: "3",
+      isShowTitle: true,
+      title: "面积图",
+      titleColor: "#1677ff",
+      titleFontSize: 14,
+      isShowRemark: false,
+      remark: "备注2",
+      remarkPosition: "belowTitle",
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: true,
+      backgroundColor: "#90b3e7",
+      borderRadius: 0,
+      chartCardPadding: [10, 10, 10, 10],
+      type: "polyline",
       color: "#52c41a",
       showLegend: false,
     },

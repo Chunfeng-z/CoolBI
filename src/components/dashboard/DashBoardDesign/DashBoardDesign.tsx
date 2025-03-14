@@ -1,18 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "./index.scss";
-import CoolBarChart from "../../common/Charts/CoolBarChart";
+import CoolBarChart from "../../common/CoolBarChart";
 import ChartCard from "./ChartCard/ChartCard";
-import CoolLineChart from "../../common/Charts/CoolLineChart";
+import CoolLineChart from "../../common/CoolLineChart";
 import { useDrop } from "react-dnd";
-import { ChartEnum } from "../utils";
+import { ChartTypeEnum } from "../utils";
 import useChartStore, { ChartConfig } from "../../../stores/useChartStore";
 import { generateUUID } from "../../../utils/uuid";
-import { debounce } from "lodash-es";
+import CoolPolyLineChart from "../../common/CoolPolyLineChart";
+import CoolPolyLineStackChart from "../../common/CoolPolyLineStackChart";
+import CoolPolyLineStackPercentChart from "../../common/CoolPolyLineStackPercentChart";
+import CoolBarStackChart from "../../common/CoolBarStackChart";
+import CoolBarStackPercentChart from "../../common/CoolBarStackPercentChart";
+import CoolPieChart from "../../common/CoolPieChart";
 const prefixCls = "dashboard-design";
 
 const DashBoardDesign: React.FC = () => {
-  /** 设计区域的缩放比例-调整窗口大小 */
-  const [scale, setScale] = useState<number>(1);
   /** 全局的仪表板图表配置-当前仪表板存在已设计的图表 */
   const chartsConfig: ChartConfig[] = useChartStore(
     (state) => state.chartsConfig
@@ -27,7 +30,16 @@ const DashBoardDesign: React.FC = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [, drop] = useDrop(() => {
     return {
-      accept: [ChartEnum.line, ChartEnum.bar],
+      accept: [
+        ChartTypeEnum.line,
+        ChartTypeEnum.bar,
+        ChartTypeEnum.polyline,
+        ChartTypeEnum.polylineStack,
+        ChartTypeEnum.polylineStackPercent,
+        ChartTypeEnum.barStack,
+        ChartTypeEnum.barStackPercent,
+        ChartTypeEnum.pie,
+      ],
       drop(item: { chart: string }) {
         // 添加新的图表
         appendChartConfig({
@@ -41,45 +53,32 @@ const DashBoardDesign: React.FC = () => {
   useEffect(() => {
     drop(ref);
   }, []);
-  useEffect(() => {
-    const updateScale = () => {
-      // 控制最小计算缩放比例宽度-防止过小
-      const containerWidth = Math.max(ref.current?.clientWidth || 1200, 800);
-      console.log("containerWidth", containerWidth);
-      // 基准宽度
-      const baseWidth = 1200;
-      setScale(Math.min(containerWidth / baseWidth, 1));
-    };
-
-    const debouncedUpdateScale = debounce(updateScale, 100);
-
-    window.addEventListener("resize", debouncedUpdateScale);
-    // 初始化
-    updateScale();
-    return () => window.removeEventListener("resize", debouncedUpdateScale);
-  }, []);
   /** 渲染指定的图表 */
   const renderChart = (chart: string) => {
     switch (chart) {
-      case "bar":
+      case ChartTypeEnum.bar:
         return <CoolBarChart />;
-      case "line":
+      case ChartTypeEnum.line:
         return <CoolLineChart />;
+      case ChartTypeEnum.polyline:
+        return <CoolPolyLineChart />;
+      case ChartTypeEnum.polylineStack:
+        return <CoolPolyLineStackChart />;
+      case ChartTypeEnum.polylineStackPercent:
+        return <CoolPolyLineStackPercentChart />;
+      case ChartTypeEnum.barStack:
+        return <CoolBarStackChart />;
+      case ChartTypeEnum.barStackPercent:
+        return <CoolBarStackPercentChart />;
+      case ChartTypeEnum.pie:
+        return <CoolPieChart />;
       default:
-        break;
+        return <div className="error-chart">未知图表类型</div>;
     }
   };
 
   return (
-    <div
-      className={`${prefixCls}-container`}
-      ref={ref}
-      style={{
-        transform: `scale(${scale})`,
-        transformOrigin: "0 0",
-        transition: "transform 0.3s ease",
-      }}
-    >
+    <div className={`${prefixCls}-container`} ref={ref}>
       {chartsConfig.map((config: ChartConfig) => {
         const {
           title,

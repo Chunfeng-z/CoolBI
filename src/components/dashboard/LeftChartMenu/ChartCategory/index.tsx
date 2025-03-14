@@ -1,8 +1,6 @@
 import React from "react";
 import "./index.scss";
-import { Tooltip } from "antd";
 import { ChartItem } from "../../utils/index";
-import { CHART_ICON_MAP } from "../../utils/index";
 import ChartItemIcon from "../ChartItemIcon";
 const prefixCls = "chart-category";
 

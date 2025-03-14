@@ -153,7 +153,23 @@ export const CHART_ICON_MAP: Record<string, string> = {
 };
 
 /** 支持托拽的图表类型 */
-export enum ChartEnum {
+export enum ChartTypeEnum {
+  /** 折线图 */
   line = "line",
+  /** 面积图 */
+  polyline = "polyline",
+  /** 堆叠面积图 */
+  polylineStack = "polylineStack",
+  /** 百分比堆叠面积图 */
+  polylineStackPercent = "polylineStackPercent",
+  /** 组合图 */
+  combination = "combination",
+  /** 柱状图 */
   bar = "bar",
+  /** 堆叠柱状图 */
+  barStack = "barStack",
+  /** 百分比堆叠柱状图 */
+  barStackPercent = "barStackPercent",
+  /** 饼图 */
+  pie = "pie",
 }
