@@ -22,6 +22,7 @@ export default defineConfig({
   },
   envDir: "./env",
   server: {
+    // 开启host之后可以局域网连接
     // host: "0.0.0.0",
   },
 });
