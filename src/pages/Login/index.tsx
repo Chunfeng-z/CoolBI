@@ -8,9 +8,9 @@ import {
   ProFormText,
 } from "@ant-design/pro-components";
 import { Tabs, message, theme } from "antd";
-import logo from "../../assets/icons/logo-dark.svg";
+import logo from "@/assets/icons/logo-dark.svg";
 import { useState } from "react";
-import StarrySky from "../../components/common/StarrySky";
+import StarrySky from "@comp/common/StarrySky";
 
 type LoginType = "phone" | "account";
 

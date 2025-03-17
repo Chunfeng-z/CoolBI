@@ -1,4 +1,4 @@
-import { Button, Space, Table, TableProps, Tag, Tooltip } from "antd";
+import { Button, Space, Table, TableProps, Tooltip } from "antd";
 import React, { useState } from "react";
 import {
   DashBoardTableDataType,

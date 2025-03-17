@@ -14,7 +14,6 @@
 
     .chart-card-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
       color: white;
@@ -29,6 +28,7 @@
       }
 
       &-tail {
+        margin-left: auto;
         color: #fff;
         cursor: move;
       }

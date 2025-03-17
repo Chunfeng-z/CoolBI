@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.scss";
-import CoolCollapse from "../../../common/CoolCollapse";
+import CoolCollapse from "@comp/common/CoolCollapse";
 import TitleCard from "./TitleCard";
 import DrawArea from "./DrawArea";
 import ChartAxis from "./ChartAxis";

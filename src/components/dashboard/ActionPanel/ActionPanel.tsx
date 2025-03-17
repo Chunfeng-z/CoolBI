@@ -1,8 +1,8 @@
 import { LeftOutlined, RollbackOutlined, StarFilled } from "@ant-design/icons";
 import { Button, Divider, Space, Tooltip } from "antd";
-import DashBoardIcon from "../../../assets/dashboard/dashboard-icon.svg";
+import DashBoardIcon from "@/assets/dashboard/dashboard-icon.svg";
 import React, { useState } from "react";
-import useChartStore from "../../../stores/useChartStore";
+import useChartStore from "@/stores/useChartStore";
 
 const prefixCls = "action-panel";
 

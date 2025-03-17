@@ -5,7 +5,7 @@ import type { TabsProps } from "antd";
 import { BranchesOutlined, GatewayOutlined } from "@ant-design/icons";
 import ComponentStyleConfig from "./ComponentStyleConfig";
 import ComponentWordConfig from "./ComponentWordConfig/index";
-import useChartStore from "../../../stores/useChartStore";
+import useChartStore from "@/stores/useChartStore";
 const prefixCls = "right-component-config";
 const onChange = (key: string) => {
   console.log(key);

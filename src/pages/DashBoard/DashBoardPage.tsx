@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "./index.scss";
-import ActionPanel from "../../components/dashboard/ActionPanel";
-import ComponentPanel from "../../components/dashboard/ComponentPanel";
-import RightTheme from "../../components/dashboard/RightTheme";
-import LeftChartMenu from "../../components/dashboard/LeftChartMenu";
-import DashBoardDesign from "../../components/dashboard/DashBoardDesign/DashBoardDesign";
-import RightComponentConfig from "../../components/dashboard/RightComponentConfig";
+import ActionPanel from "@comp/dashboard/ActionPanel";
+import ComponentPanel from "@comp/dashboard/ComponentPanel";
+import RightTheme from "@comp/dashboard/RightTheme";
+import LeftChartMenu from "@comp/dashboard/LeftChartMenu";
+import DashBoardDesign from "@comp/dashboard/DashBoardDesign/DashBoardDesign";
+import RightComponentConfig from "@comp/dashboard/RightComponentConfig";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import useChartStore from "../../stores/useChartStore";

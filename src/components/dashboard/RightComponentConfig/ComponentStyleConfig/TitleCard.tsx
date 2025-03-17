@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useMemo,
 } from "react";
-import CoolCollapse from "../../../common/CoolCollapse";
+import CoolCollapse from "@comp/common/CoolCollapse";
 import {
   CaretRightOutlined,
   DesktopOutlined,
@@ -23,7 +23,7 @@ import {
   RadioChangeEvent,
   Tooltip,
 } from "antd";
-import useChartStore, { ChartConfig } from "../../../../stores/useChartStore";
+import useChartStore, { ChartConfig } from "@/stores/useChartStore";
 import { pick } from "lodash-es";
 const prefixCls = "title-card";
 

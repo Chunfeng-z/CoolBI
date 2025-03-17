@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./index.scss";
-import { Radio, RadioChangeEvent, Select, SelectProps, Tooltip } from "antd";
+import { Radio, RadioChangeEvent, SelectProps, Tooltip } from "antd";
 import { CardRadius, CardSpace, Theme } from "../../utils";
 import { InfoCircleOutlined } from "@ant-design/icons";
 const prefixCls = "right-theme-global-style";

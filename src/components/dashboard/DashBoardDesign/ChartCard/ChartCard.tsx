@@ -2,6 +2,7 @@ import { HolderOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import React from "react";
 import "./index.scss";
+import EllipsisText from "@comp/common/EllipsisText/index";
 
 const prefixCls = "dashboard-chart-card";
 
@@ -68,7 +69,7 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
       className={`${prefixCls}-container ${
         isSelected ? `${prefixCls}-selected` : ""
       }`}
-      style={{ backgroundColor: "#E9E7E0" }}
+      style={{ backgroundColor: "#E9E7E0", maxWidth: 450 }}
       onClick={onClick}
     >
       <div
@@ -87,14 +88,21 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
           <div className="chart-card-header-title">
             {isShowCardTitle && (
               <Tooltip title={cardTitle}>
-                <span style={{ fontSize: titleFontSize, color: titleColor }}>
-                  {cardTitle}
-                </span>
+                <EllipsisText
+                  text={cardTitle}
+                  width={200}
+                  style={{
+                    fontSize: titleFontSize,
+                    color: titleColor,
+                  }}
+                />
               </Tooltip>
             )}
           </div>
           {isShowRemark && remarkPosition === "afterTitle" && (
-            <span className="chart-card-remark">{remark}</span>
+            <div className="chart-card-header-middle">
+              <EllipsisText text={remark} width={150} />
+            </div>
           )}
           <div className="chart-card-header-tail">
             <HolderOutlined />
@@ -102,7 +110,7 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
         </div>
         {isShowRemark && remarkPosition === "belowTitle" && (
           <div className="chart-card-remark-container">
-            <span className="chart-card-remark">{remark}</span>
+            <EllipsisText text={remark} />
           </div>
         )}
         <div className={`${prefixCls}-chart`}>{children}</div>

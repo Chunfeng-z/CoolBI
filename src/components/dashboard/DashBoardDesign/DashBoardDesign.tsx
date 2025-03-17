@@ -1,18 +1,18 @@
 import React, { useEffect, useRef } from "react";
 import "./index.scss";
-import CoolBarChart from "../../common/CoolBarChart";
+import CoolBarChart from "@comp/common/CoolBarChart";
 import ChartCard from "./ChartCard/ChartCard";
-import CoolLineChart from "../../common/CoolLineChart";
+import CoolLineChart from "@comp/common/CoolLineChart";
 import { useDrop } from "react-dnd";
 import { ChartTypeEnum } from "../utils";
-import useChartStore, { ChartConfig } from "../../../stores/useChartStore";
-import { generateUUID } from "../../../utils/uuid";
-import CoolPolyLineChart from "../../common/CoolPolyLineChart";
-import CoolPolyLineStackChart from "../../common/CoolPolyLineStackChart";
-import CoolPolyLineStackPercentChart from "../../common/CoolPolyLineStackPercentChart";
-import CoolBarStackChart from "../../common/CoolBarStackChart";
-import CoolBarStackPercentChart from "../../common/CoolBarStackPercentChart";
-import CoolPieChart from "../../common/CoolPieChart";
+import useChartStore, { ChartConfig } from "@/stores/useChartStore";
+import { generateUUID } from "@/utils/uuid";
+import CoolPolyLineChart from "@comp/common/CoolPolyLineChart";
+import CoolPolyLineStackChart from "@comp/common/CoolPolyLineStackChart";
+import CoolPolyLineStackPercentChart from "@comp/common/CoolPolyLineStackPercentChart";
+import CoolBarStackChart from "@comp/common/CoolBarStackChart";
+import CoolBarStackPercentChart from "@comp/common/CoolBarStackPercentChart";
+import CoolPieChart from "@comp/common/CoolPieChart";
 const prefixCls = "dashboard-design";
 
 const DashBoardDesign: React.FC = () => {

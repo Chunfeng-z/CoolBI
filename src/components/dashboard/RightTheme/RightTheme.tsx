@@ -2,7 +2,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Button, CollapseProps, Tooltip } from "antd";
 import classNames from "classnames";
 import React from "react";
-import CoolCollapse from "../../common/CoolCollapse";
+import CoolCollapse from "@comp/common/CoolCollapse";
 import GlobalStyle from "./GlobalStyle";
 import PageLayout from "./PageLayout";
 import DashboardBackground from "./DashboardBackground";

@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import "./index.scss";
-import CoolCollapse from "../../../common/CoolCollapse";
+import CoolCollapse from "@comp/common/CoolCollapse";
 import { CollapseProps } from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
 const prefixCls = "right-theme-component-style";

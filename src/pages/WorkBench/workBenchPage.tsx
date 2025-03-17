@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
 import { PageContainer, ProCard } from "@ant-design/pro-components";
 import { Button, Divider, Popover, Space } from "antd";
-import RecommendCardList from "../../components/workbench/RecommendCardList/RecommendCardList";
-import DashboardTable from "../../components/workbench/DashboardTable/DashboardTable";
-import QuickActionsBar from "../../components/workbench/QuickActionBar/QuickActionsBar";
-import { SegmentedItems } from "../../components/workbench/utils/types";
+import RecommendCardList from "@comp/workbench/RecommendCardList/RecommendCardList";
+import DashboardTable from "@comp/workbench/DashboardTable/DashboardTable";
+import QuickActionsBar from "@comp/workbench/QuickActionBar/QuickActionsBar";
+import { SegmentedItems } from "@comp/workbench/utils/types";
 import "./index.scss";
 import {
   CaretDownOutlined,

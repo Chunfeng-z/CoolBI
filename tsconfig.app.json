@@ -1,4 +1,5 @@
 {
+  /** 继承公共的配置-阻止覆盖 */
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
