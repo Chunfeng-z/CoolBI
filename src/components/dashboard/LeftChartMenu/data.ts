@@ -1,5 +1,58 @@
 export const ChartCategoryData = [
   {
+    category: "指标图",
+    items: [
+      {
+        shortName: "指标看板",
+        name: "指标看板",
+        icon: "indicatorCard",
+        description: "用来展示关键指标的数值和变化趋势。",
+      },
+      {
+        shortName: "指标趋势",
+        name: "指标趋势图",
+        icon: "indicatorTrend",
+        description: "用来展示关键指标一段时间的变化。",
+      },
+      {
+        shortName: "翻牌器",
+        name: "翻牌器",
+        icon: "flipper",
+        description: "用于监控或展示业务的实时数据变化。",
+      },
+      {
+        shortName: "进度条",
+        name: "进度条",
+        icon: "progress",
+        description: "用来某个指标的完成进度。",
+      },
+      {
+        shortName: "仪表盘",
+        name: "仪表盘",
+        icon: "gauge",
+        description: "用来展示某个指标所在的数据范围。",
+      },
+      {
+        shortName: "水波图",
+        name: "水波图",
+        icon: "waterwave",
+        description: "用来展示某个指标的数值占比。",
+      },
+      {
+        shortName: "指标拆解",
+        name: "指标拆解树",
+        icon: "decompositionTree",
+        description: "按照不同维度分解目标数据，用来查看各部分对整体的贡献度。",
+      },
+      {
+        shortName: "指标关系",
+        name: "指标关系图",
+        icon: "indicatorRelation",
+        description: "描述一组指标间的关系，常用于杜邦分析模型中。",
+      },
+    ],
+  },
+  {
     category: "线/面图",
     items: [
       {
@@ -209,59 +262,6 @@ export const ChartCategoryData = [
         name: "桑基图",
         icon: "sankey",
         description: "用来展示数据的流向和流量分布。",
-      },
-    ],
-  },
-  {
-    category: "指标图",
-    items: [
-      {
-        shortName: "指标看板",
-        name: "指标看板",
-        icon: "indicatorCard",
-        description: "用来展示关键指标的数值和变化趋势。",
-      },
-      {
-        shortName: "指标趋势",
-        name: "指标趋势图",
-        icon: "indicatorTrend",
-        description: "用来展示关键指标一段时间的变化。",
-      },
-      {
-        shortName: "翻牌器",
-        name: "翻牌器",
-        icon: "flipper",
-        description: "用于监控或展示业务的实时数据变化。",
-      },
-      {
-        shortName: "进度条",
-        name: "进度条",
-        icon: "progress",
-        description: "用来某个指标的完成进度。",
-      },
-      {
-        shortName: "仪表盘",
-        name: "仪表盘",
-        icon: "gauge",
-        description: "用来展示某个指标所在的数据范围。",
-      },
-      {
-        shortName: "水波图",
-        name: "水波图",
-        icon: "waterwave",
-        description: "用来展示某个指标的数值占比。",
-      },
-      {
-        shortName: "指标拆解",
-        name: "指标拆解树",
-        icon: "decompositionTree",
-        description: "按照不同维度分解目标数据，用来查看各部分对整体的贡献度。",
-      },
-      {
-        shortName: "指标关系",
-        name: "指标关系图",
-        icon: "indicatorRelation",
-        description: "描述一组指标间的关系，常用于杜邦分析模型中。",
       },
     ],
   },

@@ -1,0 +1,21 @@
+.component-word-config-container {
+  .field-area-wrapper {
+    padding: 8px 12px;
+
+    .field-area-header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .field-area-body {
+      .blank-area-tip {
+        height: 26px;
+        line-height: 26px;
+        text-align: center;
+        color: #bfbfbf;
+        border: 1px dashed #bfbfbf;
+        border-radius: 4px;
+      }
+    }
+  }
+}

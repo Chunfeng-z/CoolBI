@@ -1,4 +1,3 @@
-import React from "react";
 import { ConfigProvider } from "antd";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
