@@ -1,231 +1,122 @@
 import {
-  GithubFilled,
-  InfoCircleFilled,
   LogoutOutlined,
-  QuestionCircleFilled,
-  SearchOutlined,
+  AppstoreAddOutlined,
+  CloudServerOutlined,
+  SettingOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import type { ProSettings } from "@ant-design/pro-components";
-import {
-  PageContainer,
-  ProCard,
-  ProConfigProvider,
-  ProLayout,
-  SettingDrawer,
-} from "@ant-design/pro-components";
-import { Button, ConfigProvider, Divider, Dropdown, Input, theme } from "antd";
+import { Avatar, Button, Dropdown, Layout, Menu, Space } from "antd";
 import React, { useState } from "react";
-import defaultProps from "./_defaultProps";
 import logo from "@/assets/icons/logo-dark.svg";
 import WorkBenchPage from "./WorkBench/workBenchPage.tsx";
+const { Header, Content } = Layout;
 
-const SearchInput: React.FC = () => {
-  const { token } = theme.useToken();
+/** 主页菜单项 */
+const headerMenuItems = [
+  {
+    key: "workbench",
+    label: "工作台",
+    icon: <AppstoreAddOutlined />,
+  },
+  {
+    key: "datacenter",
+    label: "数据中心",
+    icon: <CloudServerOutlined />,
+  },
+];
+
+/** 主页内容 */
+const Home: React.FC = () => {
+  /** 当前选中的菜单项 */
+  const [selectedMenuKey, setSelectedMenuKey] = useState("workbench");
   return (
-    <div
-      key="SearchOutlined"
-      aria-hidden
-      style={{
-        display: "flex",
-        alignItems: "center",
-        marginInlineEnd: 24,
-      }}
-      onMouseDown={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-      }}
-    >
-      <Input
+    <Layout>
+      <Header
         style={{
-          borderRadius: 4,
-          backgroundColor: token.colorBgTextHover,
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          width: "100%",
+          display: "flex",
+          alignItems: "self-start",
         }}
-        prefix={
-          <SearchOutlined
-            style={{
-              color: token.colorTextLightSolid,
-            }}
-          />
-        }
-        placeholder="搜索方案"
-        variant="borderless"
-      />
-    </div>
-  );
-};
-
-const Home = () => {
-  const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
-    fixSiderbar: true,
-    layout: "mix",
-    splitMenus: true,
-  });
-
-  const [pathname, setPathname] = useState("/welcome");
-  const [showWorkbench, setShowWorkbench] = useState(true);
-  if (typeof document === "undefined") {
-    return <div />;
-  }
-  return (
-    <div
-      id="test-pro-layout"
-      style={{
-        height: "100vh",
-        overflow: "auto",
-      }}
-    >
-      <ProConfigProvider hashed={false}>
-        <ConfigProvider
-          getTargetContainer={() => {
-            return document.getElementById("test-pro-layout") || document.body;
+      >
+        <Button
+          type="link"
+          style={{
+            height: "fit-content",
+            fontSize: "1.2rem",
+            color: "black",
+            padding: 0,
+            fontWeight: "500",
           }}
+          icon={<img src={logo} alt="Cool BI logo" width={32} />}
         >
-          <ProLayout
-            prefixCls="my-prefix"
-            {...defaultProps}
-            location={{
-              pathname,
-            }}
-            token={{
-              header: {
-                colorBgMenuItemSelected: "rgba(0,0,0,0.04)",
-              },
-            }}
-            siderMenuType="group"
-            menu={{
-              collapsedShowGroupTitle: true,
-            }}
-            avatarProps={{
-              src: "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
-              size: "small",
-              title: "Cool",
-              render: (props, avatarNode) => {
-                return (
-                  <Dropdown
-                    menu={{
-                      items: [
-                        {
-                          key: "logout",
-                          icon: <LogoutOutlined />,
-                          label: "退出登录",
-                        },
-                      ],
-                    }}
-                  >
-                    {avatarNode}
-                  </Dropdown>
-                );
-              },
-            }}
-            actionsRender={(props) => {
-              if (props.isMobile) return [];
-              if (typeof window === "undefined") return [];
-              return [
-                props.layout !== "side" && document.body.clientWidth > 1400 ? (
-                  <SearchInput />
-                ) : undefined,
-                <InfoCircleFilled key="InfoCircleFilled" />,
-                <QuestionCircleFilled key="QuestionCircleFilled" />,
-                <GithubFilled key="GithubFilled" />,
-              ];
-            }}
-            headerTitleRender={(oldLogo, oldTitle, _) => {
-              const defaultDom = (
-                <a>
-                  <img src={logo} alt="Cool BI logo"></img>
-                  <h1 style={{ color: "black" }}>Cool BI</h1>
-                </a>
-              );
-              if (typeof window === "undefined") return defaultDom;
-              if (document.body.clientWidth < 1400) {
-                return defaultDom;
-              }
-              if (_.isMobile) return defaultDom;
-              return (
-                <>
-                  {defaultDom}
-                  <Divider
-                    style={{
-                      height: "1.5em",
-                    }}
-                    type="vertical"
-                  />
-                </>
-              );
-            }}
-            menuFooterRender={(props) => {
-              if (props?.collapsed) return undefined;
-              return (
-                <div
-                  style={{
-                    textAlign: "center",
-                    paddingBlockStart: 12,
-                  }}
-                >
-                  <div>© 2025 Made with love</div>
-                  <div>by Chunfeng-z</div>
-                </div>
-              );
-            }}
-            onMenuHeaderClick={(e) => console.log(e)}
-            menuItemRender={(item, dom) => (
+          Cool BI
+        </Button>
+        <Menu
+          className="center-menu"
+          theme="light"
+          mode="horizontal"
+          selectedKeys={[selectedMenuKey]}
+          onSelect={({ key }) => setSelectedMenuKey(key)}
+          defaultSelectedKeys={["workbench"]}
+          items={headerMenuItems.map((item) => ({
+            ...item,
+            style: {
+              color: "black",
+              fontWeight: item.key === selectedMenuKey ? "bold" : "normal",
+            },
+          }))}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        />
+        <div className="right-menu">
+          <Space size="middle">
+            <Button type="text" size="small" icon={<SettingOutlined />} />
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    key: "logout",
+                    icon: <LogoutOutlined />,
+                    label: "退出登录",
+                  },
+                ],
+              }}
+            >
               <div
-                onClick={() => {
-                  setPathname(item.path || "/welcome");
+                className="avatar-wrapper"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  cursor: "pointer",
                 }}
               >
-                {dom}
-              </div>
-            )}
-            {...settings}
-          >
-            {showWorkbench ? (
-              <WorkBenchPage />
-            ) : (
-              <>
-                <PageContainer
-                  extra={[
-                    <Button key="2">操作</Button>,
-                    <Button key="1" type="primary">
-                      主操作
-                    </Button>,
-                  ]}
-                  subTitle="简单的描述"
-                  footer={[
-                    <Button key="3">重置</Button>,
-                    <Button key="2" type="primary">
-                      提交
-                    </Button>,
-                  ]}
-                >
-                  <ProCard
-                    style={{
-                      height: "200vh",
-                      minHeight: 800,
-                    }}
-                  >
-                    <div />
-                  </ProCard>
-                </PageContainer>
-                <SettingDrawer
-                  pathname={pathname}
-                  enableDarkTheme
-                  getContainer={(e: any) => {
-                    if (typeof window === "undefined") return e;
-                    return document.getElementById("test-pro-layout");
-                  }}
-                  settings={settings}
-                  onSettingChange={(changeSetting) => {
-                    setSetting(changeSetting);
-                  }}
-                  disableUrlParams={false}
+                <Avatar
+                  size={28}
+                  icon={<UserOutlined />}
+                  src="https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg"
                 />
-              </>
-            )}
-          </ProLayout>
-        </ConfigProvider>
-      </ProConfigProvider>
-    </div>
+                <span>User</span>
+              </div>
+            </Dropdown>
+          </Space>
+        </div>
+      </Header>
+      <Content
+        style={{
+          backgroundColor: "#F5F5F5",
+        }}
+      >
+        <WorkBenchPage />
+      </Content>
+    </Layout>
   );
 };
 

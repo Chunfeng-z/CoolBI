@@ -17,6 +17,13 @@ export default function App() {
         token: {
           colorPrimary: "#1890ff",
         },
+        components: {
+          Layout: {
+            headerBg: "#FFFFFF",
+            headerPadding: "0 20px",
+            headerHeight: "56px",
+          },
+        },
       }}
     >
       <BrowserRouter>
@@ -26,7 +33,7 @@ export default function App() {
             element={<Navigate to={`${base}/home`}></Navigate>}
           />
           <Route path={`${base}/home`} element={<Home />} />
-          <Route path={`${base}/home/ai`} element={<AIChat />} />
+          <Route path={`${base}/ai`} element={<AIChat />} />
           <Route path={`${base}/dashboard`} element={<DashBoardPage />} />
           <Route path={`${base}/login`} element={<Login />} />
           <Route path={`${base}/register`} element={<Register />} />
