@@ -67,6 +67,11 @@
       .name {
         flex: 1;
         overflow: hidden;
+
+        .sub-name {
+          font-size: 12px;
+          color: #999;
+        }
       }
 
       > span {

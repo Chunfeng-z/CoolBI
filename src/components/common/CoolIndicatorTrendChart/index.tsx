@@ -37,6 +37,7 @@ interface ICoolIndicatorTrendChartProps {
   /** 指标图的y坐标轴 */
   yField?: string | string[];
 }
+/** 指标趋势图 */
 const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
   props
 ) => {

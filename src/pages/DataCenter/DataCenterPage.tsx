@@ -23,7 +23,8 @@ import {
   Tooltip,
 } from "antd";
 import { ConfigContext } from "antd/es/config-provider";
-import React, { useContext, useRef, useState } from "react";
+import DataConnectConfig from "@comp/datacenter/DataConnectConfig/DataConnectConfig";
+import React, { useContext, useMemo, useRef, useState } from "react";
 import "./index.scss";
 const { Sider, Content } = Layout;
 const prefixCls = "data-center-page";
@@ -113,54 +114,47 @@ const dataSourceList = [
 ];
 
 // 新建数据源类型定义测试
-const dataSourceTypes = [
+const dataSourceTypes: {
+  id: string;
+  title: string;
+  items: {
+    name: string;
+    value: string;
+    icon: string;
+    subName?: string;
+  }[];
+}[] = [
   {
     id: "recent-use",
     title: "最近使用",
     items: [
-      { name: "MySQL", icon: "mysql-icon.png" },
-      { name: "PostgreSQL", icon: "postgresql-icon.png" },
-      { name: "Oracle", icon: "oracle-icon.png" },
+      {
+        name: "本地文件",
+        value: "local-file",
+        icon: "mysql-icon.png",
+        subName: "只支持.csv,xls,xlsx",
+      },
     ],
   },
   {
-    id: "database",
-    title: "数据库",
+    id: "local-file",
+    title: "本地文件",
     items: [
-      { name: "MySQL", icon: "mysql-icon.png" },
-      { name: "PostgreSQL", icon: "postgresql-icon.png" },
-      { name: "Oracle", icon: "oracle-icon.png" },
-      { name: "SQL Server", icon: "sqlserver-icon.png" },
-      { name: "MongoDB", icon: "mongodb-icon.png" },
-      { name: "Redis", icon: "redis-icon.png" },
+      {
+        name: "本地文件",
+        value: "local-file",
+        icon: "mysql-icon.png",
+        subName: "只支持.csv,xls,xlsx",
+      },
     ],
   },
   {
     id: "cloud-service",
     title: "云服务",
     items: [
-      { name: "AWS", icon: "aws-icon.png" },
-      { name: "Azure", icon: "azure-icon.png" },
-      { name: "Google Cloud", icon: "gcp-icon.png" },
-    ],
-  },
-  {
-    id: "file-upload",
-    title: "文件上传",
-    items: [
-      { name: "CSV", icon: "csv-icon.png" },
-      { name: "Excel", icon: "excel-icon.png" },
-      { name: "JSON", icon: "json-icon.png" },
-      { name: "XML", icon: "xml-icon.png" },
-    ],
-  },
-  {
-    id: "api",
-    title: "API",
-    items: [
-      { name: "RESTful API", icon: "rest-icon.png" },
-      { name: "GraphQL", icon: "graphql-icon.png" },
-      { name: "SOAP", icon: "soap-icon.png" },
+      { name: "AWS", value: "aws", icon: "aws-icon.png" },
+      { name: "Azure", value: "azure", icon: "azure-icon.png" },
+      { name: "Google Cloud", value: "google cloud", icon: "gcp-icon.png" },
     ],
   },
 ];
@@ -182,15 +176,33 @@ const DataCenterPage: React.FC = () => {
   const [selectedTypeKey, setSelectedTypeKey] = useState<string[]>([
     "recent-use",
   ]);
-  // 创建引用以访问各个分类区域
+  /** 当前步骤-0是选择数据源、1是配置连接，2是完成 */
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  /** 选择的数据源项 */
+  const [selectedDataSource, setSelectedDataSource] = useState<string>("");
+
+  /** 创建引用以访问各个分类区域 */
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const handleShowDrawer = () => {
     setOpen(true);
   };
+
   const handleCloseDrawer = () => {
     setOpen(false);
+    // 每次关闭的时候需要重置步骤&数据源选择
+    setCurrentStep(0);
+    setSelectedDataSource("");
   };
+
+  /** 处理数据源项点击 */
+  const handleDataSourceItemClick = (value: string) => {
+    console.log("选择的数据源类型:", value);
+    setSelectedDataSource(value);
+    // 进入第二步
+    setCurrentStep(1);
+  };
+
   /** 处理搜索事件 */
   const handleSearch = () => {
     console.log("开始检索:", searchKey);
@@ -213,10 +225,14 @@ const DataCenterPage: React.FC = () => {
   };
 
   // 生成数据源类型菜单项
-  const dataSourceMenuItems = dataSourceTypes.map((type) => ({
-    key: type.id,
-    label: type.title,
-  }));
+  const dataSourceMenuItems = useMemo(
+    () =>
+      dataSourceTypes.map((type) => ({
+        key: type.id,
+        label: type.title,
+      })),
+    []
+  );
 
   return (
     <>
@@ -298,21 +314,35 @@ const DataCenterPage: React.FC = () => {
           </span>
           <div className="extra-wrapper">
             <Steps
-              current={0}
+              current={currentStep}
               size="small"
               style={{ minWidth: 700 }}
               items={[
                 {
                   title: "选择数据源",
                   description: "选择数据源类型",
+                  onClick: () => setCurrentStep(0),
                 },
                 {
                   title: "配置连接",
                   description: "配置数据源连接信息",
+                  disabled: currentStep === 0,
+                  onClick: () => {
+                    // antd的disabled状态只是样式变化
+                    if (currentStep !== 0) {
+                      setCurrentStep(1);
+                    }
+                  },
                 },
                 {
                   title: "完成",
                   description: "完成数据源创建",
+                  disabled: currentStep === 0 || currentStep === 1,
+                  onClick: () => {
+                    if (currentStep !== 0 && currentStep !== 1) {
+                      setCurrentStep(2);
+                    }
+                  },
                 },
               ]}
             />
@@ -324,62 +354,74 @@ const DataCenterPage: React.FC = () => {
             onClick={handleCloseDrawer}
           />
         </div>
-        <div className="data-source-content-wrapper">
-          <div className="data-source-content-menu">
-            <Menu
-              style={{
-                border: "none",
-                width: 180,
-                backgroundColor: "transparent",
-              }}
-              theme="dark"
-              mode="inline"
-              selectedKeys={selectedTypeKey}
-              onSelect={handleDSMenuSelect}
-              items={dataSourceMenuItems}
+        {/* 选择数据源 */}
+        {currentStep === 0 && (
+          <div className="data-source-content-wrapper">
+            <div className="data-source-content-menu">
+              <Menu
+                style={{
+                  border: "none",
+                  width: 180,
+                  backgroundColor: "transparent",
+                }}
+                theme="dark"
+                mode="inline"
+                selectedKeys={selectedTypeKey}
+                onSelect={handleDSMenuSelect}
+                items={dataSourceMenuItems}
+              />
+            </div>
+            {/* 分隔线高度与父元素保持一致 */}
+            <Divider
+              type="vertical"
+              style={{ borderWidth: 2, height: "100%", marginInline: 20 }}
             />
-          </div>
-          {/* 分隔线高度与父元素保持一致 */}
-          <Divider
-            type="vertical"
-            style={{ borderWidth: 2, height: "100%", marginInline: 20 }}
-          />
-          <div className="data-source-list">
-            {dataSourceTypes.map((type) => (
-              <div key={type.id}>
-                <div
-                  id={type.id}
-                  ref={(el) => (sectionRefs.current[type.id] = el)}
-                >
-                  <h4>{type.title}</h4>
+            <div className="data-source-list">
+              {dataSourceTypes.map((type) => (
+                <div key={type.id}>
+                  <div
+                    id={type.id}
+                    ref={(el) => (sectionRefs.current[type.id] = el)}
+                  >
+                    <h4>{type.title}</h4>
+                  </div>
+                  <Space
+                    size={[12, 12]}
+                    wrap
+                    style={{ marginTop: 8, marginBottom: 24 }}
+                  >
+                    {type.items.map((item, index) => (
+                      <div
+                        className="data-source-item"
+                        key={`${type.id}-${index}`}
+                        onClick={() => handleDataSourceItemClick(item.value)}
+                      >
+                        <div className="icon">
+                          <img
+                            src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+                            alt={item.name}
+                            width={30}
+                          />
+                        </div>
+                        <div className="name">
+                          <span>{item.name}</span>
+                          {item?.subName && (
+                            <>
+                              <br />
+                              <span className="sub-name">{item?.subName}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </Space>
                 </div>
-                <Space
-                  size={[12, 12]}
-                  wrap
-                  style={{ marginTop: 8, marginBottom: 24 }}
-                >
-                  {type.items.map((item, index) => (
-                    <div
-                      className="data-source-item"
-                      key={`${type.id}-${index}`}
-                    >
-                      <div className="icon">
-                        <img
-                          src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-                          alt={item.name}
-                          width={30}
-                        />
-                      </div>
-                      <div className="name">
-                        <span>{item.name}</span>
-                      </div>
-                    </div>
-                  ))}
-                </Space>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+        {/* 数据源连接 */}
+        {currentStep === 1 && <DataConnectConfig />}
       </Drawer>
     </>
   );
