@@ -59,27 +59,34 @@ const WorkBenchPage: React.FC = () => {
   return (
     <PageContainer
       className={`${prefixCls}-container`}
-      extra={
-        <Popover
-          content={<Content onCreateDashBoardClick={handleCreateDashboard} />}
-          trigger={["hover"]}
-          arrow={false}
-          placement="bottomRight"
-          className={`${prefixCls}-popover`}
-        >
-          <Button
-            type="primary"
-            icon={
-              isHoverCreateReport ? <CaretUpOutlined /> : <CaretDownOutlined />
-            }
-            iconPosition="end"
-            onMouseEnter={() => setIsHoverCreateReport(true)}
-            onMouseLeave={() => setIsHoverCreateReport(false)}
+      header={{
+        title: "工作台",
+        extra: [
+          <Popover
+            content={<Content onCreateDashBoardClick={handleCreateDashboard} />}
+            trigger={["hover"]}
+            arrow={false}
+            placement="bottomRight"
+            className={`${prefixCls}-popover`}
           >
-            {"创建报表"}
-          </Button>
-        </Popover>
-      }
+            <Button
+              type="primary"
+              icon={
+                isHoverCreateReport ? (
+                  <CaretUpOutlined />
+                ) : (
+                  <CaretDownOutlined />
+                )
+              }
+              iconPosition="end"
+              onMouseEnter={() => setIsHoverCreateReport(true)}
+              onMouseLeave={() => setIsHoverCreateReport(false)}
+            >
+              {"创建报表"}
+            </Button>
+          </Popover>,
+        ],
+      }}
     >
       <ProCard
         style={{

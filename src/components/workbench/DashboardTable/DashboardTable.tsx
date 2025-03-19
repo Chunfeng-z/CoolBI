@@ -53,7 +53,11 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
               return (
                 <div className="action-group-item" key={action.action}>
                   <Tooltip title={action.name}>
-                    <Button type="text" icon={<DesktopOutlined />} />
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<DesktopOutlined />}
+                    />
                   </Tooltip>
                 </div>
               );
@@ -61,7 +65,7 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
               return (
                 <div className="action-group-item" key={action.action}>
                   <Tooltip title={action.name}>
-                    <Button type="text" icon={<CopyOutlined />} />
+                    <Button type="text" size="small" icon={<CopyOutlined />} />
                   </Tooltip>
                 </div>
               );
@@ -69,7 +73,7 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
               return (
                 <div className="action-group-item" key={action.action}>
                   <Tooltip title={action.name}>
-                    <Button type="text" icon={<StarOutlined />} />
+                    <Button type="text" size="small" icon={<StarOutlined />} />
                   </Tooltip>
                 </div>
               );

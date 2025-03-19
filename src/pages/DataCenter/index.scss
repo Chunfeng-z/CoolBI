@@ -1,0 +1,77 @@
+.data-center-page {
+  .data-center-card {
+    .ant-card-body {
+      padding: 15px;
+    }
+  }
+}
+
+.data-source-drawer {
+  // 覆盖 antd 样式
+  .ant-drawer-body {
+    display: flex;
+    flex-direction: column;
+    background-color: #f6f8fc;
+  }
+
+  .data-source-header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .data-source-content-wrapper {
+    display: flex;
+    flex: 1;
+    overflow: auto;
+
+    .data-source-content-menu {
+      li {
+        color: black;
+
+        &.ant-menu-item-selected {
+          color: #1990ff;
+          background-color: #cdedfb;
+        }
+
+        &.ant-menu-item-active {
+          color: gray !important;
+        }
+      }
+    }
+
+    .data-source-list {
+      overflow: auto;
+    }
+
+    .data-source-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      width: 220px;
+      height: 64px;
+      background-color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: rgb(212 214 216 / 20%) 0 4px 12px;
+
+      &:hover {
+        box-shadow: rgb(149 157 165 / 20%) 0 8px 24px;
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+
+      .name {
+        flex: 1;
+        overflow: hidden;
+      }
+
+      > span {
+        word-break: break-word;
+      }
+    }
+  }
+}

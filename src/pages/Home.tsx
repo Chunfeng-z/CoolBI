@@ -57,6 +57,7 @@ const Home: React.FC = () => {
           width: "100%",
           display: "flex",
           alignItems: "self-start",
+          borderBottom: "1px solid #f0f0f0",
         }}
       >
         <Button
