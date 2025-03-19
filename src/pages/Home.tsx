@@ -8,18 +8,23 @@ import {
 import { Avatar, Button, Dropdown, Layout, Menu, Space } from "antd";
 import React, { useState } from "react";
 import logo from "@/assets/icons/logo-dark.svg";
-import WorkBenchPage from "./WorkBench/workBenchPage.tsx";
+import { Outlet, useNavigate } from "react-router-dom";
+const base = import.meta.env.VITE_BASE;
 const { Header, Content } = Layout;
+const enum MenuItemKey {
+  Workbench = "workbench",
+  Datacenter = "datacenter",
+}
 
 /** 主页菜单项 */
 const headerMenuItems = [
   {
-    key: "workbench",
+    key: MenuItemKey.Workbench,
     label: "工作台",
     icon: <AppstoreAddOutlined />,
   },
   {
-    key: "datacenter",
+    key: MenuItemKey.Datacenter,
     label: "数据中心",
     icon: <CloudServerOutlined />,
   },
@@ -27,8 +32,21 @@ const headerMenuItems = [
 
 /** 主页内容 */
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   /** 当前选中的菜单项 */
-  const [selectedMenuKey, setSelectedMenuKey] = useState("workbench");
+  const [selectedMenuKey, setSelectedMenuKey] = useState<MenuItemKey>(
+    MenuItemKey.Workbench
+  );
+
+  // 处理菜单项点击事件
+  const handleMenuSelect = ({ key }: { key: string }) => {
+    setSelectedMenuKey(key as MenuItemKey);
+    if (key === "workbench") {
+      navigate(`${base}/home/workbench`);
+    } else if (key === "datacenter") {
+      navigate(`${base}/home/datacenter`);
+    }
+  };
   return (
     <Layout>
       <Header
@@ -59,7 +77,7 @@ const Home: React.FC = () => {
           theme="light"
           mode="horizontal"
           selectedKeys={[selectedMenuKey]}
-          onSelect={({ key }) => setSelectedMenuKey(key)}
+          onSelect={handleMenuSelect}
           defaultSelectedKeys={["workbench"]}
           items={headerMenuItems.map((item) => ({
             ...item,
@@ -77,7 +95,7 @@ const Home: React.FC = () => {
         />
         <div className="right-menu">
           <Space size="middle">
-            <Button type="text" size="small" icon={<SettingOutlined />} />
+            <Button type="text" size="middle" icon={<SettingOutlined />} />
             <Dropdown
               menu={{
                 items: [
@@ -114,7 +132,7 @@ const Home: React.FC = () => {
           backgroundColor: "#F5F5F5",
         }}
       >
-        <WorkBenchPage />
+        <Outlet />
       </Content>
     </Layout>
   );

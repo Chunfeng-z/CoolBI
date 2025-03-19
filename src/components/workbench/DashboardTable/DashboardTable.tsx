@@ -90,7 +90,7 @@ const DashboardTable: React.FC = () => {
   return (
     <div className={`${prefixCls}-container`}>
       <Table<DashBoardTableDataType>
-        size="middle"
+        size="small"
         columns={columns}
         pagination={{
           position: ["bottomRight"],

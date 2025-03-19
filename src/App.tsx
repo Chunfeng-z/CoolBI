@@ -8,6 +8,8 @@ import PageNotAuthorized from "./pages/Error/PageNotAuthorized";
 import ServerError from "./pages/Error/ServerError";
 import DashBoardPage from "./pages/DashBoard/DashBoardPage";
 import AIChat from "./pages/AIChat/AIChat";
+import WorkBenchPage from "./pages/WorkBench/workBenchPage";
+import DataCenterPage from "./pages/DataCenter/DataCenterPage";
 
 const base = import.meta.env.VITE_BASE;
 export default function App() {
@@ -32,7 +34,12 @@ export default function App() {
             path={`${base}/`}
             element={<Navigate to={`${base}/home`}></Navigate>}
           />
-          <Route path={`${base}/home`} element={<Home />} />
+          <Route path={`${base}/home`} element={<Home />}>
+            {/* 默认加载工作台 */}
+            <Route index element={<Navigate to="workbench" />} />
+            <Route path="workbench" element={<WorkBenchPage />} />
+            <Route path="datacenter" element={<DataCenterPage />} />
+          </Route>
           <Route path={`${base}/ai`} element={<AIChat />} />
           <Route path={`${base}/dashboard`} element={<DashBoardPage />} />
           <Route path={`${base}/login`} element={<Login />} />
