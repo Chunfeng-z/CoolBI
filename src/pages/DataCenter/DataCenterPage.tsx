@@ -1,5 +1,6 @@
 import {
   ApartmentOutlined,
+  CheckCircleFilled,
   CloseOutlined,
   CloudServerOutlined,
   DatabaseOutlined,
@@ -306,7 +307,7 @@ const DataCenterPage: React.FC = () => {
         closable={false}
         onClose={handleCloseDrawer}
         open={open}
-        size="large"
+        height={`calc(100vh - 120px)`}
       >
         <div className="data-source-header-wrapper">
           <span style={{ fontSize: 18, fontWeight: 500, whiteSpace: "nowrap" }}>
@@ -316,7 +317,7 @@ const DataCenterPage: React.FC = () => {
             <Steps
               current={currentStep}
               size="small"
-              style={{ minWidth: 700 }}
+              style={{ minWidth: 700, cursor: "pointer" }}
               items={[
                 {
                   title: "选择数据源",
@@ -422,6 +423,18 @@ const DataCenterPage: React.FC = () => {
         )}
         {/* 数据源连接 */}
         {currentStep === 1 && <DataConnectConfig />}
+        {/* 数据源文件上传成功 */}
+        {currentStep === 2 && (
+          <div className="create-data-source-success">
+            <Space className="header-tip">
+              <CheckCircleFilled style={{ color: "#0CC448" }} />
+              <span>您的数据源已创建成功</span>
+            </Space>
+            <Button type="primary" onClick={handleCloseDrawer}>
+              返回数据源列表
+            </Button>
+          </div>
+        )}
       </Drawer>
     </>
   );
