@@ -21,6 +21,7 @@ const Login: React.FC = () => {
   return (
     <ProConfigProvider hashed={false}>
       <div style={{ backgroundColor: token.colorBgContainer }}>
+        {/* 气泡背景 */}
         <StarrySky />
         <LoginForm
           logo={logo}
