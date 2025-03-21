@@ -1,0 +1,48 @@
+.home-page-drawer {
+  .ant-drawer-body {
+    padding: 0;
+  }
+
+  .account-manage-setting-wrapper {
+    display: flex;
+    height: 100%;
+
+    .account-content {
+      flex: 1;
+      padding: 15px;
+
+      h4 {
+        margin-bottom: 15px;
+        font-weight: 500;
+      }
+
+      .account-bind-wrapper {
+        .account-bind-label {
+          width: 100px;
+        }
+
+        .account-bind-btn-wrapper {
+          margin-left: auto;
+        }
+      }
+
+      .account-info-row {
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px dashed #f0f0f0;
+      }
+
+      .account-info-label {
+        margin-bottom: 4px;
+      }
+
+      .account-info-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: 30px;
+        width: 100%;
+      }
+    }
+  }
+}
