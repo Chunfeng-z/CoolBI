@@ -1,4 +1,9 @@
 .component-word-config-container {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+
   .field-area-wrapper {
     padding: 8px 12px;
 
@@ -17,5 +22,14 @@
         border-radius: 4px;
       }
     }
+  }
+
+  .update-btn {
+    padding: 10px;
+    margin-top: auto;
+    text-align: center;
+    color: white;
+    background-color: #2d70f8;
+    cursor: pointer;
   }
 }

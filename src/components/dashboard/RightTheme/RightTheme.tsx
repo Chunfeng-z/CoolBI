@@ -1,12 +1,13 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import CoolCollapse from "@comp/common/CoolCollapse";
 import { Button, CollapseProps, Tooltip } from "antd";
 import classNames from "classnames";
 import React from "react";
-import CoolCollapse from "@comp/common/CoolCollapse";
+
+import ComponentStyle from "./ComponentStyle";
+import DashboardBackground from "./DashboardBackground";
 import GlobalStyle from "./GlobalStyle";
 import PageLayout from "./PageLayout";
-import DashboardBackground from "./DashboardBackground";
-import ComponentStyle from "./ComponentStyle";
 const prefixCls = "right-theme";
 const items: CollapseProps["items"] = [
   {
@@ -60,7 +61,7 @@ const RightTheme: React.FC<IRightThemeProps> = (props) => {
             icon={isCollapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
           />
         </Tooltip>
-        <div className={`${prefixCls}-title`}>主题</div>
+        <span className={`${prefixCls}-title`}>主题</span>
       </div>
       {!isCollapsed && (
         <div className={`${prefixCls}-collapse-body`}>

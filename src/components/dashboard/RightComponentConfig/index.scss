@@ -6,17 +6,55 @@
 
   .right-component-config-header {
     display: flex;
-    justify-content: center;
+    gap: 10px;
     align-items: center;
-    padding: 0 12px;
+    padding: 7px 12px;
     height: 44px;
   }
 
+  &.is-collapsed {
+    width: 45px;
+
+    .right-component-config-header {
+      flex-direction: column;
+    }
+
+    .collapsed-config-options {
+      > span {
+        height: 60px;
+        text-align: center;
+        writing-mode: vertical-rl;
+        cursor: pointer;
+        line-height: 45px;
+
+        &:hover {
+          color: #1890ff;
+        }
+      }
+    }
+  }
+
   .right-component-config-content {
+    display: flex;
     overflow-y: auto;
+    flex: 1;
+    flex-direction: column;
 
     .ant-tabs-nav {
       margin-bottom: 0;
+    }
+
+    // 设置tabs的内容区域占满高度
+    .right-component-config-tabs {
+      height: 100%;
+
+      .ant-tabs-content.ant-tabs-content-top {
+        height: 100%;
+      }
+
+      .ant-tabs-tabpane {
+        height: 100%;
+      }
     }
   }
 }

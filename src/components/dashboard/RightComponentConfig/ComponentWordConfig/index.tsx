@@ -1,6 +1,6 @@
-import React from "react";
-import { Button, Divider } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
+import { Button, Divider } from "antd";
+import React from "react";
 import "./index.scss";
 const prefixCls = "component-word-config";
 /** 组件字段配置 */
@@ -40,6 +40,7 @@ const ComponentWordConfig: React.FC = () => {
           </div>
         </div>
       </div>
+      <div className="update-btn">更新</div>
     </div>
   );
 };
