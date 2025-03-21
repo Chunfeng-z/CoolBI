@@ -11,11 +11,10 @@ import {
   message,
 } from "antd";
 import React from "react";
-import "./index.scss";
 import { useNavigate } from "react-router-dom";
 
-import RegisterBg from "@/assets/background/register.png"; // 请根据实际路径调整
-
+import RegisterBg from "@/assets/background/register.png";
+import "./index.scss";
 const base = import.meta.env.VITE_BASE;
 const { Title, Paragraph } = Typography;
 const prefixCls = "register-page";
@@ -26,7 +25,7 @@ type RegisterFieldType = {
   password: string;
   confirmPassword: string;
 };
-const Register: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const handleFinish: FormProps<RegisterFieldType>["onFinish"] = (values) => {
@@ -225,4 +224,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default RegisterPage;

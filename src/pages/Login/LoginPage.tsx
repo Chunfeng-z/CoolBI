@@ -1,5 +1,5 @@
 import { UserOutlined, LockOutlined, MobileOutlined } from "@ant-design/icons";
-import { Card, Row, Tabs, Form, Input, Button, message, Col } from "antd";
+import { Card, Row, Tabs, Form, Input, Button, Col, App } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,10 +11,15 @@ const prefixCls = "login-page";
 
 type LoginMethodType = "account" | "mobile";
 
+type LoginFieldType = {
+  account: string;
+  password: string;
+};
+
 const LoginPage: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
   /** 登陆方式 */
   const [loginMethod, setLoginMethod] = useState<LoginMethodType>("account");
   /** 展示忘记密码内容 */
@@ -30,10 +35,9 @@ const LoginPage: React.FC = () => {
     setLoginMethod(key as LoginMethodType);
   };
 
-  const handleLogin = (values: any) => {
-    console.log("登录信息:", values);
+  const handleLogin = (values: LoginFieldType) => {
     message.success("登录成功");
-    // 此处可添加登录逻辑
+    navigate(`${base}/home`);
   };
 
   const handleForgotPassword = (values: any) => {
@@ -91,7 +95,6 @@ const LoginPage: React.FC = () => {
 
   return (
     <>
-      {contextHolder}
       <div className={`${prefixCls}-wrapper`}>
         {/* 气泡背景 */}
         <StarrySky />

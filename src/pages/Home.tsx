@@ -7,8 +7,9 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Button, Dropdown, Layout, Menu, Space } from "antd";
 import React, { useState } from "react";
-import logo from "@/assets/icons/logo-dark.svg";
 import { Outlet, useNavigate } from "react-router-dom";
+
+import logo from "@/assets/icons/logo-dark.svg";
 const base = import.meta.env.VITE_BASE;
 const { Header, Content } = Layout;
 const enum MenuItemKey {
@@ -47,6 +48,16 @@ const Home: React.FC = () => {
       navigate(`${base}/home/datacenter`);
     }
   };
+
+  // 处理退出登录事件
+  const handleLogout = () => {
+    // 这里可以添加退出登录的逻辑，如清除本地存储的用户信息、令牌等
+    localStorage.removeItem("token"); // 假设使用token存储登录状态
+
+    // 导航到登录页面
+    navigate(`${base}/login`);
+  };
+
   return (
     <Layout>
       <Header
@@ -104,6 +115,7 @@ const Home: React.FC = () => {
                     key: "logout",
                     icon: <LogoutOutlined />,
                     label: "退出登录",
+                    onClick: handleLogout,
                   },
                 ],
               }}

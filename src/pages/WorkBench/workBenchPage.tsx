@@ -1,17 +1,17 @@
-import React, { useCallback } from "react";
-import { PageContainer, ProCard } from "@ant-design/pro-components";
-import { Button, Divider, Popover, Space } from "antd";
-import RecommendCardList from "@comp/workbench/RecommendCardList/RecommendCardList";
-import DashboardTable from "@comp/workbench/DashboardTable/DashboardTable";
-import QuickActionsBar from "@comp/workbench/QuickActionBar/QuickActionsBar";
-import { SegmentedItems } from "@comp/workbench/utils/types";
-import "./index.scss";
 import {
   CaretDownOutlined,
   CaretUpOutlined,
   FundOutlined,
   FundProjectionScreenOutlined,
 } from "@ant-design/icons";
+import { PageContainer, ProCard } from "@ant-design/pro-components";
+import DashboardTable from "@comp/workbench/DashboardTable/DashboardTable";
+import QuickActionsBar from "@comp/workbench/QuickActionBar/QuickActionsBar";
+import RecommendCardList from "@comp/workbench/RecommendCardList/RecommendCardList";
+import { SegmentedItems } from "@comp/workbench/utils/types";
+import { Button, Divider, Popover, Space } from "antd";
+import React, { useCallback } from "react";
+import "./index.scss";
 const base = import.meta.env.VITE_BASE;
 const prefixCls = "workbench-page";
 interface contentProps {
@@ -26,13 +26,18 @@ const Content: React.FC<contentProps> = (props) => {
       <div className="create-report-title">{"快捷创建"}</div>
       <div className="create-report-items">
         <Button
+          key="dashboard"
           icon={<FundOutlined />}
           type="text"
           onClick={onCreateDashBoardClick}
         >
           {"仪表板"}
         </Button>
-        <Button icon={<FundProjectionScreenOutlined />} type="text">
+        <Button
+          key="dataScreen"
+          icon={<FundProjectionScreenOutlined />}
+          type="text"
+        >
           {"数据大屏"}
         </Button>
       </div>
@@ -68,6 +73,7 @@ const WorkBenchPage: React.FC = () => {
             arrow={false}
             placement="bottomRight"
             className={`${prefixCls}-popover`}
+            key={"createReport"}
           >
             <Button
               type="primary"
