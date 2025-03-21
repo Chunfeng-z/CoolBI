@@ -1,19 +1,12 @@
-import React from "react";
 import { Button, Result } from "antd";
-import { useNavigateToHome } from "./utils/hooks";
+import React from "react";
+
+import { useNavigateToHome } from "@/utils/hooks";
 const prefixCls = "server-error";
 const ServerError: React.FC = () => {
   const handleBackClick = useNavigateToHome();
   return (
-    <div
-      className={`${prefixCls}-container`}
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <div className={`${prefixCls}-container error-page-container`}>
       <Result
         status="500"
         title="500"
