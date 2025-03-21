@@ -1,11 +1,12 @@
 @use "sass:string";
 @use "sass:math";
+@use "sass:list";
 
 $duration: 400s;
 $n: 400;
-$color: rgb(153 226 255 / 78.7%);
+$colors: (#10108f, #5b80ed, #3897f5, #55c6eb, #9ad3e9);
 
-@function get-shadows($n) {
+@function get-shadows($n, $color) {
   $result: "#{math.random(100)}vw #{math.random(100)}vh 0 #{$color}";
 
   @for $i from 2 through $n {
@@ -20,6 +21,7 @@ $color: rgb(153 226 255 / 78.7%);
   $n: math.floor(calc($n / 2));
   .starry-sky-layer#{$i} {
     $size: #{$i}px;
+    $layer-color: list.nth($colors, $i);
 
     position: fixed;
     top: 0;
@@ -27,7 +29,7 @@ $color: rgb(153 226 255 / 78.7%);
     width: $size;
     height: $size;
     border-radius: 50%;
-    box-shadow: get-shadows($n);
+    box-shadow: get-shadows($n, $layer-color);
     animation: move-up $duration linear infinite;
 
     &::after {
