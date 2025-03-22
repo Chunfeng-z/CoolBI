@@ -46,6 +46,11 @@ $size-32: 32px;
       align-items: center;
       padding: 0 12px;
       height: $size-32;
+
+      // 覆盖antd样式
+      .ant-tabs-nav {
+        margin-bottom: 0;
+      }
     }
 
     .data-source-fields-wrapper {

@@ -26,10 +26,10 @@ import React, { useMemo, useState } from "react";
 
 import type { TabsProps } from "antd";
 
-import CoolTree from "@/components/common/CoolTree";
-
 const prefixCls = "data-source-config";
 import "./index.scss";
+import CoolTree from "@/components/common/CoolTree";
+import EllipsisText from "@/components/common/EllipsisText";
 
 // 添加Tree数据类型
 type TreeDataNode = {
@@ -128,6 +128,14 @@ const DataSourceConfig: React.FC = () => {
     ],
     []
   );
+  /** 下拉选中的数据源 */
+  const [curSelectDs, setCurSelectDs] = useState<string>();
+  /** 数据源选项 */
+  const [options, setOptions] = useState<{ value: string; label: string }[]>([
+    { value: "jack", label: "Jacksssssssssss" },
+    { value: "lucy", label: "Lucy" },
+    { value: "Yiminghe", label: "yiminghe" },
+  ]);
 
   // 标签页配置
   const tabItems: TabsProps["items"] = [
@@ -208,15 +216,92 @@ const DataSourceConfig: React.FC = () => {
             <div className="data-source-switch">
               <Select
                 size="small"
-                placement="bottomRight"
-                defaultValue="lucy"
+                placement="topRight"
+                variant="filled"
                 style={{ width: 130 }}
-                options={[
-                  { value: "jack", label: "Jacksssssssssss" },
-                  { value: "lucy", label: "Lucy" },
-                  { value: "Yiminghe", label: "yiminghe" },
-                  { value: "disabled", label: "Disabled", disabled: true },
-                ]}
+                placeholder="选择数据源"
+                value={curSelectDs}
+                onSelect={(value) => {
+                  setCurSelectDs(value);
+                }}
+                // 当下拉列表为空时显示的内容
+                notFoundContent={
+                  <Flex justify="center" style={{ height: 50 }} align="center">
+                    <span>暂无数据，请添加数据源</span>
+                  </Flex>
+                }
+                // 将下来菜单渲染到下拉框
+                getPopupContainer={(triggerNode) => triggerNode.parentElement!}
+                // option配置
+                options={options}
+                // TODO:暂时一直展示下拉菜单，便于调试
+                // open={true}
+                optionRender={(option) => <span>{option.label}</span>}
+                // 自定义渲染下拉菜单，可以自定义option的样式/自己注册事件
+                dropdownRender={(menu) => (
+                  <div>
+                    {curSelectDs && (
+                      <Row>
+                        <Col
+                          span={24}
+                          style={{
+                            display: "flex",
+                            height: 24,
+                            backgroundColor: "#1990FF",
+                            alignItems: "center",
+                            paddingInline: 10,
+                            borderRadius: "4px 4px 0 0",
+                          }}
+                        >
+                          <EllipsisText
+                            text={curSelectDs}
+                            style={{
+                              color: "white",
+                              width: "90%",
+                            }}
+                          />
+                        </Col>
+                      </Row>
+                    )}
+                    <Flex style={{ padding: "0px 4px" }}>
+                      <Tabs
+                        size="small"
+                        tabBarGutter={15}
+                        style={{ width: "100%" }}
+                        defaultActiveKey="2"
+                        items={[
+                          { key: "1", label: "已使用", children: menu },
+                          { key: "2", label: "全部", children: "2" },
+                        ]}
+                      />
+                    </Flex>
+                    <Flex justify="space-around" style={{ paddingTop: 5 }}>
+                      <Col span={11}>
+                        <Button
+                          size="small"
+                          type="primary"
+                          style={{ width: "100%" }}
+                        >
+                          上传本地文件
+                        </Button>
+                      </Col>
+                      <Col span={11}>
+                        <Button
+                          size="small"
+                          type="default"
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          取消
+                        </Button>
+                      </Col>
+                    </Flex>
+                  </div>
+                )}
+                dropdownStyle={{
+                  width: 300,
+                }}
               />
               <Dropdown
                 menu={{ items: DSSwitchOption }}

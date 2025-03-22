@@ -1,12 +1,13 @@
+import { CopyOutlined, DesktopOutlined, StarOutlined } from "@ant-design/icons";
 import { Button, Space, Table, TableProps, Tooltip } from "antd";
 import React, { useState } from "react";
+
+import { dashboardTableEditData } from "../test";
 import {
   DashBoardTableDataType,
   DashBoardTableDataKeys,
   DashBoardTableActions,
 } from "../utils/types";
-import { dashboardTableEditData } from "../test";
-import { CopyOutlined, DesktopOutlined, StarOutlined } from "@ant-design/icons";
 const prefixCls = "dashboard-table";
 
 /** 表格表头配置 */
@@ -78,7 +79,6 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
                 </div>
               );
           }
-          // <Tag key={action.action}>{action.name}</Tag>
         })}
       </Space>
     ),
