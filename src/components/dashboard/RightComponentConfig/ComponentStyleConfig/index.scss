@@ -106,5 +106,43 @@
         }
       }
     }
+
+    .data-label-container {
+      .data-label-text-simple {
+        display: flex;
+        align-items: center;
+        height: 32px;
+      }
+
+      .data-label-text {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        gap: 5px;
+      }
+    }
+
+    .chart-tooltip-container {
+      .chart-tooltip-text-simple {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        gap: 5px;
+      }
+
+      .chart-tooltip-text-vertical {
+        display: flex;
+        gap: 5px;
+        padding-block: 3px;
+      }
+    }
+
+    .auxiliary-config-container {
+      .auxiliary-config-text-vertical {
+        display: flex;
+        gap: 5px;
+        padding-block: 3px;
+      }
+    }
   }
 }

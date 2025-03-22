@@ -1,14 +1,17 @@
 import React from "react";
 import "./index.scss";
 
+import AuxiliaryConfig from "./AuxiliaryConfig";
 import ChartAxis from "./ChartAxis";
 import ChartLegend from "./ChartLegend";
+import ChartToolTip from "./ChartToolTip";
 import DataLabel from "./DataLabel";
 import DrawArea from "./DrawArea";
 import TitleCard from "./TitleCard";
 
 const prefixCls = "component-style-config";
 import CoolCollapse from "@/components/common/CoolCollapse";
+
 const componentStyleItems = [
   {
     key: "1",
@@ -58,17 +61,20 @@ const componentStyleItems = [
   {
     key: "6",
     label: "工具提示",
-    children: <div className="style-item">背景</div>,
+    children: (
+      <div className="style-item">
+        <ChartToolTip />
+      </div>
+    ),
   },
   {
     key: "7",
-    label: "系列设置",
-    children: <div className="style-item">颜色</div>,
-  },
-  {
-    key: "8",
     label: "辅助展示",
-    children: <div className="style-item">颜色</div>,
+    children: (
+      <div className="style-item">
+        <AuxiliaryConfig />
+      </div>
+    ),
   },
 ];
 /** 组件样式配置 */
@@ -77,7 +83,7 @@ const ComponentStyleConfig: React.FC = () => {
     <div className={`${prefixCls}-container`}>
       <CoolCollapse
         items={componentStyleItems}
-        defaultActiveKey={[1, 2, 3, 4, 5]}
+        defaultActiveKey={[1, 2, 3, 4, 5, 6, 7]}
       />
     </div>
   );
