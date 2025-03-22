@@ -15,6 +15,7 @@ import {
 } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
+
 import { pageRasterOptions as options } from "../utils";
 const prefixCls = "component-panel";
 enum ScaleValue {

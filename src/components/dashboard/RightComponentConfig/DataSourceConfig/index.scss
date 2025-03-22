@@ -1,0 +1,108 @@
+$size-32: 32px;
+
+.data-source-config-wrapper {
+  width: 180px;
+
+  .data-source-config-header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 7px 12px;
+    height: 44px;
+
+    .data-source-header-text-btn.is-collapse {
+      &:hover {
+        cursor: pointer;
+        color: #1890ff;
+      }
+    }
+  }
+
+  &.is-collapse {
+    width: 44px;
+
+    .data-source-config-header {
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+
+  .data-source-config-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 44px);
+
+    .data-source-switch {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      height: $size-32;
+    }
+
+    .data-source-fields-wrapper {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      height: $size-32;
+      gap: 3px;
+      border-bottom: 1px solid #f0f0f0;
+
+      .search-wrapper {
+        margin-left: auto;
+      }
+    }
+
+    .tree-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - $size-32 * 2);
+
+      // 公共样式
+      .data-source-tree-title {
+        padding-bottom: 10px;
+      }
+
+      .data-source-dimension-tree-wrapper {
+        padding: 12px;
+        height: 50%;
+        max-height: calc(100% - 44px);
+        border-bottom: 1px solid #f0f0f0;
+
+        .dimension-tree-container {
+          overflow-y: auto;
+          height: calc(100% - 32px);
+        }
+      }
+
+      .data-source-measure-tree-wrapper {
+        padding: 12px;
+        height: 50%;
+        min-height: 44px;
+        border-bottom: 1px solid #f0f0f0;
+
+        .measure-tree-container {
+          overflow-y: auto;
+          height: calc(100% - 32px);
+        }
+      }
+    }
+  }
+}
+
+// 数据预览Modal的样式
+.preview-data-source-modal-content {
+  .preview-modal-content {
+    .data-source-tree-panel {
+      .tree-wrapper {
+        overflow-y: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+  }
+}

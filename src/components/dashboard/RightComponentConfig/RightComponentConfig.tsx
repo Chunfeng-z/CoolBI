@@ -12,6 +12,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import ComponentStyleConfig from "./ComponentStyleConfig";
 import ComponentWordConfig from "./ComponentWordConfig/index";
+import DataSourceConfig from "./DataSourceConfig";
 
 import type { TabsProps } from "antd";
 
@@ -90,64 +91,67 @@ const RightComponentConfig: React.FC = () => {
   };
 
   return (
-    <div
-      className={classNames(`${prefixCls}-container`, {
-        "is-collapsed": isCompConfigCollapsed,
-      })}
-    >
-      <div className={`${prefixCls}-header`}>
+    <div className="setting-panel">
+      <div
+        className={classNames(`${prefixCls}-container`, {
+          "is-collapsed": isCompConfigCollapsed,
+        })}
+      >
+        <div className={`${prefixCls}-header`}>
+          {!isCompConfigCollapsed && (
+            <Input
+              placeholder="图表组件名称"
+              variant="filled"
+              value={componentName}
+              maxLength={100}
+              onChange={(e) => setComponentName(e.target.value)}
+              onPressEnter={(e) => {
+                updateChartCardTitle((e.target as HTMLInputElement).value);
+              }}
+            />
+          )}
+          <Tooltip title={isCompConfigCollapsed ? "展开" : "收起"}>
+            <Button
+              type="text"
+              size="small"
+              onClick={() => setIsCompConfigCollapsed(!isCompConfigCollapsed)}
+              icon={
+                isCompConfigCollapsed ? (
+                  <MenuFoldOutlined />
+                ) : (
+                  <MenuUnfoldOutlined />
+                )
+              }
+            />
+          </Tooltip>
+          {/* 折叠后展示的组件配置选项 */}
+          {isCompConfigCollapsed && (
+            <Flex className="collapsed-config-options" vertical align="center">
+              {CONFIG_TABS.map((tab) => (
+                <span
+                  key={tab.key}
+                  onClick={() => handleConfigOptionClick(tab.key)}
+                >
+                  {tab.label}
+                </span>
+              ))}
+            </Flex>
+          )}
+        </div>
         {!isCompConfigCollapsed && (
-          <Input
-            placeholder="图表组件名称"
-            variant="filled"
-            value={componentName}
-            maxLength={100}
-            onChange={(e) => setComponentName(e.target.value)}
-            onPressEnter={(e) => {
-              updateChartCardTitle((e.target as HTMLInputElement).value);
-            }}
-          />
-        )}
-        <Tooltip title={isCompConfigCollapsed ? "展开" : "收起"}>
-          <Button
-            type="text"
-            size="small"
-            onClick={() => setIsCompConfigCollapsed(!isCompConfigCollapsed)}
-            icon={
-              isCompConfigCollapsed ? (
-                <MenuFoldOutlined />
-              ) : (
-                <MenuUnfoldOutlined />
-              )
-            }
-          />
-        </Tooltip>
-        {/* 折叠后展示的组件配置选项 */}
-        {isCompConfigCollapsed && (
-          <Flex className="collapsed-config-options" vertical align="center">
-            {CONFIG_TABS.map((tab) => (
-              <span
-                key={tab.key}
-                onClick={() => handleConfigOptionClick(tab.key)}
-              >
-                {tab.label}
-              </span>
-            ))}
-          </Flex>
+          <div className={`${prefixCls}-content`}>
+            <Tabs
+              centered
+              className="right-component-config-tabs"
+              size="small"
+              activeKey={activeTabKey}
+              items={items}
+              onChange={handleTabChange}
+            />
+          </div>
         )}
       </div>
-      {!isCompConfigCollapsed && (
-        <div className={`${prefixCls}-content`}>
-          <Tabs
-            centered
-            className="right-component-config-tabs"
-            size="small"
-            activeKey={activeTabKey}
-            items={items}
-            onChange={handleTabChange}
-          />
-        </div>
-      )}
+      <DataSourceConfig />
     </div>
   );
 };

@@ -1,10 +1,13 @@
-import React from "react";
-import ChartCategory from "./ChartCategory";
-import { ChartCategoryData } from "./data";
-import { ChartItem } from "../utils";
 import { PushpinOutlined } from "@ant-design/icons";
 import { Button, Tooltip } from "antd";
+import React from "react";
+
+import { ChartItem } from "../utils";
 import { CHART_ICON_MAP } from "../utils/index";
+
+import ChartCategory from "./ChartCategory";
+import { ChartCategoryData } from "./data";
+
 const prefixCls = "left-chart-menu";
 
 /** 仪表板左侧的图表菜单 */

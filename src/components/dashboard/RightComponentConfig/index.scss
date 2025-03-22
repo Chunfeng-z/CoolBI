@@ -1,59 +1,73 @@
-.right-component-config-container {
+.setting-panel {
   display: flex;
-  flex-direction: column;
-  width: 420px;
   height: 100%;
 
-  .right-component-config-header {
+  .right-component-config-container {
     display: flex;
-    gap: 10px;
-    align-items: center;
-    padding: 7px 12px;
-    height: 44px;
-  }
-
-  &.is-collapsed {
-    width: 45px;
+    flex-direction: column;
+    width: 280px;
+    height: 100%;
+    border-right: 1px solid #f0f0f0;
 
     .right-component-config-header {
-      flex-direction: column;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 7px 12px;
+      height: 44px;
     }
 
-    .collapsed-config-options {
-      > span {
-        height: 60px;
-        text-align: center;
-        writing-mode: vertical-rl;
-        cursor: pointer;
-        line-height: 45px;
+    &.is-collapsed {
+      width: 45px;
 
-        &:hover {
-          color: #1890ff;
+      .right-component-config-header {
+        flex-direction: column;
+      }
+
+      .collapsed-config-options {
+        > span {
+          height: 60px;
+          text-align: center;
+          writing-mode: vertical-rl;
+          cursor: pointer;
+          line-height: 45px;
+
+          &:hover {
+            color: #1890ff;
+          }
         }
       }
     }
-  }
 
-  .right-component-config-content {
-    display: flex;
-    overflow-y: auto;
-    flex: 1;
-    flex-direction: column;
+    .right-component-config-content {
+      display: flex;
+      overflow-y: auto;
+      flex: 1;
+      flex-direction: column;
 
-    .ant-tabs-nav {
-      margin-bottom: 0;
-    }
+      // 隐藏滚动条
+      scrollbar-width: none;
 
-    // 设置tabs的内容区域占满高度
-    .right-component-config-tabs {
-      height: 100%;
-
-      .ant-tabs-content.ant-tabs-content-top {
-        height: 100%;
+      // Fallback for browsers that do not support scrollbar-width
+      &::-webkit-scrollbar {
+        display: none;
       }
 
-      .ant-tabs-tabpane {
+      .ant-tabs-nav {
+        margin-bottom: 0;
+      }
+
+      // 设置tabs的内容区域占满高度
+      .right-component-config-tabs {
         height: 100%;
+
+        .ant-tabs-content.ant-tabs-content-top {
+          height: 100%;
+        }
+
+        .ant-tabs-tabpane {
+          height: 100%;
+        }
       }
     }
   }
