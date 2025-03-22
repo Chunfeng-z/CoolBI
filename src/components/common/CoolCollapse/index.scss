@@ -1,0 +1,6 @@
+.cool-collapse-container {
+  // 覆盖collapse的默认样式
+  .ant-collapse-content-box {
+    padding: 4px 8px 8px !important;
+  }
+}

@@ -9,7 +9,6 @@ import {
   Button,
   Checkbox,
   ColorPicker,
-  Flex,
   Input,
   InputNumber,
   Select,
@@ -28,35 +27,23 @@ const ChartAxis: React.FC = () => {
       icon: <ArrowRightOutlined />,
       children: (
         <div className={`${prefixCls}-x-content`}>
-          <Flex style={{ height: 32 }} align="center">
+          <div className="chart-axis-text-simple">
             <Checkbox>显示X轴</Checkbox>
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示标题和单位</Checkbox>
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>标题</span>
-            <Input size="small" />
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>单位</span>
-            <Input size="small" />
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>文本</span>
-            <ColorPicker size="small" showText />
+          </div>
+          <div className="chart-axis-text">
+            <span>标题</span>
+            <Input size="small" maxLength={20} placeholder="请输入标题" />
+          </div>
+          <div className="chart-axis-text">
+            <span>单位</span>
+            <Input size="small" maxLength={20} placeholder="请输入单位" />
+          </div>
+          <div className="chart-axis-text">
+            <span>文本</span>
+            <ColorPicker size="small" />
             <InputNumber
               size="small"
               addonAfter="px"
@@ -73,17 +60,13 @@ const ChartAxis: React.FC = () => {
             <Tooltip title="斜体">
               <Button type="text" icon={<ItalicOutlined />} size="small" />
             </Tooltip>
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示坐标轴标签</Checkbox>
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>文本</span>
-            <ColorPicker size="small" showText />
+          </div>
+          <div className="chart-axis-text">
+            <span>文本</span>
+            <ColorPicker size="small" />
             <InputNumber
               size="small"
               addonAfter="px"
@@ -100,18 +83,14 @@ const ChartAxis: React.FC = () => {
             <Tooltip title="斜体">
               <Button type="text" icon={<ItalicOutlined />} size="small" />
             </Tooltip>
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示刻度线</Checkbox>
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示坐标轴</Checkbox>
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
+          </div>
+          <div className="chart-axis-text">
             <InputNumber
               size="small"
               addonAfter="px"
@@ -122,16 +101,12 @@ const ChartAxis: React.FC = () => {
               changeOnWheel
               style={{ width: 100 }}
             />
-            <ColorPicker size="small" showText />
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+            <ColorPicker size="small" />
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示网格线</Checkbox>
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
+          </div>
+          <div className="chart-axis-text">
             <InputNumber
               size="small"
               addonAfter="px"
@@ -142,8 +117,8 @@ const ChartAxis: React.FC = () => {
               changeOnWheel
               style={{ width: 100 }}
             />
-            <ColorPicker size="small" showText />
-          </Flex>
+            <ColorPicker size="small" />
+          </div>
         </div>
       ),
     },
@@ -153,34 +128,22 @@ const ChartAxis: React.FC = () => {
       icon: <ArrowUpOutlined />,
       children: (
         <div className={`${prefixCls}-y-content`}>
-          <Flex style={{ height: 32 }} align="center">
+          <div className="chart-axis-text-simple">
             <Checkbox>显示Y轴</Checkbox>
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示标题和单位</Checkbox>
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>标题</span>
-            <Input size="small" placeholder="标题名称" />
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>单位</span>
-            <Input size="small" placeholder="单位" />
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>位置</span>
+          </div>
+          <div className="chart-axis-text">
+            <span>标题</span>
+            <Input size="small" placeholder="请输入标题" maxLength={20} />
+          </div>
+          <div className="chart-axis-text">
+            <span>单位</span>
+            <Input size="small" placeholder="请输入单位" maxLength={20} />
+          </div>
+          <div className="chart-axis-text">
+            <span>位置</span>
             <Tooltip title="双Y轴下两侧标题会同步">
               <InfoCircleOutlined />
             </Tooltip>
@@ -193,13 +156,9 @@ const ChartAxis: React.FC = () => {
                 { value: "axisOut", label: "轴外侧" },
               ]}
             />
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>文本</span>
+          </div>
+          <div className="chart-axis-text">
+            <span>文本</span>
             <ColorPicker size="small" />
             <InputNumber
               size="small"
@@ -217,16 +176,12 @@ const ChartAxis: React.FC = () => {
             <Tooltip title="斜体">
               <Button type="text" icon={<ItalicOutlined />} size="small" />
             </Tooltip>
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示坐标轴标签</Checkbox>
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
-            <span style={{ whiteSpace: "nowrap" }}>文本</span>
+          </div>
+          <div className="chart-axis-text">
+            <span>文本</span>
             <ColorPicker size="small" />
             <InputNumber
               size="small"
@@ -244,18 +199,14 @@ const ChartAxis: React.FC = () => {
             <Tooltip title="斜体">
               <Button type="text" icon={<ItalicOutlined />} size="small" />
             </Tooltip>
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示刻度线</Checkbox>
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示坐标轴</Checkbox>
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
+          </div>
+          <div className="chart-axis-text">
             <InputNumber
               size="small"
               addonAfter="px"
@@ -267,15 +218,11 @@ const ChartAxis: React.FC = () => {
               style={{ width: 100 }}
             />
             <ColorPicker size="small" />
-          </Flex>
-          <Flex style={{ height: 32 }} align="center">
+          </div>
+          <div className="chart-axis-text-simple">
             <Checkbox>显示网格线</Checkbox>
-          </Flex>
-          <Flex
-            style={{ height: 32, marginLeft: 25 }}
-            align="center"
-            gap="small"
-          >
+          </div>
+          <div className="chart-axis-text">
             <InputNumber
               size="small"
               addonAfter="px"
@@ -287,7 +234,7 @@ const ChartAxis: React.FC = () => {
               style={{ width: 100 }}
             />
             <ColorPicker size="small" />
-          </Flex>
+          </div>
         </div>
       ),
     },
@@ -298,6 +245,7 @@ const ChartAxis: React.FC = () => {
         defaultActiveKey="1"
         size="small"
         items={items}
+        tabBarGutter={15}
         onChange={(key: string) => {
           console.log(key);
         }}

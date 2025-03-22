@@ -1,12 +1,14 @@
 import React from "react";
 import "./index.scss";
-import CoolCollapse from "@comp/common/CoolCollapse";
-import TitleCard from "./TitleCard";
-import DrawArea from "./DrawArea";
+
 import ChartAxis from "./ChartAxis";
 import ChartLegend from "./ChartLegend";
 import DataLabel from "./DataLabel";
+import DrawArea from "./DrawArea";
+import TitleCard from "./TitleCard";
+
 const prefixCls = "component-style-config";
+import CoolCollapse from "@/components/common/CoolCollapse";
 const componentStyleItems = [
   {
     key: "1",

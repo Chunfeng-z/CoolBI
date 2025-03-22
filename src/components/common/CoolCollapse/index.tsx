@@ -3,6 +3,7 @@ import { CollapsibleType } from "antd/es/collapse/CollapsePanel";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { ItemType } from "rc-collapse/es/interface";
 import React from "react";
+import "./index.scss";
 const prefixCls = "cool-collapse";
 interface PanelProps {
   isActive?: boolean;

@@ -33,59 +33,67 @@ const DrawArea: React.FC<IDrawAreaProps> = (props) => {
       case "bar":
         return (
           <div className={`${prefixCls}-bar`}>
-            <div className="draw-area-text">
-              <span>柱体宽度</span>
-              <Tooltip title="当前配置的柱体宽度超过最大范围之后将不再生效">
-                <InfoCircleOutlined />
-              </Tooltip>
-              <Slider
-                min={1}
-                max={100}
-                style={{ width: 180, marginInline: 10 }}
-                onChange={handleBarWidthChange}
-                value={
-                  typeof barWidthPercent === "number" ? barWidthPercent : 0
-                }
-              />
-              <InputNumber
-                size="small"
-                min={0}
-                max={100}
-                addonAfter="%"
-                style={{ width: 90 }}
-                value={barWidthPercent}
-                changeOnWheel
-                onChange={handleBarWidthChange}
-              />
+            <div className="draw-area-text-vertical">
+              <div className="draw-area-text-left">
+                <span>柱体宽度</span>
+                <Tooltip title="当前配置的柱体宽度超过最大范围之后将不再生效">
+                  <InfoCircleOutlined />
+                </Tooltip>
+              </div>
+              <div className="draw-area-text-right">
+                <Slider
+                  min={1}
+                  max={100}
+                  style={{ width: 125, marginLeft: 10 }}
+                  onChange={handleBarWidthChange}
+                  value={
+                    typeof barWidthPercent === "number" ? barWidthPercent : 0
+                  }
+                />
+                <InputNumber
+                  size="small"
+                  min={0}
+                  max={100}
+                  addonAfter="%"
+                  style={{ width: 90 }}
+                  value={barWidthPercent}
+                  changeOnWheel
+                  onChange={handleBarWidthChange}
+                />
+              </div>
             </div>
-            <div className="draw-area-text">
+            <div className="draw-area-text-vertical">
               <span>图表对其方式</span>
+              <Radio.Group
+                onChange={(e) => setChartAlign(e.target.value)}
+                value={chartAlign}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                }}
+                options={[
+                  {
+                    value: "left",
+                    label: (
+                      <Flex gap="small">
+                        <AlignLeftOutlined />
+                        左对齐
+                      </Flex>
+                    ),
+                  },
+                  {
+                    value: "right",
+                    label: (
+                      <Flex gap="small">
+                        <AlignRightOutlined />
+                        右对齐
+                      </Flex>
+                    ),
+                  },
+                ]}
+              />
             </div>
-            <Radio.Group
-              onChange={(e) => setChartAlign(e.target.value)}
-              value={chartAlign}
-              options={[
-                {
-                  value: "left",
-                  label: (
-                    <Flex gap="small">
-                      <AlignLeftOutlined />
-                      左对齐
-                    </Flex>
-                  ),
-                },
-                {
-                  value: "right",
-                  label: (
-                    <Flex gap="small">
-                      <AlignRightOutlined />
-                      右对齐
-                    </Flex>
-                  ),
-                },
-              ]}
-              style={{ marginLeft: 25 }}
-            />
           </div>
         );
       case "pie":

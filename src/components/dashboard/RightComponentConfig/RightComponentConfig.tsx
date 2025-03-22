@@ -146,6 +146,7 @@ const RightComponentConfig: React.FC = () => {
               size="small"
               activeKey={activeTabKey}
               items={items}
+              tabBarGutter={15}
               onChange={handleTabChange}
             />
           </div>

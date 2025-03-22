@@ -10,7 +10,6 @@ import {
   Button,
   Checkbox,
   ColorPicker,
-  Flex,
   InputNumber,
   Radio,
   Tooltip,
@@ -95,10 +94,10 @@ const ChartLegend: React.FC = () => {
   };
   return (
     <div className={`${prefixCls}-container`}>
-      <Flex style={{ height: 32 }} align="center">
+      <div className="chart-legend-text-simple">
         <Checkbox>显示图例</Checkbox>
-      </Flex>
-      <Flex style={{ height: 32 }} align="center" gap="small">
+      </div>
+      <div className="chart-legend-text">
         <span>位置</span>
         {directions.map(({ position, icon, tooltip }) => (
           <Tooltip key={position} title={tooltip}>
@@ -114,9 +113,9 @@ const ChartLegend: React.FC = () => {
             />
           </Tooltip>
         ))}
-      </Flex>
+      </div>
       {selectedPosition && (
-        <Flex style={{ marginLeft: 25, height: 32 }} align="center">
+        <div className="chart-legend-text">
           <Radio.Group
             value={selectedOption}
             size="small"
@@ -124,11 +123,11 @@ const ChartLegend: React.FC = () => {
           >
             {renderRadioOptions()}
           </Radio.Group>
-        </Flex>
+        </div>
       )}
-      <Flex style={{ height: 32 }} align="center" gap="small">
-        <span style={{ whiteSpace: "nowrap" }}>文本</span>
-        <ColorPicker size="small" showText />
+      <div className="chart-legend-text">
+        <span>文本</span>
+        <ColorPicker size="small" />
         <InputNumber
           size="small"
           addonAfter="px"
@@ -145,7 +144,7 @@ const ChartLegend: React.FC = () => {
         <Tooltip title="斜体">
           <Button type="text" icon={<ItalicOutlined />} size="small" />
         </Tooltip>
-      </Flex>
+      </div>
     </div>
   );
 };
