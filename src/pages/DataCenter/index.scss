@@ -10,8 +10,8 @@
   // 覆盖 antd 样式
   .ant-drawer-body {
     display: flex;
-    flex-direction: column;
     background-color: #f6f8fc;
+    flex-direction: column;
   }
 
   .data-source-header-wrapper {
@@ -77,6 +77,19 @@
       > span {
         word-break: break-word;
       }
+    }
+  }
+
+  .create-data-source-success {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    flex-direction: column;
+    gap: 20px;
+
+    .header-tip {
+      font-size: 20px;
+      font-weight: bold;
     }
   }
 }

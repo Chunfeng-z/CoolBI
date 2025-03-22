@@ -194,9 +194,11 @@ const DataSourceConfig: React.FC = () => {
             />
           </Tooltip>
           <span
-            className={classNames("data-source-header-text-btn", {
-              "is-collapse": isDSConfigCollapse,
-            })}
+            onClick={() => {
+              if (isDSConfigCollapse) {
+                setIsDSConfigCollapse(false);
+              }
+            }}
           >
             数据源
           </span>

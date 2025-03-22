@@ -61,7 +61,16 @@ const RightTheme: React.FC<IRightThemeProps> = (props) => {
             icon={isCollapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
           />
         </Tooltip>
-        <span className={`${prefixCls}-title`}>主题</span>
+        <span
+          className={`${prefixCls}-title`}
+          onClick={() => {
+            if (isCollapsed) {
+              setIsCollapsed(false);
+            }
+          }}
+        >
+          主题
+        </span>
       </div>
       {!isCollapsed && (
         <div className={`${prefixCls}-collapse-body`}>

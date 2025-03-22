@@ -1,18 +1,22 @@
-import React, { useEffect, useRef } from "react";
-import "./index.scss";
 import CoolBarChart from "@comp/common/CoolBarChart";
-import ChartCard from "./ChartCard/ChartCard";
+import CoolBarStackChart from "@comp/common/CoolBarStackChart";
+import CoolBarStackPercentChart from "@comp/common/CoolBarStackPercentChart";
 import CoolLineChart from "@comp/common/CoolLineChart";
-import { useDrop } from "react-dnd";
-import { ChartTypeEnum } from "../utils";
-import useChartStore, { ChartConfig } from "@/stores/useChartStore";
-import { generateUUID } from "@/utils/uuid";
+import CoolPieChart from "@comp/common/CoolPieChart";
 import CoolPolyLineChart from "@comp/common/CoolPolyLineChart";
 import CoolPolyLineStackChart from "@comp/common/CoolPolyLineStackChart";
 import CoolPolyLineStackPercentChart from "@comp/common/CoolPolyLineStackPercentChart";
-import CoolBarStackChart from "@comp/common/CoolBarStackChart";
-import CoolBarStackPercentChart from "@comp/common/CoolBarStackPercentChart";
-import CoolPieChart from "@comp/common/CoolPieChart";
+import React, { useEffect, useRef } from "react";
+import { useDrop } from "react-dnd";
+
+import { ChartTypeEnum } from "../utils";
+
+import ChartCard from "./ChartCard/ChartCard";
+
+import useChartStore, { ChartConfig } from "@/stores/useChartStore";
+import { generateUUID } from "@/utils/uuid";
+
+import "./index.scss";
 const prefixCls = "dashboard-design";
 
 const DashBoardDesign: React.FC = () => {
@@ -76,6 +80,7 @@ const DashBoardDesign: React.FC = () => {
         return <div className="error-chart">未知图表类型</div>;
     }
   };
+  console.log("chartsConfig dashboard", chartsConfig);
 
   return (
     <div className={`${prefixCls}-container`} ref={ref}>

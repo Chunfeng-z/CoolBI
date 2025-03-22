@@ -28,6 +28,11 @@
         text-align: center;
         writing-mode: vertical-lr;
         cursor: pointer;
+        letter-spacing: 3px;
+
+        &:hover {
+          color: #1890ff;
+        }
       }
     }
   }
