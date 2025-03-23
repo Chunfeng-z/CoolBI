@@ -8,6 +8,7 @@ import {
   SearchOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import DataConnectConfig from "@comp/datacenter/DataConnectConfig/DataConnectConfig";
 import {
   Button,
   Card,
@@ -21,14 +22,16 @@ import {
   Space,
   Steps,
   Table,
+  theme,
   Tooltip,
 } from "antd";
-import { ConfigContext } from "antd/es/config-provider";
-import DataConnectConfig from "@comp/datacenter/DataConnectConfig/DataConnectConfig";
-import React, { useContext, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
+
 import "./index.scss";
+import { useThemeStore } from "@/stores/useThemeStore";
 const { Sider, Content } = Layout;
 const prefixCls = "data-center-page";
+const { useToken } = theme;
 
 const DataCenterMenuItems: MenuProps["items"] = [
   {
@@ -163,8 +166,10 @@ const dataSourceTypes: {
 /** 数据中心页面 */
 const DataCenterPage: React.FC = () => {
   /** 全局的组件样式 */
-  const { theme } = useContext(ConfigContext);
-  const headerHeight = theme?.components?.Layout?.headerHeight || "56px";
+  const { token } = useToken();
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
+  /** 全局定义的组件token */
+  const headerHeight = token.Layout?.headerHeight ?? "56px";
   /** 侧边栏的折叠状态 */
   const [collapsed, setCollapsed] = useState<boolean>(false);
   /** 选中的数据菜单 */
@@ -240,7 +245,7 @@ const DataCenterPage: React.FC = () => {
       <Layout
         className={prefixCls}
         style={{
-          height: `calc(100vh - ${headerHeight})`,
+          minHeight: `calc(100vh - ${headerHeight})`,
         }}
       >
         <Sider
@@ -307,7 +312,17 @@ const DataCenterPage: React.FC = () => {
         closable={false}
         onClose={handleCloseDrawer}
         open={open}
-        height={`calc(100vh - 120px)`}
+        // 通过styles属性设置antd组件样式
+        styles={{
+          content: {
+            backgroundColor: isDarkMode ? "" : "#f6f8fc",
+          },
+          body: {
+            display: "flex",
+            flexDirection: "column",
+          },
+        }}
+        height={"90vh"}
       >
         <div className="data-source-header-wrapper">
           <span style={{ fontSize: 18, fontWeight: 500, whiteSpace: "nowrap" }}>
@@ -396,6 +411,11 @@ const DataCenterPage: React.FC = () => {
                         className="data-source-item"
                         key={`${type.id}-${index}`}
                         onClick={() => handleDataSourceItemClick(item.value)}
+                        style={{
+                          backgroundColor: isDarkMode
+                            ? token.colorBgContainer
+                            : "#fff",
+                        }}
                       >
                         <div className="icon">
                           <img
@@ -422,7 +442,13 @@ const DataCenterPage: React.FC = () => {
           </div>
         )}
         {/* 数据源连接 */}
-        {currentStep === 1 && <DataConnectConfig />}
+        {currentStep === 1 && (
+          <DataConnectConfig
+            updateStep={() => {
+              setCurrentStep(2);
+            }}
+          />
+        )}
         {/* 数据源文件上传成功 */}
         {currentStep === 2 && (
           <div className="create-data-source-success">

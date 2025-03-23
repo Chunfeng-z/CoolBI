@@ -8,17 +8,19 @@ import {
   Row,
   Col,
   FormProps,
-  message,
+  App,
+  theme,
 } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import RegisterBg from "@/assets/background/register.png";
 import "./index.scss";
+import { useThemeStore } from "@/stores/useThemeStore";
 const base = import.meta.env.VITE_BASE;
 const { Title, Paragraph } = Typography;
 const prefixCls = "register-page";
-
+const { useToken } = theme;
 type RegisterFieldType = {
   username: string;
   account: string;
@@ -27,7 +29,9 @@ type RegisterFieldType = {
 };
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
+  const { token } = useToken();
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const handleFinish: FormProps<RegisterFieldType>["onFinish"] = (values) => {
     console.log("Success:", values);
     // 处理注册逻辑
@@ -37,12 +41,12 @@ const RegisterPage: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _errorInfo
   ) => {
-    messageApi.error("请检查输入是否正确");
+    message.error("请检查输入是否正确");
   };
 
   /** 注册成功跳转到登陆界面 */
   const handleLoginBtnClick = () => {
-    messageApi.success("正在跳转到登录界面");
+    message.success("正在跳转到登录界面");
     setTimeout(() => {
       navigate(`${base}/login`);
     }, 1000);
@@ -50,7 +54,6 @@ const RegisterPage: React.FC = () => {
 
   return (
     <>
-      {contextHolder}
       {/* 气泡背景 */}
       <StarrySky />
       <Row
@@ -66,7 +69,10 @@ const RegisterPage: React.FC = () => {
           sm={0}
           xs={0}
           className={`${prefixCls}-left`}
-          style={{ height: "100%" }}
+          style={{
+            height: "100%",
+            backgroundColor: isDarkMode ? "#282828" : "#edf3fe",
+          }}
         >
           <div className={`${prefixCls}-left-content`}>
             <img
@@ -92,7 +98,10 @@ const RegisterPage: React.FC = () => {
           sm={24}
           xs={24}
           className={`${prefixCls}-right`}
-          style={{ height: "100%" }}
+          style={{
+            height: "100%",
+            backgroundColor: isDarkMode ? token.colorBgContainer : "#ffffff",
+          }}
         >
           <div className={`${prefixCls}-right-content`}>
             <div className={`${prefixCls}-form-header`}>
@@ -176,7 +185,6 @@ const RegisterPage: React.FC = () => {
                     placeholder="请输入密码"
                   />
                 </Form.Item>
-
                 <Form.Item
                   name="confirmPassword"
                   hasFeedback

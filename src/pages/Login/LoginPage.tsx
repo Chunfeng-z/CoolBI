@@ -1,11 +1,13 @@
 import { UserOutlined, LockOutlined, MobileOutlined } from "@ant-design/icons";
-import { Card, Row, Tabs, Form, Input, Button, Col, App } from "antd";
+import { Card, Row, Tabs, Form, Input, Button, Col, App, theme } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const { useToken } = theme;
 import "./index.scss";
 import logo from "@/assets/icons/logo-dark.svg";
 import StarrySky from "@/components/common/StarrySky";
+import { useThemeStore } from "@/stores/useThemeStore";
 const base = import.meta.env.VITE_BASE;
 const prefixCls = "login-page";
 
@@ -20,6 +22,9 @@ const LoginPage: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { message } = App.useApp();
+  // 颜色主题控制，亮色下采用自定义的颜色
+  const { token } = useToken();
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 登陆方式 */
   const [loginMethod, setLoginMethod] = useState<LoginMethodType>("account");
   /** 展示忘记密码内容 */
@@ -95,7 +100,12 @@ const LoginPage: React.FC = () => {
 
   return (
     <>
-      <div className={`${prefixCls}-wrapper`}>
+      <div
+        className={`${prefixCls}-wrapper`}
+        style={{
+          backgroundColor: isDarkMode ? token.colorBgContainer : "aliceblue",
+        }}
+      >
         {/* 气泡背景 */}
         <StarrySky />
         <div className="cool-bi-login-container">
@@ -104,7 +114,7 @@ const LoginPage: React.FC = () => {
             style={{
               width: "450px",
               height: "550px",
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              opacity: 0.9,
             }}
           >
             <div className="cool-bi-login-header">

@@ -5,12 +5,12 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import {
+  App,
   Button,
   Card,
   Checkbox,
   Divider,
   Input,
-  message,
   Modal,
   Segmented,
   Space,
@@ -18,13 +18,17 @@ import {
   Table,
   TableProps,
   Tabs,
+  theme,
   Tooltip,
   Upload,
   UploadProps,
 } from "antd";
-import React, { useState, useEffect } from "react";
-import "./index.scss";
 import classNames from "classnames";
+import React, { useState, useEffect } from "react";
+
+import "./index.scss";
+import { useThemeStore } from "@/stores/useThemeStore";
+const { useToken } = theme;
 const prefixCls = "data-connect-config";
 const { Dragger } = Upload;
 /** 上传样例表格的数据类型 */
@@ -82,8 +86,18 @@ const columns: TableProps<DataType>["columns"] = [
 interface DataItem {
   [key: string]: string | number;
 }
+
+interface DataConnectConfigProps {
+  /** 更新新建数据源步骤 */
+  updateStep: () => void;
+}
+
 /** 文件上传和数据预览 */
-const DataConnectConfig: React.FC = () => {
+const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
+  const { updateStep } = props;
+  const { message } = App.useApp();
+  const { token } = useToken();
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 文件上传的步骤 */
   const [fileUploadStep, setFileUploadStep] = useState<number>(0);
   /** sheet标题 */
@@ -167,7 +181,7 @@ const DataConnectConfig: React.FC = () => {
   }, [headerRowIndex]);
 
   /** 文件上传的属性配置 */
-  const props: UploadProps = {
+  const draggerProps: UploadProps = {
     name: "file",
     multiple: false,
     accept: ".csv,.xlsx,.xls",
@@ -253,6 +267,8 @@ const DataConnectConfig: React.FC = () => {
 
   const handleOk = () => {
     setIsModalOpen(false);
+    message.success("文件上传成功");
+    updateStep();
   };
 
   const handleCancel = () => {
@@ -311,7 +327,7 @@ const DataConnectConfig: React.FC = () => {
       >
         {fileUploadStep === 0 && (
           <div className="content">
-            <Dragger {...props}>
+            <Dragger {...draggerProps}>
               <p className="cool-bi-drag-icon">
                 <InboxOutlined style={{ fontSize: 50, color: "#1990FF" }} />
               </p>
@@ -354,7 +370,16 @@ const DataConnectConfig: React.FC = () => {
         )}
         {fileUploadStep === 1 && (
           <>
-            <div className="second-upload-step-content">
+            <div
+              className={classNames("second-upload-step-content", {
+                "is-dark-mode": isDarkMode,
+              })}
+              style={{
+                backgroundColor: isDarkMode
+                  ? token.colorBgContainer
+                  : "#f6f8fc",
+              }}
+            >
               <Tabs
                 onChange={onChange}
                 type="card"

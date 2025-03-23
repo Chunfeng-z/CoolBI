@@ -71,6 +71,8 @@ const accountMenuItems: {
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const { token } = theme.useToken();
+  /** header组件高度的token */
+  const headerHeight = token.Layout?.headerHeight ?? "56px";
   /** 系统颜色主题 */
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 系统主题切换 */
@@ -330,7 +332,7 @@ const Home: React.FC = () => {
             </Space>
           </div>
         </Header>
-        <Content>
+        <Content style={{ minHeight: `calc(100vh - ${headerHeight})` }}>
           <Outlet />
         </Content>
       </Layout>
@@ -343,7 +345,12 @@ const Home: React.FC = () => {
         <div className="theme-config-drawer-wrapper">
           <Row>
             <Col span={24}>
-              <span>外观配置</span>
+              <span>主题颜色配置</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <span>组件外观配置</span>
             </Col>
           </Row>
         </div>

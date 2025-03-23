@@ -100,7 +100,6 @@
     padding: 8px;
     width: 100%;
     height: calc(100% - 42px);
-    background-color: #f6f8fc;
     border-radius: 10px;
 
     .ant-tabs {
@@ -115,6 +114,12 @@
         background-color: #fff;
         border-radius: 0 10px 10px;
         flex: 1;
+      }
+    }
+
+    &.is-dark-mode {
+      .ant-tabs-content-holder {
+        background-color: #1c1c1c;
       }
     }
 
