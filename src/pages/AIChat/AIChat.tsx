@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Bubble, BubbleProps, Sender, Welcome } from "@ant-design/x";
-import "./index.scss";
-import { GetRef, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { Bubble, BubbleProps, Sender, Welcome } from "@ant-design/x";
 import { RolesType } from "@ant-design/x/es/bubble/BubbleList";
+import { GetRef, message } from "antd";
 import { Typography } from "antd";
 import markdownit from "markdown-it";
+import React, { useEffect, useState } from "react";
+import "./index.scss";
 const markdown = `### GPT的发展历程`;
 const md = markdownit({ html: true, breaks: true });
 

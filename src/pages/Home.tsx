@@ -26,6 +26,10 @@ import {
   Image,
   Tooltip,
   theme,
+  ColorPicker,
+  Flex,
+  Divider,
+  InputNumber,
 } from "antd";
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -224,6 +228,17 @@ const Home: React.FC = () => {
   const [isThemeConfigDrawerOpen, setIsThemeConfigDrawerOpen] =
     useState<boolean>(false);
 
+  /** 主题配置 */
+  const colorPrimary = useThemeStore((state) => state.colorPrimary);
+  const borderRadius = useThemeStore((state) => state.borderRadius);
+  const setThemeConfig = useThemeStore((state) => state.setThemeConfig);
+  const resetTheme = useThemeStore((state) => state.resetTheme);
+
+  // 重置主题按钮
+  const handleResetTheme = () => {
+    resetTheme();
+  };
+
   return (
     <>
       <Layout>
@@ -341,18 +356,73 @@ const Home: React.FC = () => {
         open={isThemeConfigDrawerOpen}
         onClose={() => setIsThemeConfigDrawerOpen(false)}
         className={`${prefixCls}-theme-config-drawer`}
+        styles={{
+          body: {
+            padding: "8px 24px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          },
+        }}
+        footer={
+          <Button danger onClick={handleResetTheme}>
+            重置主题
+          </Button>
+        }
       >
-        <div className="theme-config-drawer-wrapper">
-          <Row>
-            <Col span={24}>
-              <span>主题颜色配置</span>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <span>组件外观配置</span>
-            </Col>
-          </Row>
+        <div className="theme-config-drawer-content-wrapper">
+          <Divider style={{ marginBlock: 10 }}>
+            <span>主题颜色配置</span>
+          </Divider>
+          <Flex vertical gap={16}>
+            <Flex justify="space-between" align="center">
+              <span>主题色</span>
+              <ColorPicker
+                value={colorPrimary}
+                showText
+                size="middle"
+                onChange={(_color, hex) =>
+                  setThemeConfig({ colorPrimary: hex })
+                }
+              />
+            </Flex>
+            <Flex justify="space-between" align="center">
+              <span>信息色</span>
+              <ColorPicker defaultValue="#1890ff" showText size="middle" />
+            </Flex>
+            <Flex justify="space-between" align="center">
+              <span>成功色</span>
+              <ColorPicker defaultValue="#52c41a" showText size="middle" />
+            </Flex>
+            <Flex justify="space-between" align="center">
+              <span>警告色</span>
+              <ColorPicker defaultValue="#faad14" showText size="middle" />
+            </Flex>
+            <Flex justify="space-between" align="center">
+              <span>错误色</span>
+              <ColorPicker defaultValue="#f5222d" showText size="middle" />
+            </Flex>
+          </Flex>
+          <Divider style={{ marginBlock: 10 }}>
+            <span>组件样式配置</span>
+          </Divider>
+          <Flex vertical gap={16}>
+            <Flex justify="space-between" align="center">
+              <span>组件圆角</span>
+              <InputNumber
+                min={0}
+                max={8}
+                value={borderRadius}
+                onChange={(value) =>
+                  value !== null && setThemeConfig({ borderRadius: value })
+                }
+              />
+            </Flex>
+            <Flex justify="space-between" align="center">
+              <span>组件字号</span>
+              <InputNumber min={12} max={14} defaultValue={14} />
+            </Flex>
+          </Flex>
         </div>
       </Drawer>
       <Drawer
@@ -365,6 +435,11 @@ const Home: React.FC = () => {
         }}
         open={isDrawerOpen}
         width={600}
+        styles={{
+          body: {
+            padding: 0,
+          },
+        }}
         className={`${prefixCls}-drawer`}
       >
         <div className="account-manage-setting-wrapper">
