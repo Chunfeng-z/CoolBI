@@ -62,7 +62,7 @@ const RegisterPage: React.FC = () => {
         }}
       >
         <Col
-          md={12}
+          md={8}
           sm={0}
           xs={0}
           className={`${prefixCls}-left`}
@@ -88,7 +88,7 @@ const RegisterPage: React.FC = () => {
           </div>
         </Col>
         <Col
-          md={12}
+          md={16}
           sm={24}
           xs={24}
           className={`${prefixCls}-right`}

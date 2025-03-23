@@ -103,7 +103,7 @@ const LoginPage: React.FC = () => {
             variant="borderless"
             style={{
               width: "450px",
-              height: "500px",
+              height: "550px",
               backgroundColor: "rgba(255, 255, 255, 0.8)",
             }}
           >
