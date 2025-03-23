@@ -7,6 +7,8 @@ import {
   EditOutlined,
   FileTextOutlined,
   ApiOutlined,
+  SunFilled,
+  MoonFilled,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -22,12 +24,16 @@ import {
   Row,
   Col,
   Image,
+  Tooltip,
+  theme,
 } from "antd";
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./index.scss";
 
 import logo from "@/assets/icons/logo-dark.svg";
+import { useThemeStore } from "@/stores/useThemeStore";
+
 const prefixCls = "home-page";
 const base = import.meta.env.VITE_BASE;
 const { Header, Content } = Layout;
@@ -64,6 +70,11 @@ const accountMenuItems: {
 /** 主页内容 */
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { token } = theme.useToken();
+  /** 系统颜色主题 */
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
+  /** 系统主题切换 */
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
   /** 当前选中的菜单项 */
   const [selectedMenuKey, setSelectedMenuKey] = useState<MenuItemKey>(
     MenuItemKey.Workbench
@@ -207,6 +218,10 @@ const Home: React.FC = () => {
     }, 1000);
   };
 
+  /** 主题配置的抽屉展开状态 */
+  const [isThemeConfigDrawerOpen, setIsThemeConfigDrawerOpen] =
+    useState<boolean>(false);
+
   return (
     <>
       <Layout>
@@ -215,10 +230,10 @@ const Home: React.FC = () => {
             position: "sticky",
             top: 0,
             zIndex: 1,
-            width: "100%",
             display: "flex",
-            alignItems: "self-start",
-            borderBottom: "1px solid #f0f0f0",
+            alignItems: "center",
+            borderBottom: `1px solid ${token.colorBorder}`,
+            padding: "0 20px",
           }}
         >
           <Button
@@ -226,7 +241,7 @@ const Home: React.FC = () => {
             style={{
               height: "fit-content",
               fontSize: "1.2rem",
-              color: "black",
+              color: `${token.colorTextHeading}`,
               padding: 0,
               fontWeight: "500",
             }}
@@ -236,7 +251,6 @@ const Home: React.FC = () => {
           </Button>
           <Menu
             className="center-menu"
-            theme="light"
             mode="horizontal"
             selectedKeys={[selectedMenuKey]}
             onSelect={handleMenuSelect}
@@ -244,7 +258,6 @@ const Home: React.FC = () => {
             items={headerMenuItems.map((item) => ({
               ...item,
               style: {
-                color: "black",
                 fontWeight: item.key === selectedMenuKey ? "bold" : "normal",
               },
             }))}
@@ -257,14 +270,34 @@ const Home: React.FC = () => {
           />
           <div className="right-menu">
             <Space size="middle">
-              <Button type="text" size="middle" icon={<SettingOutlined />} />
+              <Tooltip
+                title={isDarkMode ? "点击切换为亮色模式" : "点击切换为暗色模式"}
+                placement="bottom"
+              >
+                <Button
+                  type="text"
+                  size="middle"
+                  shape="circle"
+                  onClick={toggleTheme}
+                  icon={isDarkMode ? <MoonFilled /> : <SunFilled />}
+                />
+              </Tooltip>
+              <Tooltip title="主题配置" placement="bottom">
+                <Button
+                  type="text"
+                  size="middle"
+                  shape="circle"
+                  icon={<SettingOutlined />}
+                  onClick={() => setIsThemeConfigDrawerOpen(true)}
+                />
+              </Tooltip>
               <Dropdown
                 placement="bottomRight"
                 menu={{
                   items: [
                     {
                       key: "account",
-                      label: "账号管理与设置",
+                      label: "账号管理",
                       icon: <UserOutlined />,
                       onClick: showDrawer,
                     },
@@ -297,14 +330,24 @@ const Home: React.FC = () => {
             </Space>
           </div>
         </Header>
-        <Content
-          style={{
-            backgroundColor: "#F5F5F5",
-          }}
-        >
+        <Content>
           <Outlet />
         </Content>
       </Layout>
+      <Drawer
+        title="主题配置"
+        open={isThemeConfigDrawerOpen}
+        onClose={() => setIsThemeConfigDrawerOpen(false)}
+        className={`${prefixCls}-theme-config-drawer`}
+      >
+        <div className="theme-config-drawer-wrapper">
+          <Row>
+            <Col span={24}>
+              <span>外观配置</span>
+            </Col>
+          </Row>
+        </div>
+      </Drawer>
       <Drawer
         title="账号管理与设置"
         onClose={() => {

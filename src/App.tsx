@@ -1,4 +1,4 @@
-import { ConfigProvider, App as AntApp } from "antd";
+import { ConfigProvider, App as AntApp, theme } from "antd";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import AIChat from "./pages/AIChat/AIChat";
@@ -9,21 +9,28 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/Login/LoginPage";
 import RegisterPage from "./pages/Register/RegisterPage";
 import WorkBenchPage from "./pages/WorkBench/workBenchPage";
+import { useThemeStore } from "./stores/useThemeStore";
 
 const base = import.meta.env.VITE_BASE;
 
 export default function App() {
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
   return (
     <>
       <ConfigProvider
         theme={{
+          // antd主题算法
+          algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
           token: {
             colorPrimary: "#1890ff",
+            // 设置所有组件的圆角
+            // borderRadius: 2,
+            // fontSize: 12,
           },
           components: {
             Layout: {
-              headerBg: "#FFFFFF",
-              headerPadding: "0 20px",
+              headerBg: isDarkMode ? "#141414" : "#ffffff",
+              // header的高度只能通过token设置
               headerHeight: "56px",
             },
           },
