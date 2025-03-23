@@ -41,8 +41,14 @@ const CONFIG_TABS = [
   },
 ];
 
+interface RightComponentConfigProps {
+  /** 组件样式 */
+  style?: React.CSSProperties;
+}
+
 /** 仪表板右侧组件的配置菜单 */
-const RightComponentConfig: React.FC = () => {
+const RightComponentConfig: React.FC<RightComponentConfigProps> = (props) => {
+  const { style } = props;
   /** 获取当前选中的图表 */
   const getCurrentChartConfig = useChartStore(
     (state) => state.getCurrentChartConfig
@@ -91,7 +97,7 @@ const RightComponentConfig: React.FC = () => {
   };
 
   return (
-    <div className="setting-panel">
+    <div className="setting-panel" style={{ ...style }}>
       <div
         className={classNames(`${prefixCls}-container`, {
           "is-collapsed": isCompConfigCollapsed,

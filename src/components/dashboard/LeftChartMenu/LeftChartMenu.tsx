@@ -8,10 +8,18 @@ import { CHART_ICON_MAP } from "../utils/index";
 import ChartCategory from "./ChartCategory";
 import { ChartCategoryData } from "./data";
 
+import { useThemeStore } from "@/stores/useThemeStore";
+
 const prefixCls = "left-chart-menu";
 
+interface LeftChartMenuProps {
+  style?: React.CSSProperties;
+}
+
 /** 仪表板左侧的图表菜单 */
-const LeftChartMenu: React.FC = () => {
+const LeftChartMenu: React.FC<LeftChartMenuProps> = (props) => {
+  const { style } = props;
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 当前hover选中的图表 */
   const [currentHoverChart, setCurrentHoverChart] =
     React.useState<ChartItem | null>(null);
@@ -22,9 +30,19 @@ const LeftChartMenu: React.FC = () => {
     setCurrentHoverChart(null);
   };
   return (
-    <div className={`${prefixCls}-scroll-wrapper`}>
+    <div
+      className={`${prefixCls}-scroll-wrapper`}
+      style={{
+        ...style,
+      }}
+    >
       <div className={`${prefixCls}-container`}>
-        <div className={`${prefixCls}-title`}>
+        <div
+          className={`${prefixCls}-title`}
+          style={{
+            backgroundColor: isDarkMode ? "#1f1f1f" : "#ffffff",
+          }}
+        >
           <span>图表组件</span>
           <Tooltip title="固定图表菜单">
             <Button type="text" size="small" icon={<PushpinOutlined />} />
@@ -42,7 +60,12 @@ const LeftChartMenu: React.FC = () => {
           ))}
         </div>
         {currentHoverChart && (
-          <div className={`${prefixCls}-description`}>
+          <div
+            className={`${prefixCls}-description`}
+            style={{
+              backgroundColor: isDarkMode ? "#1f1f1f" : "#ffffff",
+            }}
+          >
             <span>{currentHoverChart.name}</span>
             <div className="detail">
               <div className="chart-icon-image">

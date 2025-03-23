@@ -17,6 +17,8 @@ import classNames from "classnames";
 import React, { useState } from "react";
 
 import { pageRasterOptions as options } from "../utils";
+
+import { useThemeStore } from "@/stores/useThemeStore";
 const prefixCls = "component-panel";
 enum ScaleValue {
   "level1" = "25%",
@@ -42,8 +44,15 @@ const items: MenuProps["items"] = [
     label: <span>{ScaleValue.level4}</span>,
   },
 ];
+
+interface ComponentPanelProps {
+  style?: React.CSSProperties;
+}
+
 /** 仪表板-组件操作菜单 */
-const ComponentPanel: React.FC = () => {
+const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
+  const { style } = props;
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 图表菜单的显示状态 */
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   /** 当前菜单缩放倍率 */
@@ -74,9 +83,12 @@ const ComponentPanel: React.FC = () => {
   }));
 
   return (
-    <div className={`${prefixCls}-container`}>
+    <div className={`${prefixCls}-container`} style={{ ...style }}>
       {isPageRasterSettingOpen ? (
-        <div className={`${prefixCls}-layout-menu`}>
+        <div
+          className={classNames(`${prefixCls}-layout-menu`)}
+          style={{ backgroundColor: isDarkMode ? "#141414" : "#f4f4f5" }}
+        >
           <div className="layout-menu-label">页面栅格设置</div>
           <div className="layout-menu">
             <div className="layout-menu-item">

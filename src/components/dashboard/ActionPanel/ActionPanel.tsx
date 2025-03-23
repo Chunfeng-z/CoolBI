@@ -1,13 +1,19 @@
 import { LeftOutlined, RollbackOutlined, StarFilled } from "@ant-design/icons";
 import { Button, Divider, Space, Tooltip } from "antd";
-import DashBoardIcon from "@/assets/dashboard/dashboard-icon.svg";
 import React, { useState } from "react";
+
+import DashBoardIcon from "@/assets/dashboard/dashboard-icon.svg";
 import useChartStore from "@/stores/useChartStore";
 
 const prefixCls = "action-panel";
 
+interface ActionPanelProps {
+  style?: React.CSSProperties;
+}
+
 /** 仪表板操作栏 */
-const ActionPanel: React.FC = () => {
+const ActionPanel: React.FC<ActionPanelProps> = (props) => {
+  const { style } = props;
   const undo = useChartStore((state) => state.undo);
   const redo = useChartStore((state) => state.redo);
   const history = useChartStore((state) => state.history);
@@ -19,7 +25,7 @@ const ActionPanel: React.FC = () => {
   };
 
   return (
-    <div className={`${prefixCls}-container`}>
+    <div className={`${prefixCls}-container`} style={{ ...style }}>
       <div className={`${prefixCls}-left`}>
         <div className="back-button">
           <Tooltip title="返回">
@@ -53,8 +59,10 @@ const ActionPanel: React.FC = () => {
               type="text"
               size="small"
               icon={<RollbackOutlined />}
-              onClick={undo}
-              disabled={history.length === 0}
+              onClick={() => {
+                undo();
+              }}
+              disabled={history.length <= 1}
             >
               撤销
             </Button>

@@ -45,7 +45,7 @@ const RightTheme: React.FC<IRightThemeProps> = (props) => {
       className={classNames(`${prefixCls}-container`, {
         "is-collapsed": isCollapsed,
       })}
-      style={style}
+      style={{ ...style }}
     >
       <div
         className={classNames(`${prefixCls}-collapse-header`, {
