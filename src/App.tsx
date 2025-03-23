@@ -14,6 +14,8 @@ import { useThemeStore } from "./stores/useThemeStore";
 const base = import.meta.env.VITE_BASE;
 
 export default function App() {
+  const CustomColorPrimary = useThemeStore((state) => state.colorPrimary);
+  const CustomBorderRadius = useThemeStore((state) => state.borderRadius);
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   return (
     <>
@@ -22,10 +24,9 @@ export default function App() {
           // antd主题算法
           algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
           token: {
-            colorPrimary: "#1890ff",
-            // 设置所有组件的圆角
-            // borderRadius: 2,
-            // fontSize: 12,
+            colorPrimary: CustomColorPrimary,
+            borderRadius: CustomBorderRadius,
+            // 可以添加更多配置项
           },
           components: {
             Layout: {
