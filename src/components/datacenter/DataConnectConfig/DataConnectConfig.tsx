@@ -616,7 +616,17 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        height={500}
+        styles={{
+          content: {
+            width: 500,
+            height: 600,
+            display: "flex",
+            flexDirection: "column",
+          },
+          footer: {
+            marginTop: "auto",
+          },
+        }}
         footer={[
           <Button key="back" onClick={handleCancel}>
             取消
