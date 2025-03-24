@@ -1,7 +1,8 @@
 import React from "react";
-import "./index.scss";
+
 import { ChartItem } from "../../utils/index";
 import ChartItemIcon from "../ChartItemIcon";
+import "./index.scss";
 const prefixCls = "chart-category";
 
 /** 图表分类属性 */

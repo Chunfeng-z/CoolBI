@@ -1,8 +1,12 @@
 import { Tooltip } from "antd";
+import classNames from "classnames";
 import React, { useEffect, useRef } from "react";
-import { CHART_ICON_MAP } from "../../utils";
-import "./index.scss";
 import { useDrag } from "react-dnd";
+
+import { CHART_ICON_MAP } from "../../utils";
+
+import "./index.scss";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 interface IChartItemIconProps {
   /** 图标名称 */
@@ -19,6 +23,7 @@ interface IChartItemIconProps {
 
 /** 图表菜单的图表icon */
 const ChartItemIcon: React.FC<IChartItemIconProps> = (props) => {
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const { name, icon, shortName, onMouseEnter, onMouseLeave } = props;
   const ref = useRef<HTMLDivElement | null>(null);
   const [, drag] = useDrag({
@@ -33,7 +38,9 @@ const ChartItemIcon: React.FC<IChartItemIconProps> = (props) => {
   return (
     <Tooltip title={name}>
       <div
-        className="chart-items"
+        className={classNames("chart-items", {
+          "is-dark-mode": isDarkMode,
+        })}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         ref={ref}
