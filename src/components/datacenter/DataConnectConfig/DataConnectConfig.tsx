@@ -1,4 +1,7 @@
 import {
+  CalendarOutlined,
+  FieldNumberOutlined,
+  FieldStringOutlined,
   InboxOutlined,
   InfoCircleOutlined,
   QuestionCircleOutlined,
@@ -10,7 +13,9 @@ import {
   Card,
   Checkbox,
   Divider,
+  Dropdown,
   Input,
+  MenuProps,
   Modal,
   Segmented,
   Space,
@@ -24,10 +29,11 @@ import {
   UploadProps,
 } from "antd";
 import classNames from "classnames";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import "./index.scss";
 import { useThemeStore } from "@/stores/useThemeStore";
+import { ExcelData, useExcelParser } from "@/utils/hooks";
 const { useToken } = theme;
 const prefixCls = "data-connect-config";
 const { Dragger } = Upload;
@@ -92,6 +98,13 @@ interface DataConnectConfigProps {
   updateStep: () => void;
 }
 
+/** 字段类型对应的图标映射 */
+const fieldTypeIconMap = {
+  string: <FieldStringOutlined style={{ color: "#488BF7" }} />,
+  number: <FieldNumberOutlined style={{ color: "#2BC048" }} />,
+  date: <CalendarOutlined style={{ color: "#488BF7" }} />,
+};
+
 /** 文件上传和数据预览 */
 const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
   const { updateStep } = props;
@@ -100,8 +113,14 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 文件上传的步骤 */
   const [fileUploadStep, setFileUploadStep] = useState<number>(0);
-  /** sheet标题 */
+  /** 上传的文件的原始名称 */
+  const [fileOriginName, setFileOriginName] = useState<string>("");
+  /** 解析后展示的文件sheet标题-可修改 */
   const [sheetTitle, setSheetTitle] = useState<string>("");
+  /** 解析后文件sheet的标题行 */
+  const [sheetHeaders, setSheetHeaders] = useState<string[]>([]);
+  /** 解析后文件sheet的数据rows */
+  const [sheetRows, setSheetRows] = useState<DataItem[]>([]);
   /** 当前选中的segment */
   const [currentSegment, setCurrentSegment] = useState<
     "DataPreview" | "FieldDetails"
@@ -110,109 +129,117 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   /** 解析的数据 */
   const [parsedData, setParsedData] = useState<DataItem[]>([]);
-  /** 表格列配置 */
-  const [tableColumns, setTableColumns] = useState<TableProps<any>["columns"]>(
-    []
-  );
+  /** 数据预览的表格列配置 */
+  const [previewTableColumns, setPreviewTableColumns] = useState<
+    TableProps<any>["columns"]
+  >([]);
   /** 标题行索引 */
   const [headerRowIndex, setHeaderRowIndex] = useState<string>("1");
   /** 数据协议的选择状态 */
   const [isNoticeChecked, setIsNoticeChecked] = useState<boolean>(false);
+  const items: MenuProps["items"] = [
+    {
+      key: "string",
+      label: <span>{fieldTypeIconMap.string} 文本</span>,
+    },
+    {
+      key: "number",
+      label: <span>{fieldTypeIconMap.number} 数值</span>,
+    },
+    {
+      key: "date",
+      label: <span>{fieldTypeIconMap.date} 日期</span>,
+    },
+  ];
 
-  /** 解析CSV文件 */
-  const parseCSVFile = (file: File, headerRow: number = 0) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (e.target && e.target.result) {
-        const csvContent = e.target.result as string;
-        const lines = csvContent.split("\n");
-
-        // 提取标题行
-        const headers = lines[headerRow]
-          .split(",")
-          .map((header) => header.trim());
-
-        // 创建动态列配置
-        const dynamicColumns = headers.map((header, index) => ({
-          title: header,
-          dataIndex: header,
-          key: header,
-          width: 150,
-        }));
-        setTableColumns(dynamicColumns);
-
-        // 解析数据行
-        const parsedRows: DataItem[] = [];
-        for (let i = headerRow + 1; i < lines.length; i++) {
-          if (lines[i].trim() === "") continue;
-
-          const values = lines[i].split(",");
-          const row: DataItem = {
-            key: `${i - headerRow}`,
-          };
-
-          headers.forEach((header, index) => {
-            row[header] = values[index] ? values[index].trim() : "";
-          });
-
-          parsedRows.push(row);
-        }
-
-        setParsedData(parsedRows);
-
-        // 自动设置文件名作为sheet标题（去掉扩展名）
-        if (!sheetTitle) {
-          const fileName = file.name.replace(/\.[^/.]+$/, "");
-          setSheetTitle(fileName);
-        }
-
-        // 自动跳转到预览步骤
-        setFileUploadStep(1);
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  // 当标题行索引变化时重新解析数据
-  useEffect(() => {
-    if (uploadedFile) {
-      parseCSVFile(uploadedFile, parseInt(headerRowIndex) - 1);
-    }
-  }, [headerRowIndex]);
+  // 解析Excel文件
+  const { parseFile } = useExcelParser();
 
   /** 文件上传的属性配置 */
   const draggerProps: UploadProps = {
     name: "file",
     multiple: false,
+    maxCount: 1,
     accept: ".csv,.xlsx,.xls",
     beforeUpload: (file) => {
       // 检查文件类型
       const isValidType = /\.(csv|xlsx|xls)$/i.test(file.name);
       if (!isValidType) {
-        message.error("请上传.csv、.xlsx或.xls格式的文件!");
+        message.error(
+          "当前文件格式暂不支持，请上传.csv、.xlsx或.xls格式的文件!"
+        );
+        // 阻止列表展示
         return Upload.LIST_IGNORE;
       }
+      parseFile(file)
+        .then((data: ExcelData) => {
+          message.success(`${file.name} 解析成功！`);
+          setSheetTitle(data.sheetName || "");
+          setFileOriginName(data.fileName || "");
+          setSheetHeaders(data.headers || []);
+          // 格式化数据行，确保每行有唯一key，并且列名与header对应
+          const formattedRows = (data.rows || []).map((row, rowIndex) => {
+            // 创建新的行对象，添加唯一key
+            const formattedRow: DataItem = {
+              key: `${rowIndex + 1}`,
+            };
 
-      // 存储上传的文件
-      setUploadedFile(file);
+            // 遍历所有表头，将对应的值添加到行数据中
+            data.headers?.forEach((header, index) => {
+              formattedRow[header] = row[index] as string;
+            });
 
-      // 如果是CSV文件，直接解析
-      if (file.name.toLowerCase().endsWith(".csv")) {
-        parseCSVFile(file);
-      } else {
-        message.info("Excel文件格式支持待完善，请上传CSV格式文件");
-      }
+            return formattedRow;
+          });
+
+          setSheetRows(formattedRows);
+          // TODO:存储上传的文件,用户预览时用户确认上传
+          setUploadedFile(file);
+          // 动态生成表格的列配置
+          const dynamicColumns = data.headers?.map((header, index) => ({
+            title: (
+              <Space>
+                <Tooltip title="切换字段类型">
+                  <Dropdown
+                    placement="bottomLeft"
+                    menu={{ items }}
+                    trigger={["click"]}
+                  >
+                    <Button
+                      size="small"
+                      type="text"
+                      icon={fieldTypeIconMap.string}
+                    />
+                  </Dropdown>
+                </Tooltip>
+                <Input value={header} size="small" />
+              </Space>
+            ),
+            dataIndex: header,
+            key: header,
+            ellipsis: {
+              showTitle: false,
+            },
+            width: 150,
+            render: (text) => {
+              return (
+                <Tooltip title={text} placement="topLeft">
+                  {text}
+                </Tooltip>
+              );
+            },
+          }));
+          setPreviewTableColumns(dynamicColumns);
+          // 自动跳转到预览步骤
+          setFileUploadStep(1);
+        })
+        .catch((err) => {
+          message.error(`${file.name} 解析失败，请重试！`);
+          console.error(err);
+        });
 
       // 返回false阻止自动上传
       return false;
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-      const file = e.dataTransfer.files[0];
-      if (file && file.name.toLowerCase().endsWith(".csv")) {
-        setUploadedFile(file);
-        parseCSVFile(file);
-      }
     },
     style: {
       width: 650,
@@ -234,7 +261,7 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
     setCurrentSegment(value as "DataPreview" | "FieldDetails");
   };
 
-  /** 处理标题行索引变化 */
+  /** 处理标题行索引变化-只允许输入数字 */
   const handleHeaderRowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (/^\d*$/.test(value)) {
@@ -243,12 +270,66 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
     }
   };
 
-  /** 刷新数据处理 */
+  /** 当标题行索引变化时重新解析数据-只更新表头行和数据行 */
   const handleRefresh = () => {
     if (uploadedFile && headerRowIndex) {
       const headerRowNum = parseInt(headerRowIndex);
       if (headerRowNum > 0) {
-        parseCSVFile(uploadedFile, headerRowNum - 1);
+        parseFile(uploadedFile, {
+          headerRow: parseInt(headerRowIndex) - 1,
+        }).then((data: ExcelData) => {
+          setSheetHeaders(data.headers || []);
+          // 格式化数据行，确保每行有唯一key，并且列名与header对应
+          const formattedRows = (data.rows || []).map((row, rowIndex) => {
+            // 创建新的行对象，添加唯一key
+            const formattedRow: DataItem = {
+              key: `${rowIndex + 1}`,
+            };
+            // 遍历所有表头，将对应的值添加到行数据中
+            data.headers?.forEach((header, index) => {
+              formattedRow[header] = row[index] as string;
+            });
+            return formattedRow;
+          });
+
+          setSheetRows(formattedRows);
+
+          // 动态生成表格的列配置
+          const dynamicColumns = data.headers?.map((header, index) => ({
+            title: (
+              <Space>
+                <Tooltip title="切换字段类型">
+                  <Dropdown
+                    placement="bottomLeft"
+                    menu={{ items }}
+                    trigger={["click"]}
+                  >
+                    <Button
+                      size="small"
+                      type="text"
+                      icon={fieldTypeIconMap.string}
+                    />
+                  </Dropdown>
+                </Tooltip>
+                <Input value={header} size="small" />
+              </Space>
+            ),
+            dataIndex: header,
+            key: header,
+            ellipsis: {
+              showTitle: false,
+            },
+            width: 150,
+            render: (text) => {
+              return (
+                <Tooltip title={text} placement="topLeft">
+                  {text}
+                </Tooltip>
+              );
+            },
+          }));
+          setPreviewTableColumns(dynamicColumns);
+        });
         message.success("数据已刷新");
       } else {
         message.error("标题行索引必须大于0");
@@ -336,7 +417,7 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
                 或将文件拖拽到此区域上传
               </p>
               <p className="cool-bi-upload-hint">
-                文件只支持.csV、.xlsx、.xls格式
+                文件只支持.csv、.xlsx、.xls格式
               </p>
             </Dragger>
             <div className="upload-description-title">
@@ -363,6 +444,7 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
                 dataSource={exampleData}
                 pagination={false}
                 size="small"
+                bordered
               />
               <span>上传示例</span>
             </div>
@@ -388,7 +470,7 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
                   {
                     label: (
                       <div style={{ minWidth: 100 }}>
-                        {uploadedFile?.name || "数据表"}
+                        {fileOriginName || "数据表"}
                       </div>
                     ),
                     key: "1",
@@ -450,12 +532,13 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
                         </div>
                         <div className="analyze-file-table-wrapper">
                           {currentSegment === "DataPreview" ? (
-                            <div>
+                            <div className="data-preview">
                               <Table
-                                columns={tableColumns}
-                                dataSource={parsedData}
+                                columns={previewTableColumns}
+                                dataSource={sheetRows}
                                 pagination={false}
                                 size="small"
+                                bordered
                                 scroll={{ x: "max-content", y: 360 }}
                               />
                               <Space className="tip" style={{ marginTop: 3 }}>
@@ -468,9 +551,14 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
                               <Table
                                 columns={[
                                   {
-                                    title: "字段名",
+                                    title: "文件列名",
                                     dataIndex: "name",
                                     key: "name",
+                                  },
+                                  {
+                                    title: "数据库字段名称",
+                                    dataIndex: "field",
+                                    key: "field",
                                   },
                                   {
                                     title: "字段类型",
@@ -483,7 +571,7 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
                                     key: "example",
                                   },
                                 ]}
-                                dataSource={tableColumns?.map(
+                                dataSource={previewTableColumns?.map(
                                   (col: any, index) => ({
                                     key: index,
                                     name: col.title,

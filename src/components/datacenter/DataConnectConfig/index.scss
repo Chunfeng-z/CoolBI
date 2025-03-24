@@ -127,6 +127,12 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+
+      .data-preview {
+        .ant-table-body {
+          scrollbar-width: thin;
+        }
+      }
     }
 
     .analyze-file-table-header {
