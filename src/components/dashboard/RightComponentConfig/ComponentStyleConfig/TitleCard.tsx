@@ -1,16 +1,9 @@
-import React, {
-  CSSProperties,
-  useCallback,
-  useState,
-  useEffect,
-  useMemo,
-} from "react";
-import CoolCollapse from "@comp/common/CoolCollapse";
 import {
   CaretRightOutlined,
   DesktopOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
+import CoolCollapse from "@comp/common/CoolCollapse";
 import {
   Checkbox,
   CheckboxProps,
@@ -21,10 +14,19 @@ import {
   InputNumberProps,
   Radio,
   RadioChangeEvent,
+  theme,
   Tooltip,
 } from "antd";
-import useChartStore, { ChartConfig } from "@/stores/useChartStore";
 import { pick } from "lodash-es";
+import React, {
+  CSSProperties,
+  useCallback,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
+
+import useChartStore, { ChartConfig } from "@/stores/useChartStore";
 const prefixCls = "title-card";
 
 type TitleCardProps = Pick<
@@ -45,6 +47,8 @@ type TitleCardProps = Pick<
 >;
 /** 标题与卡片 */
 const TitleCard: React.FC = () => {
+  const { token } = theme.useToken();
+
   const titleCardProps = useMemo(
     () => [
       "isShowTitle",
@@ -174,9 +178,9 @@ const TitleCard: React.FC = () => {
   };
 
   const panelStyle: React.CSSProperties = {
-    marginBottom: 8,
-    background: "#F7F7F7",
-    borderRadius: 5,
+    marginBottom: 5,
+    background: token.colorFillAlter,
+    borderRadius: token.borderRadius,
   };
   const getItems: (panelStyle: CSSProperties) => CollapseProps["items"] =
     useCallback(
@@ -186,21 +190,31 @@ const TitleCard: React.FC = () => {
           label: "标题",
           children: (
             <div className="title-card-item">
-              <Checkbox
-                checked={curTitleCardConfig?.isShowTitle}
-                onChange={handleCheckboxChange("isShowTitle")}
-              >
-                显示主标题
-              </Checkbox>
+              <div className="title-card-text-simple">
+                <Checkbox
+                  checked={curTitleCardConfig?.isShowTitle}
+                  onChange={handleCheckboxChange("isShowTitle")}
+                >
+                  显示主标题
+                </Checkbox>
+              </div>
               <div className="title-card-text">
                 <span>标题</span>
-                <Tooltip title="标题最长允许输入100字符">
+                <Tooltip
+                  title="标题最长允许输入100字符"
+                  styles={{
+                    root: {
+                      width: 150,
+                    },
+                  }}
+                >
                   <InfoCircleOutlined />
                 </Tooltip>
                 <Input
                   disabled={!curTitleCardConfig?.isShowTitle}
                   size="small"
                   placeholder="请输入图表组件名称"
+                  maxLength={100}
                   value={curTitleCardConfig?.title}
                   onChange={handleInputChange("title")}
                 />
@@ -210,7 +224,6 @@ const TitleCard: React.FC = () => {
                 <ColorPicker
                   value={curTitleCardConfig?.titleColor}
                   size="small"
-                  showText
                   disabled={!curTitleCardConfig?.isShowTitle}
                   onChange={(color) =>
                     handleColorPicker("titleColor", color.toHexString())
@@ -238,45 +251,64 @@ const TitleCard: React.FC = () => {
           label: "备注与尾注",
           children: (
             <div className="title-card-item">
-              <Checkbox
-                checked={curTitleCardConfig?.isShowRemark}
-                onChange={handleCheckboxChange("isShowRemark")}
-              >
-                备注
-              </Checkbox>
+              <div className="title-card-text-simple">
+                <Checkbox
+                  checked={curTitleCardConfig?.isShowRemark}
+                  onChange={handleCheckboxChange("isShowRemark")}
+                >
+                  备注
+                </Checkbox>
+              </div>
               <div className="title-card-text">
-                <span>备注内容</span>
+                <span>内容</span>
                 <Input
                   disabled={!curTitleCardConfig?.isShowRemark}
                   size="small"
+                  maxLength={100}
                   value={curTitleCardConfig?.remark}
                   placeholder="请输入备注内容"
                   onChange={handleInputChange("remark")}
                 />
               </div>
-              <div className="title-card-text">
+              <div className="title-card-text-vertical">
                 <span>位置</span>
-                <Radio.Group
-                  disabled={!curTitleCardConfig?.isShowRemark}
-                  onChange={handleRemarkPositionChange}
-                  value={curTitleCardConfig?.remarkPosition}
-                  options={[
-                    { value: "afterTitle", label: "标题后方" },
-                    { value: "belowTitle", label: "标题下方" },
-                  ]}
-                />
+                <div className="title-card-text-right">
+                  <Radio.Group
+                    disabled={!curTitleCardConfig?.isShowRemark}
+                    onChange={handleRemarkPositionChange}
+                    value={curTitleCardConfig?.remarkPosition}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 4,
+                    }}
+                    options={[
+                      {
+                        value: "afterTitle",
+                        label: <span>标题后</span>,
+                      },
+                      {
+                        value: "belowTitle",
+                        label: <span>标题下</span>,
+                      },
+                    ]}
+                  />
+                </div>
               </div>
-              <Checkbox
-                checked={curTitleCardConfig?.isShowEndNote}
-                onChange={handleCheckboxChange("isShowEndNote")}
-              >
-                尾注
-              </Checkbox>
+              <div className="title-card-text-simple">
+                <Checkbox
+                  checked={curTitleCardConfig?.isShowEndNote}
+                  onChange={handleCheckboxChange("isShowEndNote")}
+                >
+                  尾注
+                </Checkbox>
+              </div>
               <div className="title-card-text">
                 <span>尾注内容</span>
                 <Input
                   disabled={!curTitleCardConfig?.isShowEndNote}
                   size="small"
+                  maxLength={100}
                   value={curTitleCardConfig?.endNote}
                   placeholder="请输入尾注内容"
                   onChange={handleInputChange("endNote")}
@@ -291,19 +323,20 @@ const TitleCard: React.FC = () => {
           label: "组件容器",
           children: (
             <div className="title-card-item">
-              <Checkbox
-                checked={curTitleCardConfig?.isShowBackgroundColor}
-                onChange={handleCheckboxChange("isShowBackgroundColor")}
-              >
-                组件背景填充
-              </Checkbox>
+              <div className="title-card-text-simple">
+                <Checkbox
+                  checked={curTitleCardConfig?.isShowBackgroundColor}
+                  onChange={handleCheckboxChange("isShowBackgroundColor")}
+                >
+                  组件背景填充
+                </Checkbox>
+              </div>
               <div className="title-card-text">
                 <span>卡片颜色</span>
                 <ColorPicker
                   size="small"
                   value={curTitleCardConfig?.backgroundColor}
                   disabled={!curTitleCardConfig?.isShowBackgroundColor}
-                  showText
                   onChange={(color) =>
                     handleColorPicker("backgroundColor", color.toHexString())
                   }
@@ -360,7 +393,6 @@ const TitleCard: React.FC = () => {
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
         items={getItems(panelStyle)}
-        style={{ fontSize: 13 }}
       />
     </div>
   );

@@ -13,6 +13,7 @@ import { ChartTypeEnum } from "../utils";
 
 import ChartCard from "./ChartCard/ChartCard";
 
+import CoolIndicatorTrendChart from "@/components/common/CoolIndicatorTrendChart";
 import useChartStore, { ChartConfig } from "@/stores/useChartStore";
 import { generateUUID } from "@/utils/uuid";
 
@@ -43,6 +44,7 @@ const DashBoardDesign: React.FC = () => {
         ChartTypeEnum.barStack,
         ChartTypeEnum.barStackPercent,
         ChartTypeEnum.pie,
+        ChartTypeEnum.indicatorTrend,
       ],
       drop(item: { chart: string }) {
         // 添加新的图表
@@ -76,6 +78,8 @@ const DashBoardDesign: React.FC = () => {
         return <CoolBarStackPercentChart />;
       case ChartTypeEnum.pie:
         return <CoolPieChart />;
+      case ChartTypeEnum.indicatorTrend:
+        return <CoolIndicatorTrendChart />;
       default:
         return <div className="error-chart">未知图表类型</div>;
     }

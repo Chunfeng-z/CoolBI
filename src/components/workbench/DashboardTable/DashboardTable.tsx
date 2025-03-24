@@ -8,6 +8,7 @@ import {
   DashBoardTableDataKeys,
   DashBoardTableActions,
 } from "../utils/types";
+
 const prefixCls = "dashboard-table";
 
 /** 表格表头配置 */

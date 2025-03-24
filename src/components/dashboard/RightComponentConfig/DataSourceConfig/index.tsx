@@ -216,7 +216,7 @@ const DataSourceConfig: React.FC = () => {
             <div className="data-source-switch">
               <Select
                 size="small"
-                placement="topRight"
+                placement="bottomRight"
                 variant="filled"
                 style={{ width: 130 }}
                 placeholder="选择数据源"
