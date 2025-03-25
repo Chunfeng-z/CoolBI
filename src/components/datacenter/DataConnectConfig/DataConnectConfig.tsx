@@ -27,13 +27,15 @@ import {
   Tooltip,
   Upload,
   UploadProps,
+  Select,
 } from "antd";
 import classNames from "classnames";
 import React, { useState } from "react";
 
 import "./index.scss";
 import { useThemeStore } from "@/stores/useThemeStore";
-import { ExcelData, useExcelParser } from "@/utils/hooks";
+import { ExcelData, useExcelParser, detectDataType } from "@/utils/hooks";
+import { FieldType } from "@/utils/type";
 const { useToken } = theme;
 const prefixCls = "data-connect-config";
 const { Dragger } = Upload;
@@ -93,11 +95,6 @@ interface DataItem {
   [key: string]: string | number;
 }
 
-interface DataConnectConfigProps {
-  /** 更新新建数据源步骤 */
-  updateStep: () => void;
-}
-
 /** 字段类型对应的图标映射 */
 const fieldTypeIconMap = {
   string: <FieldStringOutlined style={{ color: "#488BF7" }} />,
@@ -105,6 +102,49 @@ const fieldTypeIconMap = {
   date: <CalendarOutlined style={{ color: "#488BF7" }} />,
 };
 
+/** 下拉选项 */
+const items: MenuProps["items"] = [
+  {
+    key: "string",
+    label: <span>{fieldTypeIconMap.string} 文本</span>,
+  },
+  {
+    key: "number",
+    label: <span>{fieldTypeIconMap.number} 数值</span>,
+  },
+  {
+    key: "date",
+    label: <span>{fieldTypeIconMap.date} 日期</span>,
+  },
+];
+
+/**
+ * 格式化行数据
+ * @param rows 原始行数据
+ * @param headers 表头数据
+ * @returns 格式化后的行数据
+ */
+const formatRowsData = (
+  rows: unknown[][] = [],
+  headers: string[] = []
+): DataItem[] => {
+  return rows.map((row, rowIndex) => {
+    // 创建新的行对象，添加唯一key
+    const formattedRow: DataItem = {
+      key: `${rowIndex + 1}`,
+    };
+    // 遍历所有表头，将对应的值添加到行数据中
+    headers.forEach((header, index) => {
+      formattedRow[header] = row[index] as string;
+    });
+    return formattedRow;
+  });
+};
+
+interface DataConnectConfigProps {
+  /** 更新新建数据源步骤 */
+  updateStep: () => void;
+}
 /** 文件上传和数据预览 */
 const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
   const { updateStep } = props;
@@ -121,39 +161,75 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
   const [sheetHeaders, setSheetHeaders] = useState<string[]>([]);
   /** 解析后文件sheet的数据rows */
   const [sheetRows, setSheetRows] = useState<DataItem[]>([]);
+  /** 数据库字段名称 */
+  const [dbFieldNames, setDbFieldNames] = useState<string[]>([]);
+  /** 字段类型 */
+  const [fieldTypes, setFieldTypes] = useState<Record<number, FieldType>>({});
   /** 当前选中的segment */
   const [currentSegment, setCurrentSegment] = useState<
     "DataPreview" | "FieldDetails"
   >("DataPreview");
   /** 上传的文件 */
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  /** 解析的数据 */
-  const [parsedData, setParsedData] = useState<DataItem[]>([]);
   /** 数据预览的表格列配置 */
   const [previewTableColumns, setPreviewTableColumns] = useState<
-    TableProps<any>["columns"]
+    TableProps<unknown>["columns"]
   >([]);
   /** 标题行索引 */
   const [headerRowIndex, setHeaderRowIndex] = useState<string>("1");
   /** 数据协议的选择状态 */
   const [isNoticeChecked, setIsNoticeChecked] = useState<boolean>(false);
-  const items: MenuProps["items"] = [
-    {
-      key: "string",
-      label: <span>{fieldTypeIconMap.string} 文本</span>,
-    },
-    {
-      key: "number",
-      label: <span>{fieldTypeIconMap.number} 数值</span>,
-    },
-    {
-      key: "date",
-      label: <span>{fieldTypeIconMap.date} 日期</span>,
-    },
-  ];
 
   // 解析Excel文件
   const { parseFile } = useExcelParser();
+
+  /**
+   * 动态生成表格列配置
+   * @param headers 表头数据
+   * @returns 表格列配置
+   */
+  const generateTableColumns = (
+    headers: string[] = []
+  ): TableProps<unknown>["columns"] => {
+    return headers.map((header, index) => ({
+      title: (
+        <Space>
+          <Tooltip title="切换字段类型">
+            <Dropdown
+              placement="bottomLeft"
+              menu={{ items }}
+              trigger={["click"]}
+            >
+              <Button size="small" type="text" icon={fieldTypeIconMap.string} />
+            </Dropdown>
+          </Tooltip>
+          <Input
+            defaultValue={sheetHeaders[index] ?? header}
+            size="small"
+            onChange={(e) => {
+              // 当输入框内容变化时，更新对应的sheetHeaders数据
+              const newHeaders = [...sheetHeaders];
+              newHeaders[index] = e.target.value;
+              setSheetHeaders(newHeaders);
+            }}
+          />
+        </Space>
+      ),
+      dataIndex: header,
+      key: header,
+      ellipsis: {
+        showTitle: false,
+      },
+      width: 150,
+      render: (text) => {
+        return (
+          <Tooltip title={text} placement="topLeft">
+            {text}
+          </Tooltip>
+        );
+      },
+    }));
+  };
 
   /** 文件上传的属性配置 */
   const draggerProps: UploadProps = {
@@ -178,57 +254,22 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
           setFileOriginName(data.fileName || "");
           setSheetHeaders(data.headers || []);
           // 格式化数据行，确保每行有唯一key，并且列名与header对应
-          const formattedRows = (data.rows || []).map((row, rowIndex) => {
-            // 创建新的行对象，添加唯一key
-            const formattedRow: DataItem = {
-              key: `${rowIndex + 1}`,
-            };
-
-            // 遍历所有表头，将对应的值添加到行数据中
-            data.headers?.forEach((header, index) => {
-              formattedRow[header] = row[index] as string;
-            });
-
-            return formattedRow;
+          const formattedRows = formatRowsData(data.rows, data.headers);
+          // 初始化数据库字段名称为 COL_xx 格式
+          setDbFieldNames((data.headers || []).map((_, i) => `COL_${i + 1}`));
+          // 初始化字段类型
+          const newFieldTypes: Record<number, FieldType> = {};
+          (data.headers || []).forEach((header, index) => {
+            const sampleValue = formattedRows[0]?.[header];
+            newFieldTypes[index] =
+              detectDataType(sampleValue) || FieldType.STRING;
           });
-
+          setFieldTypes(newFieldTypes);
           setSheetRows(formattedRows);
           // TODO:存储上传的文件,用户预览时用户确认上传
           setUploadedFile(file);
           // 动态生成表格的列配置
-          const dynamicColumns = data.headers?.map((header, index) => ({
-            title: (
-              <Space>
-                <Tooltip title="切换字段类型">
-                  <Dropdown
-                    placement="bottomLeft"
-                    menu={{ items }}
-                    trigger={["click"]}
-                  >
-                    <Button
-                      size="small"
-                      type="text"
-                      icon={fieldTypeIconMap.string}
-                    />
-                  </Dropdown>
-                </Tooltip>
-                <Input value={header} size="small" />
-              </Space>
-            ),
-            dataIndex: header,
-            key: header,
-            ellipsis: {
-              showTitle: false,
-            },
-            width: 150,
-            render: (text) => {
-              return (
-                <Tooltip title={text} placement="topLeft">
-                  {text}
-                </Tooltip>
-              );
-            },
-          }));
+          const dynamicColumns = generateTableColumns(data.headers);
           setPreviewTableColumns(dynamicColumns);
           // 自动跳转到预览步骤
           setFileUploadStep(1);
@@ -246,30 +287,6 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
     },
   };
 
-  const onChange = (key: string) => {
-    console.log(key);
-  };
-
-  /** 处理sheet标题变化 */
-  const handleSheetTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSheetTitle(value);
-  };
-
-  /** segment切换 */
-  const handleSegmentChange = (value: string) => {
-    setCurrentSegment(value as "DataPreview" | "FieldDetails");
-  };
-
-  /** 处理标题行索引变化-只允许输入数字 */
-  const handleHeaderRowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^\d*$/.test(value)) {
-      // 只允许数字
-      setHeaderRowIndex(value);
-    }
-  };
-
   /** 当标题行索引变化时重新解析数据-只更新表头行和数据行 */
   const handleRefresh = () => {
     if (uploadedFile && headerRowIndex) {
@@ -280,54 +297,23 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
         }).then((data: ExcelData) => {
           setSheetHeaders(data.headers || []);
           // 格式化数据行，确保每行有唯一key，并且列名与header对应
-          const formattedRows = (data.rows || []).map((row, rowIndex) => {
-            // 创建新的行对象，添加唯一key
-            const formattedRow: DataItem = {
-              key: `${rowIndex + 1}`,
-            };
-            // 遍历所有表头，将对应的值添加到行数据中
-            data.headers?.forEach((header, index) => {
-              formattedRow[header] = row[index] as string;
-            });
-            return formattedRow;
-          });
-
+          const formattedRows = formatRowsData(data.rows, data.headers);
           setSheetRows(formattedRows);
 
+          // 初始化数据库字段名称为 COL_xx 格式
+          setDbFieldNames((data.headers || []).map((_, i) => `COL_${i + 1}`));
+
+          // 初始化字段类型
+          const newFieldTypes: Record<number, FieldType> = {};
+          (data.headers || []).forEach((header, index) => {
+            const sampleValue = formattedRows[0]?.[header];
+            newFieldTypes[index] =
+              detectDataType(sampleValue) || FieldType.STRING;
+          });
+          setFieldTypes(newFieldTypes);
+
           // 动态生成表格的列配置
-          const dynamicColumns = data.headers?.map((header, index) => ({
-            title: (
-              <Space>
-                <Tooltip title="切换字段类型">
-                  <Dropdown
-                    placement="bottomLeft"
-                    menu={{ items }}
-                    trigger={["click"]}
-                  >
-                    <Button
-                      size="small"
-                      type="text"
-                      icon={fieldTypeIconMap.string}
-                    />
-                  </Dropdown>
-                </Tooltip>
-                <Input value={header} size="small" />
-              </Space>
-            ),
-            dataIndex: header,
-            key: header,
-            ellipsis: {
-              showTitle: false,
-            },
-            width: 150,
-            render: (text) => {
-              return (
-                <Tooltip title={text} placement="topLeft">
-                  {text}
-                </Tooltip>
-              );
-            },
-          }));
+          const dynamicColumns = generateTableColumns(data.headers);
           setPreviewTableColumns(dynamicColumns);
         });
         message.success("数据已刷新");
@@ -339,6 +325,29 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
     }
   };
 
+  /** 处理sheet标题变化 */
+  const handleSheetTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSheetTitle(value);
+  };
+
+  /** segment切换 */
+  const handleSegmentChange = (value: string) => {
+    setCurrentSegment(value as "DataPreview" | "FieldDetails");
+    // TODO:切换到数据预览时，重新生成表格列配置
+  };
+
+  /** 处理标题行索引变化-只允许输入数字 */
+  const handleHeaderRowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      // 只允许数字
+      setHeaderRowIndex(value);
+    }
+  };
+  const onChange = (key: string) => {
+    console.log(key);
+  };
   /** 处理点击文件确认上传事件 */
   const handleUploadFile = () => {
     console.log("确认上传");
@@ -553,36 +562,109 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
                                   {
                                     title: "文件列名",
                                     dataIndex: "name",
+                                    width: 260,
                                     key: "name",
                                   },
                                   {
                                     title: "数据库字段名称",
                                     dataIndex: "field",
+                                    width: 260,
                                     key: "field",
                                   },
                                   {
                                     title: "字段类型",
                                     dataIndex: "type",
+                                    width: 180,
                                     key: "type",
                                   },
-                                  {
-                                    title: "示例值",
-                                    dataIndex: "example",
-                                    key: "example",
-                                  },
                                 ]}
-                                dataSource={previewTableColumns?.map(
-                                  (col: any, index) => ({
-                                    key: index,
-                                    name: col.title,
-                                    type:
-                                      typeof parsedData[0]?.[col.dataIndex] ===
-                                      "number"
-                                        ? "数值"
-                                        : "文本",
-                                    example:
-                                      parsedData[0]?.[col.dataIndex] || "-",
-                                  })
+                                dataSource={sheetHeaders?.map(
+                                  (colName: string, index) => {
+                                    // 从sheetRows中获取此列的首个值用于类型检测
+                                    const sampleValue = sheetRows[0]?.[colName];
+                                    const fieldType =
+                                      fieldTypes[index] ||
+                                      detectDataType(sampleValue) ||
+                                      FieldType.STRING;
+
+                                    // 初始化数据库字段名
+                                    const dbFieldName =
+                                      dbFieldNames[index] || `COL_${index}`;
+
+                                    return {
+                                      key: index,
+                                      name: (
+                                        <Input
+                                          size="small"
+                                          value={colName}
+                                          onChange={(e) => {
+                                            // 当输入框内容变化时，更新对应的sheetHeaders数据
+                                            const newHeaders = [
+                                              ...sheetHeaders,
+                                            ];
+                                            newHeaders[index] = e.target.value;
+                                            setSheetHeaders(newHeaders);
+                                          }}
+                                        />
+                                      ),
+                                      field: (
+                                        <Input
+                                          size="small"
+                                          value={dbFieldName}
+                                          onChange={(e) => {
+                                            // 更新数据库字段名称
+                                            const newDbFieldNames = [
+                                              ...dbFieldNames,
+                                            ];
+                                            newDbFieldNames[index] =
+                                              e.target.value;
+                                            setDbFieldNames(newDbFieldNames);
+                                          }}
+                                        />
+                                      ),
+                                      type: (
+                                        <Select
+                                          size="small"
+                                          value={fieldType}
+                                          style={{ width: "100%" }}
+                                          onChange={(value) => {
+                                            // 更新字段类型
+                                            const newFieldTypes = {
+                                              ...fieldTypes,
+                                            };
+                                            newFieldTypes[index] = value;
+                                            setFieldTypes(newFieldTypes);
+                                          }}
+                                          options={[
+                                            {
+                                              value: FieldType.STRING,
+                                              label: (
+                                                <span>
+                                                  {fieldTypeIconMap.string} 文本
+                                                </span>
+                                              ),
+                                            },
+                                            {
+                                              value: FieldType.NUMBER,
+                                              label: (
+                                                <span>
+                                                  {fieldTypeIconMap.number} 数值
+                                                </span>
+                                              ),
+                                            },
+                                            {
+                                              value: FieldType.DATE,
+                                              label: (
+                                                <span>
+                                                  {fieldTypeIconMap.date} 日期
+                                                </span>
+                                              ),
+                                            },
+                                          ]}
+                                        />
+                                      ),
+                                    };
+                                  }
                                 )}
                                 pagination={false}
                                 size="small"
@@ -655,7 +737,7 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
           <span>
             （4）任何海外消费者的任何数据（包含中国香港，中国澳门与中国台湾）；
           </span>
-          <span>2. 不上传和储存带有病毒的、蠕虫的、木马和其他有害的数据；</span>
+          <span>2. 不上传和储存带有病毒的、蠋虫的、木马和其他有害的数据；</span>
           <span>
             3. 不上传和储存侵犯他人知识产权、商业秘密及其他合法权益的数据；
           </span>

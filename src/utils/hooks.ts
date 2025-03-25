@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
+
+import { FieldType } from "./type";
 const base = import.meta.env.VITE_BASE;
 /** 出现异常返回主页，返回/,自动定位到主页 */
 export const useNavigateToHome = (baseUrl: string = base) => {
@@ -158,4 +160,28 @@ export const useExcelParser = () => {
     parseFile,
     parseFiles,
   };
+};
+
+/** 判断输入数据的类型 */
+export const detectDataType = (
+  input: unknown
+): FieldType.STRING | FieldType.NUMBER | FieldType.DATE | null => {
+  if (typeof input === "string") {
+    // 先尝试转换为日期
+    const parsedDate = new Date(input);
+    if (!isNaN(parsedDate.getTime())) {
+      return FieldType.DATE;
+    }
+    return FieldType.STRING;
+  }
+
+  if (typeof input === "number" && !isNaN(input)) {
+    return FieldType.NUMBER;
+  }
+
+  if (input instanceof Date && !isNaN(input.getTime())) {
+    return FieldType.DATE;
+  }
+
+  return null;
 };
