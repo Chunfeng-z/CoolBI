@@ -44,7 +44,7 @@ $size-32: 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 12px;
+      padding: 0 8px;
       height: $size-32;
 
       // 覆盖antd样式
@@ -64,6 +64,13 @@ $size-32: 32px;
       .search-wrapper {
         margin-left: auto;
       }
+    }
+
+    .data-source-search-wrapper {
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      height: $size-32;
     }
 
     .tree-wrapper {

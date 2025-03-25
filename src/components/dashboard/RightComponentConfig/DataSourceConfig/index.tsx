@@ -1,19 +1,24 @@
 import {
   FileSearchOutlined,
+  LeftOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   MoreOutlined,
   QuestionCircleOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import {
   Button,
   Col,
+  ConfigProvider,
   Dropdown,
   Flex,
+  Input,
   MenuProps,
   Row,
   Select,
   Tabs,
+  theme,
   Tooltip,
 } from "antd";
 import classNames from "classnames";
@@ -82,6 +87,10 @@ const DataSourceConfig: React.FC = () => {
     { value: "Yiminghe", label: "yiminghe" },
   ]);
 
+  /** 数据源检索输入框展示状态 */
+  const [isFieldSearchVisible, setIsFieldSearchVisible] =
+    useState<boolean>(false);
+
   return (
     <>
       <div
@@ -121,7 +130,7 @@ const DataSourceConfig: React.FC = () => {
                 size="small"
                 placement="bottomRight"
                 variant="filled"
-                style={{ width: 130 }}
+                style={{ width: 135 }}
                 placeholder="选择数据源"
                 value={curSelectDs}
                 onSelect={(value) => {
@@ -204,22 +213,52 @@ const DataSourceConfig: React.FC = () => {
                 <Button type="text" size="small" icon={<MoreOutlined />} />
               </Dropdown>
             </div>
-            <div className="data-source-fields-wrapper">
-              <span>字段</span>
-              <Tooltip
-                title={
-                  <>
-                    <div>同时选择：Cmd/Ctrl +</div>
-                    <div>批量选择：Shift +</div>
-                  </>
-                }
-              >
-                <QuestionCircleOutlined />
-              </Tooltip>
-              <div className="search-wrapper">
-                <FileSearchOutlined />
+            {isFieldSearchVisible ? (
+              <div className="data-source-search-wrapper">
+                <ConfigProvider
+                  theme={{
+                    algorithm: theme.compactAlgorithm,
+                  }}
+                >
+                  <Input
+                    size="middle"
+                    placeholder="请输入关键字检索"
+                    prefix={
+                      <LeftOutlined
+                        onClick={() => {
+                          setIsFieldSearchVisible(false);
+                        }}
+                      />
+                    }
+                    style={{ borderRadius: 14 }}
+                  />
+                </ConfigProvider>
               </div>
-            </div>
+            ) : (
+              <div className="data-source-fields-wrapper">
+                <span>字段</span>
+                <Tooltip
+                  title={
+                    <>
+                      <div>同时选择：Cmd/Ctrl +</div>
+                      <div>批量选择：Shift +</div>
+                    </>
+                  }
+                >
+                  <QuestionCircleOutlined />
+                </Tooltip>
+                <div className="search-wrapper">
+                  <Button
+                    type="text"
+                    icon={<FileSearchOutlined />}
+                    size="small"
+                    onClick={() => {
+                      setIsFieldSearchVisible(true);
+                    }}
+                  />
+                </div>{" "}
+              </div>
+            )}
             <div className="tree-wrapper">
               <div className="data-source-dimension-tree-wrapper">
                 <div className="data-source-tree-title">
