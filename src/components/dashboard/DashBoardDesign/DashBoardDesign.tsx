@@ -6,6 +6,7 @@ import CoolPieChart from "@comp/common/CoolPieChart";
 import CoolPolyLineChart from "@comp/common/CoolPolyLineChart";
 import CoolPolyLineStackChart from "@comp/common/CoolPolyLineStackChart";
 import CoolPolyLineStackPercentChart from "@comp/common/CoolPolyLineStackPercentChart";
+import classNames from "classnames";
 import React, { useEffect, useRef } from "react";
 import { useDrop } from "react-dnd";
 
@@ -15,12 +16,19 @@ import ChartCard from "./ChartCard/ChartCard";
 
 import CoolIndicatorTrendChart from "@/components/common/CoolIndicatorTrendChart";
 import useChartStore, { ChartConfig } from "@/stores/useChartStore";
+import useRasterStore from "@/stores/useRasterStore";
 import { generateUUID } from "@/utils/uuid";
 
 import "./index.scss";
 const prefixCls = "dashboard-design";
 
 const DashBoardDesign: React.FC = () => {
+  /** 获取栅格配置的显示状态 */
+  const isShowPageRaster = useRasterStore((state) => state.isShowPageRaster);
+  /** 当前配置显示的栅格数 */
+  const rasterNum = useRasterStore((state) => state.rasterNum);
+  /** 当前配置的栅格间距 */
+  const rasterGap = useRasterStore((state) => state.rasterGap);
   /** 全局的仪表板图表配置-当前仪表板存在已设计的图表 */
   const chartsConfig: ChartConfig[] = useChartStore(
     (state) => state.chartsConfig
@@ -88,47 +96,65 @@ const DashBoardDesign: React.FC = () => {
 
   return (
     <div className={`${prefixCls}-container`} ref={ref}>
-      {chartsConfig.map((config: ChartConfig) => {
-        const {
-          title,
-          chartId,
-          type,
-          isShowTitle,
-          titleFontSize,
-          titleColor,
-          isShowRemark,
-          remark,
-          remarkPosition,
-          isShowEndNote,
-          endNote,
-          borderRadius,
-          isShowBackgroundColor,
-          backgroundColor,
-          chartCardPadding,
-        } = config;
-        return (
-          <ChartCard
-            key={chartId}
-            isShowCardTitle={isShowTitle}
-            cardTitle={title}
-            titleFontSize={titleFontSize}
-            titleColor={titleColor}
-            isShowRemark={isShowRemark}
-            remark={remark}
-            remarkPosition={remarkPosition}
-            isShowEndNote={isShowEndNote}
-            endNote={endNote}
-            borderRadius={borderRadius}
-            backgroundColor={backgroundColor}
-            isShowBackgroundColor={isShowBackgroundColor}
-            chartCardPadding={chartCardPadding}
-            isSelected={chartId === curChartId}
-            onClick={() => handleChartCardClick(chartId)}
+      <div className="root-container-main-header-and-content">
+        <div className="root-container-main-header"></div>
+        <div className="root-container-main-content">
+          <div
+            className={classNames("cool-bi-layout-indicator", {
+              "is-show": isShowPageRaster,
+            })}
+            style={{
+              gap: `${rasterGap}px`,
+              gridTemplateColumns: `repeat(${rasterNum}, 1fr)`,
+            }}
           >
-            {renderChart(type)}
-          </ChartCard>
-        );
-      })}
+            {Array.from({ length: rasterNum }).map((_, index) => (
+              <div key={index} className="indicator-item" />
+            ))}
+          </div>
+          {chartsConfig.map((config: ChartConfig) => {
+            const {
+              title,
+              chartId,
+              type,
+              isShowTitle,
+              titleFontSize,
+              titleColor,
+              isShowRemark,
+              remark,
+              remarkPosition,
+              isShowEndNote,
+              endNote,
+              borderRadius,
+              isShowBackgroundColor,
+              backgroundColor,
+              chartCardPadding,
+            } = config;
+            return (
+              <ChartCard
+                key={chartId}
+                isShowCardTitle={isShowTitle}
+                cardTitle={title}
+                titleFontSize={titleFontSize}
+                titleColor={titleColor}
+                isShowRemark={isShowRemark}
+                remark={remark}
+                remarkPosition={remarkPosition}
+                isShowEndNote={isShowEndNote}
+                endNote={endNote}
+                borderRadius={borderRadius}
+                backgroundColor={backgroundColor}
+                isShowBackgroundColor={isShowBackgroundColor}
+                chartCardPadding={chartCardPadding}
+                isSelected={chartId === curChartId}
+                onClick={() => handleChartCardClick(chartId)}
+              >
+                {renderChart(type)}
+              </ChartCard>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

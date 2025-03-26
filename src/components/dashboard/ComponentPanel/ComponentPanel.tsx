@@ -12,12 +12,14 @@ import {
   MenuProps,
   Select,
   InputNumber,
+  InputNumberProps,
 } from "antd";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { pageRasterOptions as options } from "../utils";
 
+import useRasterStore from "@/stores/useRasterStore";
 import { useThemeStore } from "@/stores/useThemeStore";
 const prefixCls = "component-panel";
 enum ScaleValue {
@@ -52,6 +54,16 @@ interface ComponentPanelProps {
 /** 仪表板-组件操作菜单 */
 const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
   const { style } = props;
+  const isShowPageRaster = useRasterStore((state) => state.isShowPageRaster);
+  const setIsShowPageRaster = useRasterStore(
+    (state) => state.setIsShowPageRaster
+  );
+  const setRasterNum = useRasterStore((state) => state.setRasterNum);
+  const rasterGap = useRasterStore((state) => state.rasterGap);
+  const setRasterGap = useRasterStore((state) => state.setRasterGap);
+  const cardRowSpace = useRasterStore((state) => state.cardRowSpace);
+  const setCardRowSpace = useRasterStore((state) => state.setCardRowSpace);
+
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 图表菜单的显示状态 */
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -67,24 +79,41 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
       ScaleValue[`level${e.key}` as keyof typeof ScaleValue];
     setScale(selectedScale);
   };
-  /** 页面栅格设置的显示状态 */
-  const [isPageRasterSettingOpen, setIsPageRasterSettingOpen] = useState(false);
   /** 页面栅格显隐设置 */
   const handlePageRasterClick = () => {
-    setIsPageRasterSettingOpen(!isPageRasterSettingOpen);
+    setIsShowPageRaster(!isShowPageRaster);
   };
   /** 页面栅格列数控制 */
   const handleRasterNumberChange = (value: string) => {
-    console.log(value);
+    console.log("栅格列数：", value);
+    // 更新栅格数
+    setRasterNum(Number(value));
   };
-  const pageRasterOptions = options.map((item) => ({
-    value: item,
-    label: item.toString(),
-  }));
+  /** 页面栅格的选项配置 */
+  const pageRasterOptions = useMemo(
+    () =>
+      options.map((rasterNum) => ({
+        value: rasterNum,
+        label: rasterNum,
+      })),
+    []
+  );
+
+  /** 栅格间距调整 */
+  const handleRasterGapChange: InputNumberProps["onChange"] = (value) => {
+    console.log("栅格间距：", value);
+    setRasterGap(value as number);
+  };
+
+  /** 卡片行间距调整 */
+  const handleCardRowSpaceChange: InputNumberProps["onChange"] = (value) => {
+    console.log("卡片行间距：", value);
+    setCardRowSpace(value as number);
+  };
 
   return (
     <div className={`${prefixCls}-container`} style={{ ...style }}>
-      {isPageRasterSettingOpen ? (
+      {isShowPageRaster ? (
         <div
           className={classNames(`${prefixCls}-layout-menu`)}
           style={{ backgroundColor: isDarkMode ? "#141414" : "#f4f4f5" }}
@@ -93,12 +122,20 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
           <div className="layout-menu">
             <div className="layout-menu-item">
               栅格列数
-              <Tooltip title="在栅格布局下，每个卡片的宽度由栅格列数决定，栅格列数越多，卡片宽度可设置的颗粒度越细。">
+              <Tooltip
+                title="在栅格布局下，每个卡片的宽度由栅格列数决定，栅格列数越多，卡片宽度可设置的颗粒度越细。"
+                trigger={["hover"]}
+                styles={{
+                  root: {
+                    zIndex: 9999,
+                  },
+                }}
+              >
                 <InfoCircleOutlined />
               </Tooltip>
               <Select
                 size="small"
-                defaultValue="12"
+                defaultValue={"12"}
                 style={{ width: 60 }}
                 variant="filled"
                 onChange={handleRasterNumberChange}
@@ -113,6 +150,8 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
                 min={0}
                 max={30}
                 defaultValue={8}
+                value={rasterGap}
+                onChange={handleRasterGapChange}
                 style={{ width: 90 }}
                 addonAfter="px"
               />
@@ -124,7 +163,9 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
                 variant="filled"
                 min={0}
                 max={30}
-                defaultValue={8}
+                defaultValue={12}
+                value={cardRowSpace}
+                onChange={handleCardRowSpaceChange}
                 style={{ width: 90 }}
                 addonAfter="px"
               />

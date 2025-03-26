@@ -20,7 +20,6 @@ import {
   Space,
   Form,
   Input,
-  message,
   Row,
   Col,
   Image,
@@ -30,6 +29,7 @@ import {
   Flex,
   Divider,
   InputNumber,
+  App,
 } from "antd";
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -74,6 +74,7 @@ const accountMenuItems: {
 /** 主页内容 */
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { message } = App.useApp();
   const { token } = theme.useToken();
   /** header组件高度的token */
   const headerHeight = token.Layout?.headerHeight ?? "56px";

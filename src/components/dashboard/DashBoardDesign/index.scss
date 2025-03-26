@@ -3,6 +3,40 @@
   width: 100%;
   height: fit-content;
   min-height: 100%;
-  background-color: aliceblue;
+  background-color: #f2f3f8;
   flex-direction: column;
+
+  // 条件规则，用于检测浏览器是否支持某个 CSS 属性或值
+  @supports (scrollbar-gutter: stable) {
+    scrollbar-gutter: stable;
+  }
+
+  .root-container-main-header-and-content {
+    position: relative;
+    padding: 8px 24px;
+    width: 100%;
+
+    .root-container-main-content {
+      position: relative;
+    }
+  }
+
+  .cool-bi-layout-indicator {
+    position: absolute;
+    z-index: 2000;
+    display: grid;
+    inset: 0;
+    pointer-events: none;
+    visibility: hidden;
+
+    .indicator-item {
+      height: 100%;
+      background-color: #ecf6ff48;
+      border: 1px dashed #1990ff88;
+    }
+
+    &.is-show {
+      visibility: visible;
+    }
+  }
 }

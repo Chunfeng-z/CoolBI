@@ -6,7 +6,7 @@ import RightComponentConfig from "@comp/dashboard/RightComponentConfig";
 import RightTheme from "@comp/dashboard/RightTheme";
 import { theme } from "antd";
 import { isEmpty } from "lodash-es";
-import React, { useState } from "react";
+import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
