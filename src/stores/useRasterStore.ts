@@ -3,6 +3,8 @@ import { create } from "zustand";
 interface RasterState {
   /** 是否显示栅格配置 */
   isShowPageRaster: boolean;
+  /** 修改前的栅格数 */
+  prevRasterNum: number | null;
   /** 划分的栅格数 */
   rasterNum: number;
   /** 栅格列间距 */
@@ -24,10 +26,12 @@ interface RasterAction {
 const useRasterStore = create<RasterState & RasterAction>((set) => ({
   isShowPageRaster: false,
   rasterNum: 12,
+  prevRasterNum: null,
   rasterGap: 8,
   cardRowSpace: 12,
   setIsShowPageRaster: (isShow) => set({ isShowPageRaster: isShow }),
-  setRasterNum: (num) => set({ rasterNum: num }),
+  setRasterNum: (num) =>
+    set((state) => ({ prevRasterNum: state.rasterNum, rasterNum: num })),
   setRasterGap: (gap) => set({ rasterGap: gap }),
   setCardRowSpace: (space) => set({ cardRowSpace: space }),
 }));

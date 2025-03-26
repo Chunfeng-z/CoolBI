@@ -1,25 +1,30 @@
-import CoolBarChart from "@comp/common/CoolBarChart";
-import CoolBarStackChart from "@comp/common/CoolBarStackChart";
-import CoolBarStackPercentChart from "@comp/common/CoolBarStackPercentChart";
-import CoolLineChart from "@comp/common/CoolLineChart";
-import CoolPieChart from "@comp/common/CoolPieChart";
-import CoolPolyLineChart from "@comp/common/CoolPolyLineChart";
-import CoolPolyLineStackChart from "@comp/common/CoolPolyLineStackChart";
-import CoolPolyLineStackPercentChart from "@comp/common/CoolPolyLineStackPercentChart";
 import classNames from "classnames";
-import React, { useEffect, useRef } from "react";
+import { throttle } from "lodash-es";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDrop } from "react-dnd";
+import ReactGridLayout from "react-grid-layout";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 
 import { ChartTypeEnum } from "../utils";
 
 import ChartCard from "./ChartCard/ChartCard";
 
+import CoolBarChart from "@/components/common/CoolBarChart";
+import CoolBarStackChart from "@/components/common/CoolBarStackChart";
+import CoolBarStackPercentChart from "@/components/common/CoolBarStackPercentChart";
 import CoolIndicatorTrendChart from "@/components/common/CoolIndicatorTrendChart";
+import CoolLineChart from "@/components/common/CoolLineChart";
+import CoolPieChart from "@/components/common/CoolPieChart";
+import CoolPolyLineChart from "@/components/common/CoolPolyLineChart";
+import CoolPolyLineStackChart from "@/components/common/CoolPolyLineStackChart";
+import CoolPolyLineStackPercentChart from "@/components/common/CoolPolyLineStackPercentChart";
 import useChartStore, { ChartConfig } from "@/stores/useChartStore";
 import useRasterStore from "@/stores/useRasterStore";
+import { resizeGrid } from "@/utils/hooks";
 import { generateUUID } from "@/utils/uuid";
-
 import "./index.scss";
+
 const prefixCls = "dashboard-design";
 
 const DashBoardDesign: React.FC = () => {
@@ -27,8 +32,12 @@ const DashBoardDesign: React.FC = () => {
   const isShowPageRaster = useRasterStore((state) => state.isShowPageRaster);
   /** 当前配置显示的栅格数 */
   const rasterNum = useRasterStore((state) => state.rasterNum);
+  /** 上一次配置的栅格数 */
+  const preRasterNum = useRasterStore((state) => state.prevRasterNum);
   /** 当前配置的栅格间距 */
   const rasterGap = useRasterStore((state) => state.rasterGap);
+  /** 栅格的行间距 */
+  const cardRowSpace = useRasterStore((state) => state.cardRowSpace);
   /** 全局的仪表板图表配置-当前仪表板存在已设计的图表 */
   const chartsConfig: ChartConfig[] = useChartStore(
     (state) => state.chartsConfig
@@ -36,10 +45,12 @@ const DashBoardDesign: React.FC = () => {
   const setCurChartId = useChartStore((state) => state.setCurChartId);
   const curChartId = useChartStore((state) => state.curChartId);
   const appendChartConfig = useChartStore((state) => state.appendChartConfig);
+
   /** 更新选中的图表 */
   const handleChartCardClick = (chartId: string) => {
     setCurChartId(chartId);
   };
+  /** 设置支持图表托拽创建 */
   const ref = useRef<HTMLDivElement | null>(null);
   const [, drop] = useDrop(() => {
     return {
@@ -67,6 +78,7 @@ const DashBoardDesign: React.FC = () => {
   useEffect(() => {
     drop(ref);
   }, []);
+
   /** 渲染指定的图表 */
   const renderChart = (chart: string) => {
     switch (chart) {
@@ -92,13 +104,118 @@ const DashBoardDesign: React.FC = () => {
         return <div className="error-chart">未知图表类型</div>;
     }
   };
-  console.log("chartsConfig dashboard", chartsConfig);
+  /** 图表容器的宽度 */
+  const [containerWidth, setContainerWidth] = useState<number>(800);
+  const contentRef = useRef<HTMLDivElement | null>(
+    null
+  ); /** 仪表板的布局配置 */
+  const [dashBoardLayout, setDashBoardLayout] = useState<
+    {
+      i: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+    }[]
+  >([]);
+
+  // 初始化布局
+  useEffect(() => {
+    setDashBoardLayout(generateLayout());
+  }, []);
+
+  // 栅格数变化时，重新生成布局
+  useEffect(() => {
+    if (preRasterNum === null) return;
+    const newDashBoardLayout = resizeGrid(
+      dashBoardLayout,
+      preRasterNum,
+      rasterNum
+    );
+    setDashBoardLayout(newDashBoardLayout);
+  }, [preRasterNum]);
+
+  // 生成布局
+  const generateLayout = () => {
+    return chartsConfig.map((config) => {
+      const { chartId, layout } = config;
+      return {
+        i: chartId,
+        x: layout?.x || 0,
+        y: layout?.y || 0,
+        w: layout?.w || 4, // 默认宽度为4个单位
+        h: layout?.h || 4, // 默认高度为4个单位
+      };
+    });
+  };
+  /** 每行的高度 */
+  const rowHeight = 80;
+  /** 单个栅格的宽度 */
+  const rasterWidth = useMemo(
+    () => (containerWidth - (rasterNum - 1) * rasterGap) / rasterNum,
+    [containerWidth, rasterNum, rasterGap]
+  );
+  /** 按顺序计算每个图表的宽度和高度-给图表使用，grid不需要 */
+  const [dashboardChartsSize, setDashboardChartsSize] = useState<
+    {
+      width: number;
+      height: number;
+    }[]
+  >(
+    chartsConfig.map((config) => {
+      const { layout } = config;
+      const { w, h } = layout!;
+      return {
+        width: w * rasterWidth + (w - 1) * rasterGap,
+        height: h * rowHeight + (h - 1) * cardRowSpace,
+      };
+    })
+  );
+
+  useEffect(() => {
+    setDashboardChartsSize(
+      dashBoardLayout.map((layout) => {
+        const { w, h } = layout!;
+        return {
+          width: w * rasterWidth + (w - 1) * rasterGap,
+          height: h * rowHeight + (h - 1) * cardRowSpace,
+        };
+      })
+    );
+  }, [rasterWidth, rasterGap, rowHeight, cardRowSpace, dashBoardLayout]);
+
+  // 添加ResizeObserver监听容器宽度变化
+  useEffect(() => {
+    if (!contentRef.current) return;
+
+    // 使用throttle包装回调函数
+    const throttledSetWidth = throttle((width: number) => {
+      console.log("容器宽度变化:", width);
+      setContainerWidth(width);
+    }, 200);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === contentRef.current) {
+          throttledSetWidth(entry.contentRect.width);
+        }
+      }
+    });
+
+    resizeObserver.observe(contentRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+      // 取消待处理的throttle调用
+      throttledSetWidth.cancel();
+    };
+  }, []);
 
   return (
     <div className={`${prefixCls}-container`} ref={ref}>
       <div className="root-container-main-header-and-content">
         <div className="root-container-main-header"></div>
-        <div className="root-container-main-content">
+        <div className="root-container-main-content" ref={contentRef}>
           <div
             className={classNames("cool-bi-layout-indicator", {
               "is-show": isShowPageRaster,
@@ -112,47 +229,75 @@ const DashBoardDesign: React.FC = () => {
               <div key={index} className="indicator-item" />
             ))}
           </div>
-          {chartsConfig.map((config: ChartConfig) => {
-            const {
-              title,
-              chartId,
-              type,
-              isShowTitle,
-              titleFontSize,
-              titleColor,
-              isShowRemark,
-              remark,
-              remarkPosition,
-              isShowEndNote,
-              endNote,
-              borderRadius,
-              isShowBackgroundColor,
-              backgroundColor,
-              chartCardPadding,
-            } = config;
-            return (
-              <ChartCard
-                key={chartId}
-                isShowCardTitle={isShowTitle}
-                cardTitle={title}
-                titleFontSize={titleFontSize}
-                titleColor={titleColor}
-                isShowRemark={isShowRemark}
-                remark={remark}
-                remarkPosition={remarkPosition}
-                isShowEndNote={isShowEndNote}
-                endNote={endNote}
-                borderRadius={borderRadius}
-                backgroundColor={backgroundColor}
-                isShowBackgroundColor={isShowBackgroundColor}
-                chartCardPadding={chartCardPadding}
-                isSelected={chartId === curChartId}
-                onClick={() => handleChartCardClick(chartId)}
-              >
-                {renderChart(type)}
-              </ChartCard>
-            );
-          })}
+
+          <ReactGridLayout
+            className="layout"
+            layout={dashBoardLayout}
+            cols={rasterNum}
+            rowHeight={rowHeight}
+            // 使用动态宽度
+            width={containerWidth}
+            isDraggable={true}
+            isResizable={true}
+            // 设置元素之间的间距
+            margin={[rasterGap, cardRowSpace]}
+            // 设置容器内边距
+            containerPadding={[0, 0]}
+            // 布局变化时触发
+            onLayoutChange={(layout) => {
+              console.log("布局变化：", layout);
+              setDashBoardLayout(layout);
+            }}
+          >
+            {chartsConfig.map((config: ChartConfig, index) => {
+              const {
+                title,
+                chartId,
+                type,
+                isShowTitle,
+                titleFontSize,
+                titleColor,
+                isShowRemark,
+                remark,
+                remarkPosition,
+                isShowEndNote,
+                endNote,
+                borderRadius,
+                isShowBackgroundColor,
+                backgroundColor,
+                chartCardPadding,
+              } = config;
+
+              return (
+                <div key={chartId}>
+                  <ChartCard
+                    key={chartId}
+                    isShowCardTitle={isShowTitle}
+                    cardTitle={title}
+                    titleFontSize={titleFontSize}
+                    titleColor={titleColor}
+                    isShowRemark={isShowRemark}
+                    remark={remark}
+                    remarkPosition={remarkPosition}
+                    isShowEndNote={isShowEndNote}
+                    endNote={endNote}
+                    borderRadius={borderRadius}
+                    backgroundColor={backgroundColor}
+                    isShowBackgroundColor={isShowBackgroundColor}
+                    chartCardPadding={chartCardPadding}
+                    isSelected={chartId === curChartId}
+                    onClick={() => handleChartCardClick(chartId)}
+                    style={{
+                      width: dashboardChartsSize[index].width,
+                      height: dashboardChartsSize[index].height,
+                    }}
+                  >
+                    {renderChart(type)}
+                  </ChartCard>
+                </div>
+              );
+            })}
+          </ReactGridLayout>
         </div>
       </div>
     </div>

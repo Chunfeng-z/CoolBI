@@ -1,8 +1,9 @@
 import { HolderOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import React from "react";
+
+import EllipsisText from "@/components/common/EllipsisText/index";
 import "./index.scss";
-import EllipsisText from "@comp/common/EllipsisText/index";
 
 const prefixCls = "dashboard-chart-card";
 
@@ -25,8 +26,6 @@ interface ChartCardProps {
   isShowEndNote?: boolean;
   /** 尾注内容 */
   endNote?: string;
-  /** 卡片的垂直间距 */
-  marginBottom?: number;
   /** 卡片圆角 */
   borderRadius?: number;
   /** 是否展示组件背景 */
@@ -39,6 +38,8 @@ interface ChartCardProps {
   isSelected?: boolean;
   /** 外部传入的内容 */
   children?: React.ReactNode;
+  /** 开片组件的样式 */
+  style?: React.CSSProperties;
   /** 被点击的时候需要展开右侧的配置栏目 */
   onClick?: () => void;
 }
@@ -54,33 +55,30 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
     remarkPosition = "afterTitle",
     isShowEndNote = false,
     endNote = "",
-    marginBottom = 10,
-    borderRadius = 0,
+    borderRadius = 4,
     isSelected = false,
     isShowBackgroundColor = false,
     chartCardPadding = [2, 2, 2, 2],
     backgroundColor = "#f0f2f5",
     children,
+    style,
     onClick,
   } = props;
 
   return (
     <div
-      className={`${prefixCls}-container ${
-        isSelected ? `${prefixCls}-selected` : ""
-      }`}
-      style={{ backgroundColor: "#E9E7E0", maxWidth: 450 }}
+      className={`${prefixCls}-container`}
+      style={{ backgroundColor: "#E9E7E0", ...style }}
       onClick={onClick}
     >
       <div
         className={`${prefixCls}-content`}
         style={{
-          marginBottom: `${marginBottom}px`,
           padding: `${chartCardPadding[0]}px ${chartCardPadding[3]}px ${chartCardPadding[2]}px ${chartCardPadding[1]}px`,
           backgroundColor: isShowBackgroundColor
             ? backgroundColor
             : "transparent",
-          border: isSelected ? "2px solid #1890ff" : "none",
+          border: isSelected ? "2px solid #1890ff" : "2px solid transparent",
           borderRadius: `${borderRadius}px`,
         }}
       >

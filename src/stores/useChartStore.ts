@@ -21,7 +21,7 @@ interface Action {
   /** 追加新的图表组件 */
   appendChartConfig: (config: ChartConfig) => void;
   /** 撤销 */
-  undo?: () => void;
+  undo: () => void;
   /** 重做 */
   redo: () => void;
 }
@@ -66,11 +66,47 @@ export type ChartConfig = {
   chartCardPadding?: number[];
   color?: string;
   showLegend?: boolean;
+  /** 图表组件在仪表板中grid布局的位置信息 */
+  layout?: {
+    i: string;
+    /** x轴位置 */
+    x: number;
+    /** y轴位置 */
+    y: number;
+    /** 宽度 */
+    w: number;
+    /** 高度 */
+    h: number;
+  };
 };
 
 const useChartStore = create<State & Action>((set, get) => ({
   curChartId: null,
   chartsConfig: [
+    {
+      chartId: "indicatorTrend",
+      type: "indicatorTrend",
+      isShowTitle: true,
+      title: "指标趋势图",
+      titleColor: "#1677ff",
+      titleFontSize: 16,
+      isShowRemark: false,
+      remark: "备注1",
+      remarkPosition: "afterTitle",
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: true,
+      backgroundColor: "#ffffff",
+      borderRadius: 4,
+      chartCardPadding: [10, 10, 10, 10],
+      layout: {
+        i: "indicatorTrend",
+        x: 0,
+        y: 0,
+        w: 6,
+        h: 4,
+      },
+    },
     {
       chartId: "pie",
       type: "pie",
@@ -85,8 +121,15 @@ const useChartStore = create<State & Action>((set, get) => ({
       endNote: "",
       isShowBackgroundColor: true,
       backgroundColor: "#90b3e7",
-      borderRadius: 0,
+      borderRadius: 4,
       chartCardPadding: [10, 10, 10, 10],
+      layout: {
+        i: "pie",
+        x: 6,
+        y: 0,
+        w: 6,
+        h: 4,
+      },
     },
     {
       chartId: "barStackPercent",
@@ -102,8 +145,15 @@ const useChartStore = create<State & Action>((set, get) => ({
       endNote: "",
       isShowBackgroundColor: true,
       backgroundColor: "#90b3e7",
-      borderRadius: 0,
+      borderRadius: 4,
       chartCardPadding: [10, 10, 10, 10],
+      layout: {
+        i: "barStackPercent",
+        x: 0,
+        y: 4,
+        w: 6,
+        h: 4,
+      },
     },
     {
       chartId: "barStack",
@@ -119,8 +169,15 @@ const useChartStore = create<State & Action>((set, get) => ({
       endNote: "",
       isShowBackgroundColor: true,
       backgroundColor: "#90b3e7",
-      borderRadius: 0,
+      borderRadius: 4,
       chartCardPadding: [10, 10, 10, 10],
+      layout: {
+        i: "barStack",
+        x: 6,
+        y: 4,
+        w: 6,
+        h: 4,
+      },
     },
     {
       chartId: "lineStackPercent",
@@ -136,8 +193,15 @@ const useChartStore = create<State & Action>((set, get) => ({
       endNote: "",
       isShowBackgroundColor: true,
       backgroundColor: "#90b3e7",
-      borderRadius: 0,
+      borderRadius: 4,
       chartCardPadding: [10, 10, 10, 10],
+      layout: {
+        i: "lineStackPercent",
+        x: 0,
+        y: 8,
+        w: 6,
+        h: 4,
+      },
     },
     {
       chartId: "lineStack",
@@ -153,11 +217,18 @@ const useChartStore = create<State & Action>((set, get) => ({
       endNote: "",
       isShowBackgroundColor: true,
       backgroundColor: "#90b3e7",
-      borderRadius: 0,
+      borderRadius: 4,
       chartCardPadding: [10, 10, 10, 10],
+      layout: {
+        i: "lineStack",
+        x: 6,
+        y: 8,
+        w: 6,
+        h: 4,
+      },
     },
     {
-      chartId: "0",
+      chartId: "bar",
       isShowTitle: true,
       title: "柱状图",
       titleColor: "#1677ff",
@@ -169,14 +240,21 @@ const useChartStore = create<State & Action>((set, get) => ({
       endNote: "",
       isShowBackgroundColor: true,
       backgroundColor: "#90b3e7",
-      borderRadius: 0,
+      borderRadius: 4,
       chartCardPadding: [10, 10, 10, 10],
       type: "bar",
       color: "#1890ff",
       showLegend: true,
+      layout: {
+        i: "bar",
+        x: 0,
+        y: 12,
+        w: 6,
+        h: 4,
+      },
     },
     {
-      chartId: "1",
+      chartId: "line",
       isShowTitle: true,
       title: "折线图",
       titleColor: "#1677ff",
@@ -188,14 +266,21 @@ const useChartStore = create<State & Action>((set, get) => ({
       endNote: "",
       isShowBackgroundColor: true,
       backgroundColor: "#90b3e7",
-      borderRadius: 0,
+      borderRadius: 4,
       chartCardPadding: [10, 10, 10, 10],
       type: "line",
       color: "#52c41a",
       showLegend: false,
+      layout: {
+        i: "line",
+        x: 6,
+        y: 12,
+        w: 6,
+        h: 4,
+      },
     },
     {
-      chartId: "3",
+      chartId: "areArraysEqualCircular",
       isShowTitle: true,
       title: "面积图",
       titleColor: "#1677ff",
@@ -207,11 +292,18 @@ const useChartStore = create<State & Action>((set, get) => ({
       endNote: "",
       isShowBackgroundColor: true,
       backgroundColor: "#90b3e7",
-      borderRadius: 0,
+      borderRadius: 4,
       chartCardPadding: [10, 10, 10, 10],
       type: "polyline",
       color: "#52c41a",
       showLegend: false,
+      layout: {
+        i: "areArraysEqualCircular",
+        x: 0,
+        y: 16,
+        w: 6,
+        h: 4,
+      },
     },
   ],
   redoStack: [],
@@ -219,25 +311,39 @@ const useChartStore = create<State & Action>((set, get) => ({
   setCurChartId: (chartId: string) => set({ curChartId: chartId }),
   setChartsConfig: (chartId: string, config: object) => {
     const state = get();
-    const index = state.chartsConfig.findIndex(
+    const { chartsConfig, history, getCurrentChartConfig } = state;
+    const index = chartsConfig.findIndex(
       (chart: ChartConfig) => chart.chartId === chartId
     );
     if (index !== -1) {
       // 更新已存在的图表配置
-      const updatedConfig = [...state.chartsConfig];
+      const updatedConfig = [...chartsConfig];
       updatedConfig[index] = { ...updatedConfig[index], ...config };
+      let updatedHistory: object[] = [];
+
+      // 第一次修改的时候，将当前配置项添加到历史记录中才可复原
+      if (history.length === 0) {
+        // TODO: 后续需要拓展不仅是支持当前选中的图表
+        const currentConfig = getCurrentChartConfig();
+        if (currentConfig) {
+          updatedHistory = [currentConfig, { chartId, ...config }];
+        }
+      } else {
+        updatedHistory = [
+          ...history,
+          {
+            chartId,
+            ...config,
+          },
+        ];
+      }
+
       set({
         chartsConfig: updatedConfig,
         // 清空redo栈
         redoStack: [],
         // 添加新的历史记录
-        history: [
-          ...state.history,
-          {
-            chartId,
-            ...config,
-          },
-        ],
+        history: updatedHistory as historyItem[],
       });
       return true;
     } else {
@@ -259,22 +365,24 @@ const useChartStore = create<State & Action>((set, get) => ({
   undo: () => {
     const state = get();
     const { history, chartsConfig, redoStack } = state;
-    if (history.length === 0) return false;
-    // 当前操作的上一个操作，即最后一次操作
-    const lastChange = history[history.length - 1];
+    // 由于会记录初始状态，所以历史记录至少有两个
+    if (history.length <= 1) return false;
+    // 当前状态操作的上一个操作（前一个状态）
+    const preChange = history[history.length - 2];
+    const curChange = history[history.length - 1];
     const index = chartsConfig.findIndex(
-      (chart: ChartConfig) => chart.chartId === lastChange.chartId
+      (chart: ChartConfig) => chart.chartId === preChange.chartId
     );
     const updatedChartsConfig = [...chartsConfig];
     // 撤销后的图表配置
     updatedChartsConfig[index] = {
-      ...updatedChartsConfig[index],
-      ...lastChange,
+      ...chartsConfig[index],
+      ...preChange,
     };
     set({
       chartsConfig: updatedChartsConfig,
-      // 将当前撤销的配置项添加到重做栈中
-      redoStack: [lastChange, ...redoStack],
+      // 将当前的状态添加到重做栈中
+      redoStack: [curChange, ...redoStack],
       // 移除已撤销的项
       history: history.slice(0, history.length - 1),
     });
@@ -291,7 +399,7 @@ const useChartStore = create<State & Action>((set, get) => ({
     const updatedChartsConfig = [...chartsConfig];
     // 重做后的图表配置
     updatedChartsConfig[index] = {
-      ...updatedChartsConfig[index],
+      ...chartsConfig[index],
       ...nextChange,
     };
     set({

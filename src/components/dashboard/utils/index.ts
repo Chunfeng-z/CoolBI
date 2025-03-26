@@ -99,15 +99,14 @@ export enum CardSpace {
  * 页面栅格数的选择项
  */
 export const pageRasterOptions: string[] = [
-  "4",
-  "6",
-  "8",
   "10",
   "12",
   "14",
   "16",
   "18",
   "20",
+  "22",
+  "24",
 ];
 
 /** 图表菜单的图标 */

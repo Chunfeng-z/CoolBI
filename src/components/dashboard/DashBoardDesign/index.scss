@@ -13,11 +13,17 @@
 
   .root-container-main-header-and-content {
     position: relative;
+    display: flex;
     padding: 8px 24px;
     width: 100%;
+    flex: 1;
+    flex-direction: column;
 
     .root-container-main-content {
       position: relative;
+      overflow-x: hidden;
+      width: 100%;
+      flex: 1;
     }
   }
 
@@ -27,9 +33,11 @@
     display: grid;
     inset: 0;
     pointer-events: none;
+    cursor: not-allowed;
     visibility: hidden;
 
     .indicator-item {
+      box-sizing: border-box;
       height: 100%;
       background-color: #ecf6ff48;
       border: 1px dashed #1990ff88;
@@ -37,6 +45,33 @@
 
     &.is-show {
       visibility: visible;
+    }
+  }
+
+  // 在托拽时会创建的站位元素
+  .react-grid-item.react-grid-placeholder {
+    z-index: 0;
+    background: #cdcdce;
+    border: 1px dashed #9292929f;
+    border-radius: 8px;
+    opacity: 0.5;
+    transition: all 150ms ease;
+    box-sizing: border-box;
+  }
+
+  // 调整网格项的样式
+  .react-grid-item {
+    // 保证托拽的时候的虚拟元素始终在最下层
+    z-index: 1;
+
+    &:hover {
+      box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+    }
+
+    &.resizing,
+    &.react-draggable-dragging {
+      z-index: 100;
+      box-shadow: 0 5px 15px rgb(0 0 0 / 20%);
     }
   }
 }

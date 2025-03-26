@@ -185,3 +185,73 @@ export const detectDataType = (
 
   return null;
 };
+
+interface LayoutItem {
+  i: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+interface AdjustedLayoutItem {
+  i: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+interface RowItem {
+  i: string;
+  newX: number;
+  newW: number;
+  oldX: number;
+  oldW: number;
+  h: number;
+}
+/** 栅格数调整的布局缩放算法 */
+export const resizeGrid = (
+  layout: LayoutItem[],
+  oldGrid: number,
+  newGrid: number
+): AdjustedLayoutItem[] => {
+  const scale = newGrid / oldGrid;
+  let adjustedRects: AdjustedLayoutItem[] = [];
+  const rows: Record<number, RowItem[]> = {};
+
+  // 1. 计算新的 x 和 w
+  layout.forEach(({ i, x, y, w, h }) => {
+    // 宽度最小为1
+    const newW = Math.max(1, Math.round(w * scale));
+    const newX = Math.round(x * scale);
+    if (!rows[y]) rows[y] = [];
+    rows[y].push({ i, newX, newW, oldX: x, oldW: w, h });
+  });
+
+  // 2. 逐行处理，调整位置防止重叠
+  for (const y in rows) {
+    const row = rows[parseInt(y)];
+    // 按新 x 排序
+    row.sort((a, b) => a.newX - b.newX);
+    const newRow: AdjustedLayoutItem[] = [];
+    let currentX = 0;
+
+    row.forEach(({ i, newX, newW, h }) => {
+      // 确保不重叠
+      let adjustedX = Math.max(currentX, newX);
+      if (adjustedX + newW > newGrid) {
+        // 不能超出边界
+        adjustedX = Math.max(0, newGrid - newW);
+      }
+
+      newRow.push({ i, x: adjustedX, y: parseInt(y), w: newW, h });
+      // 更新下一次起始位置
+      currentX = adjustedX + newW;
+    });
+
+    adjustedRects = adjustedRects.concat(newRow);
+  }
+
+  return adjustedRects;
+};

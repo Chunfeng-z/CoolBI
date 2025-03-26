@@ -148,7 +148,7 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
                 size="small"
                 variant="filled"
                 min={0}
-                max={30}
+                max={20}
                 defaultValue={8}
                 value={rasterGap}
                 onChange={handleRasterGapChange}
@@ -162,7 +162,7 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
                 size="small"
                 variant="filled"
                 min={0}
-                max={30}
+                max={20}
                 defaultValue={12}
                 value={cardRowSpace}
                 onChange={handleCardRowSpaceChange}
