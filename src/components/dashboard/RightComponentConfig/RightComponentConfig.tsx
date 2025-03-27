@@ -12,6 +12,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import ComponentStyleConfig from "./ComponentStyleConfig";
 import ComponentWordConfig from "./ComponentWordConfig/index";
+import DataAnalysisConfig from "./DataAnalysisiConfig";
 import DataSourceConfig from "./DataSourceConfig";
 
 import type { TabsProps } from "antd";
@@ -37,7 +38,7 @@ const CONFIG_TABS = [
     key: "3",
     label: "分析",
     icon: <BulbOutlined />,
-    component: <div>分析</div>,
+    component: <DataAnalysisConfig />,
   },
 ];
 
