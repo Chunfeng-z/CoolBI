@@ -80,6 +80,7 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
             : "transparent",
           border: isSelected ? "2px solid #1890ff" : "2px solid transparent",
           borderRadius: `${borderRadius}px`,
+          ...style,
         }}
       >
         <div className="chart-card-header">
