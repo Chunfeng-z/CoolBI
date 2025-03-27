@@ -1,4 +1,4 @@
-import { PushpinOutlined } from "@ant-design/icons";
+import { PushpinFilled, PushpinOutlined } from "@ant-design/icons";
 import { Button, Tooltip } from "antd";
 import React from "react";
 
@@ -8,6 +8,7 @@ import { CHART_ICON_MAP } from "../utils/index";
 import ChartCategory from "./ChartCategory";
 import { ChartCategoryData } from "./data";
 
+import { useCompPanelStore } from "@/stores/useCompPanel";
 import { useThemeStore } from "@/stores/useThemeStore";
 
 const prefixCls = "left-chart-menu";
@@ -26,6 +27,10 @@ const LeftChartMenu: React.FC<LeftChartMenuProps> = (props) => {
   const handleItemMouseEnter = (item: ChartItem) => {
     setCurrentHoverChart(item);
   };
+  const chartMenuStatus = useCompPanelStore((state) => state.chartMenuStatus);
+  const setChartMenuStatus = useCompPanelStore(
+    (state) => state.setChartMenuStatus
+  );
   const handleItemMouseLeave = () => {
     setCurrentHoverChart(null);
   };
@@ -44,8 +49,33 @@ const LeftChartMenu: React.FC<LeftChartMenuProps> = (props) => {
           }}
         >
           <span>图表组件</span>
-          <Tooltip title="固定图表菜单">
-            <Button type="text" size="small" icon={<PushpinOutlined />} />
+          <Tooltip
+            title={
+              chartMenuStatus !== "pin" ? "固定图表菜单" : "取消固定并关闭面板"
+            }
+          >
+            <Button
+              type="text"
+              size="small"
+              icon={
+                chartMenuStatus !== "pin" ? (
+                  <PushpinOutlined />
+                ) : (
+                  <PushpinFilled
+                    style={{
+                      color: "#1990FF",
+                    }}
+                  />
+                )
+              }
+              onClick={() => {
+                if (chartMenuStatus === "pin") {
+                  setChartMenuStatus("hidden");
+                } else if (chartMenuStatus === "expand") {
+                  setChartMenuStatus("pin");
+                }
+              }}
+            />
           </Tooltip>
         </div>
         <div className={`${prefixCls}-body`}>

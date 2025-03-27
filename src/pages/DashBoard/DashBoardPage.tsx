@@ -14,6 +14,8 @@ const { useToken } = theme;
 import "./index.scss";
 import useChartStore from "../../stores/useChartStore";
 
+import { useCompPanelStore } from "@/stores/useCompPanel";
+
 const prefixCls = "dashboard-page";
 const enum LeftChartMenuState {
   "close" = "close",
@@ -29,6 +31,7 @@ const DashBoardPage: React.FC = () => {
   /** 在当前存在选中图表卡片的时候展示图表配置菜单 */
   const curChartId = useChartStore((state) => state.curChartId);
   const isShowChartConfig = !isEmpty(curChartId);
+  const chartMenuStatus = useCompPanelStore((state) => state.chartMenuStatus);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -55,11 +58,13 @@ const DashBoardPage: React.FC = () => {
           )}
         </div>
         <div className={`${prefixCls}-left-chart-menu`}>
-          <LeftChartMenu
-            style={{
-              backgroundColor: token.colorBgContainer,
-            }}
-          />
+          {chartMenuStatus === "pin" && (
+            <LeftChartMenu
+              style={{
+                backgroundColor: token.colorBgContainer,
+              }}
+            />
+          )}
         </div>
         <div className={`${prefixCls}-chart-content`}>
           <DashBoardDesign />

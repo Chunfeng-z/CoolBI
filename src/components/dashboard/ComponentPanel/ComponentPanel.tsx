@@ -17,8 +17,10 @@ import {
 import classNames from "classnames";
 import React, { useMemo, useState } from "react";
 
+import LeftChartMenu from "../LeftChartMenu";
 import { pageRasterOptions as options } from "../utils";
 
+import { useCompPanelStore } from "@/stores/useCompPanel";
 import useRasterStore from "@/stores/useRasterStore";
 import { useThemeStore } from "@/stores/useThemeStore";
 const prefixCls = "component-panel";
@@ -66,13 +68,12 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
 
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 图表菜单的显示状态 */
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const chartMenuStatus = useCompPanelStore((state) => state.chartMenuStatus);
+  const setChartMenuStatus = useCompPanelStore(
+    (state) => state.setChartMenuStatus
+  );
   /** 当前菜单缩放倍率 */
   const [scale, setScale] = useState<ScaleValue>(ScaleValue.level4);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     const selectedScale =
@@ -112,122 +113,134 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
   };
 
   return (
-    <div className={`${prefixCls}-container`} style={{ ...style }}>
-      {isShowPageRaster ? (
-        <div
-          className={classNames(`${prefixCls}-layout-menu`)}
-          style={{ backgroundColor: isDarkMode ? "#141414" : "#f4f4f5" }}
-        >
-          <div className="layout-menu-label">页面栅格设置</div>
-          <div className="layout-menu">
-            <div className="layout-menu-item">
-              栅格列数
-              <Tooltip
-                title="在栅格布局下，每个卡片的宽度由栅格列数决定，栅格列数越多，卡片宽度可设置的颗粒度越细。"
-                trigger={["hover"]}
-                styles={{
-                  root: {
-                    zIndex: 9999,
-                  },
+    <>
+      <div className={`${prefixCls}-container`} style={{ ...style }}>
+        {isShowPageRaster ? (
+          <div
+            className={classNames(`${prefixCls}-layout-menu`)}
+            style={{ backgroundColor: isDarkMode ? "#141414" : "#f4f4f5" }}
+          >
+            <div className="layout-menu-label">页面栅格设置</div>
+            <div className="layout-menu">
+              <div className="layout-menu-item">
+                栅格列数
+                <Tooltip
+                  title="在栅格布局下，每个卡片的宽度由栅格列数决定，栅格列数越多，卡片宽度可设置的颗粒度越细。"
+                  trigger={["hover"]}
+                  styles={{
+                    root: {
+                      zIndex: 9999,
+                    },
+                  }}
+                >
+                  <InfoCircleOutlined />
+                </Tooltip>
+                <Select
+                  size="small"
+                  defaultValue={"12"}
+                  style={{ width: 60 }}
+                  variant="filled"
+                  onChange={handleRasterNumberChange}
+                  options={pageRasterOptions}
+                />
+              </div>
+              <div className="layout-menu-item">
+                列间距
+                <InputNumber
+                  size="small"
+                  variant="filled"
+                  min={0}
+                  max={20}
+                  defaultValue={8}
+                  value={rasterGap}
+                  onChange={handleRasterGapChange}
+                  style={{ width: 90 }}
+                  addonAfter="px"
+                />
+              </div>
+              <div className="layout-menu-item">
+                行间距
+                <InputNumber
+                  size="small"
+                  variant="filled"
+                  min={0}
+                  max={20}
+                  defaultValue={12}
+                  value={cardRowSpace}
+                  onChange={handleCardRowSpaceChange}
+                  style={{ width: 90 }}
+                  addonAfter="px"
+                />
+              </div>
+            </div>
+            <div className="layout-button">
+              <Button
+                size="small"
+                type="primary"
+                variant="solid"
+                onClick={handlePageRasterClick}
+              >
+                完成
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className={`${prefixCls}-left`}>
+              <div
+                className={classNames(`${prefixCls}-add-chart-btn`, {
+                  selected:
+                    chartMenuStatus === "expand" || chartMenuStatus === "pin",
+                })}
+                onClick={() => {
+                  if (chartMenuStatus === "expand") {
+                    setChartMenuStatus("hidden");
+                  } else if (chartMenuStatus === "hidden") {
+                    setChartMenuStatus("expand");
+                  }
                 }}
               >
-                <InfoCircleOutlined />
+                <LineChartOutlined />
+                <span className={`${prefixCls}-btn-text`}>添加图表</span>
+                {/* 图表状态在expand和pin都是展开状态 */}
+                {chartMenuStatus === "hidden" ? (
+                  <DownOutlined style={{ fontSize: 12 }} />
+                ) : (
+                  <UpOutlined style={{ fontSize: 12 }} />
+                )}
+              </div>
+              {/* 菜单展开的时候绝对定位展示 */}
+              {chartMenuStatus === "expand" && <LeftChartMenu />}
+            </div>
+            <div className={`${prefixCls}-right`}>
+              <Tooltip title="布局缩放">
+                <Dropdown
+                  menu={{ items, onClick: handleMenuClick }}
+                  trigger={["click"]}
+                >
+                  <Button
+                    type="text"
+                    size="small"
+                    icon={<DownOutlined />}
+                    iconPosition="end"
+                  >
+                    {scale}
+                  </Button>
+                </Dropdown>
               </Tooltip>
-              <Select
-                size="small"
-                defaultValue={"12"}
-                style={{ width: 60 }}
-                variant="filled"
-                onChange={handleRasterNumberChange}
-                options={pageRasterOptions}
-              />
-            </div>
-            <div className="layout-menu-item">
-              列间距
-              <InputNumber
-                size="small"
-                variant="filled"
-                min={0}
-                max={20}
-                defaultValue={8}
-                value={rasterGap}
-                onChange={handleRasterGapChange}
-                style={{ width: 90 }}
-                addonAfter="px"
-              />
-            </div>
-            <div className="layout-menu-item">
-              行间距
-              <InputNumber
-                size="small"
-                variant="filled"
-                min={0}
-                max={20}
-                defaultValue={12}
-                value={cardRowSpace}
-                onChange={handleCardRowSpaceChange}
-                style={{ width: 90 }}
-                addonAfter="px"
-              />
-            </div>
-          </div>
-          <div className="layout-button">
-            <Button
-              size="small"
-              type="primary"
-              variant="solid"
-              onClick={handlePageRasterClick}
-            >
-              完成
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className={`${prefixCls}-left`}>
-            <div
-              className={classNames(`${prefixCls}-add-chart-btn`, {
-                selected: isMenuOpen,
-              })}
-              onClick={toggleMenu}
-            >
-              <LineChartOutlined />
-              <span className={`${prefixCls}-btn-text`}>添加图表</span>
-              {isMenuOpen ? (
-                <UpOutlined style={{ fontSize: 12 }} />
-              ) : (
-                <DownOutlined style={{ fontSize: 12 }} />
-              )}
-            </div>
-          </div>
-          <div className={`${prefixCls}-right`}>
-            <Tooltip title="布局缩放">
-              <Dropdown
-                menu={{ items, onClick: handleMenuClick }}
-                trigger={["click"]}
-              >
+              <Tooltip title="页面栅格设置">
                 <Button
                   type="text"
+                  icon={<TableOutlined />}
                   size="small"
-                  icon={<DownOutlined />}
-                  iconPosition="end"
-                >
-                  {scale}
-                </Button>
-              </Dropdown>
-            </Tooltip>
-            <Tooltip title="页面栅格设置">
-              <Button
-                type="text"
-                icon={<TableOutlined />}
-                size="small"
-                onClick={handlePageRasterClick}
-              />
-            </Tooltip>
-          </div>
-        </>
-      )}
-    </div>
+                  onClick={handlePageRasterClick}
+                />
+              </Tooltip>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
