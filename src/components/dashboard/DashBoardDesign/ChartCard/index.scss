@@ -8,21 +8,17 @@
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    color: white;
 
     &-title {
       overflow: hidden;
       max-width: 80%;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: #fff;
       font-weight: 500;
     }
 
     &-tail {
       margin-left: auto;
-      color: #fff;
-      cursor: move;
     }
   }
 

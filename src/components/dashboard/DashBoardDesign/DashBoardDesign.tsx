@@ -218,6 +218,24 @@ const DashBoardDesign: React.FC = () => {
     setCurChartId(chartId);
   }, []);
 
+  // 计算布局的总高度
+  const layoutHeight = useMemo(() => {
+    if (!dashBoardLayout.length) return 800; // 默认初始高度
+
+    // 找出所有元素中最下方的位置
+    const maxBottomPosition = dashBoardLayout.reduce((max, item) => {
+      const bottomPosition = item.y + item.h;
+      return bottomPosition > max ? bottomPosition : max;
+    }, 0);
+
+    // 计算总高度：最大底部位置 * 行高 + 额外的空间
+    return (
+      maxBottomPosition * rowHeight +
+      (maxBottomPosition - 1) * cardRowSpace +
+      50
+    ); // 额外添加100px作为底部空间
+  }, [dashBoardLayout, rowHeight, cardRowSpace]);
+
   return (
     <div className={`${prefixCls}-container`} ref={ref}>
       <div className="root-container-main-header-and-content">
@@ -239,13 +257,19 @@ const DashBoardDesign: React.FC = () => {
 
           <ReactGridLayout
             className="layout"
+            style={{
+              height: layoutHeight,
+            }}
             layout={dashBoardLayout}
             cols={rasterNum}
             rowHeight={rowHeight}
+            useCSSTransforms={true}
             // 使用动态宽度
             width={containerWidth}
             isDraggable={true}
             isResizable={true}
+            // 为真时，容器的高度会自适应内容的高度
+            autoSize={false}
             resizeHandles={["w", "se"]}
             // 设置元素之间的间距
             margin={[rasterGap, cardRowSpace]}
