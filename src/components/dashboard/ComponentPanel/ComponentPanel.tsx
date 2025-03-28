@@ -193,7 +193,10 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
                     chartMenuStatus === "expand" || chartMenuStatus === "pin",
                 })}
                 onClick={() => {
-                  if (chartMenuStatus === "expand") {
+                  if (
+                    chartMenuStatus === "expand" ||
+                    chartMenuStatus === "pin"
+                  ) {
                     setChartMenuStatus("hidden");
                   } else if (chartMenuStatus === "hidden") {
                     setChartMenuStatus("expand");
