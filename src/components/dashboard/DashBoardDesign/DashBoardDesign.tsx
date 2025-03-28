@@ -246,6 +246,7 @@ const DashBoardDesign: React.FC = () => {
             width={containerWidth}
             isDraggable={true}
             isResizable={true}
+            resizeHandles={["w", "se"]}
             // 设置元素之间的间距
             margin={[rasterGap, cardRowSpace]}
             // 设置容器内边距

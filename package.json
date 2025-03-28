@@ -19,7 +19,7 @@
     "@ant-design/pro-components": "^2.8.2",
     "@ant-design/x": "^1.0.5",
     "@microsoft/fetch-event-source": "^2.0.1",
-    "@visactor/react-vchart": "^1.13.5",
+    "@visactor/react-vchart": "^1.13.7",
     "ahooks": "^3.8.4",
     "antd": "^5.24.4",
     "axios": "^1.8.4",

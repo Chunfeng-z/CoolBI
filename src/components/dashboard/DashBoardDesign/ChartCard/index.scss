@@ -27,6 +27,8 @@
   }
 
   .dashboard-chart-card-chart {
+    // 配置overflow后图表就支持了高度自适应？
+    overflow: auto;
     flex: 1;
   }
 

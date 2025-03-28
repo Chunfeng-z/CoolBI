@@ -50,6 +50,7 @@
 
   // 在托拽时会创建的站位元素
   .react-grid-item.react-grid-placeholder {
+    // 保证托拽的时候的虚拟元素始终在最下层
     z-index: 0;
     background: #cdcdce;
     border: 1px dashed #9292929f;
@@ -61,11 +62,19 @@
 
   // 调整网格项的样式
   .react-grid-item {
-    // 保证托拽的时候的虚拟元素始终在最下层
     z-index: 1;
+
+    // 默认不现实大小缩放的手柄
+    .react-resizable-handle {
+      visibility: hidden;
+    }
 
     &:hover {
       box-shadow: 0 0 5px rgb(0 0 0 / 10%);
+
+      .react-resizable-handle {
+        visibility: visible;
+      }
     }
 
     &.resizing,
