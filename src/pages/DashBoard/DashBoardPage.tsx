@@ -14,6 +14,7 @@ const { useToken } = theme;
 import "./index.scss";
 import useChartStore from "../../stores/useChartStore";
 
+import ErrorBoundary from "@/components/common/ErrorBoundary";
 import { useCompPanelStore } from "@/stores/useCompPanel";
 
 const prefixCls = "dashboard-page";
@@ -37,37 +38,49 @@ const DashBoardPage: React.FC = () => {
     <DndProvider backend={HTML5Backend}>
       <div className={`${prefixCls}-container`}>
         <div className={`${prefixCls}-action-panel`}>
-          <ActionPanel style={{ backgroundColor: token.colorBgContainer }} />
+          <ErrorBoundary>
+            <ActionPanel style={{ backgroundColor: token.colorBgContainer }} />
+          </ErrorBoundary>
         </div>
         <div className={`${prefixCls}-component-panel`}>
-          <ComponentPanel style={{ backgroundColor: token.colorBgContainer }} />
+          <ErrorBoundary>
+            <ComponentPanel
+              style={{ backgroundColor: token.colorBgContainer }}
+            />
+          </ErrorBoundary>
         </div>
         <div className={`${prefixCls}-right-theme`}>
-          {isShowChartConfig ? (
-            <RightComponentConfig
-              style={{
-                backgroundColor: token.colorBgContainer,
-              }}
-            />
-          ) : (
-            <RightTheme
-              style={{
-                backgroundColor: token.colorBgContainer,
-              }}
-            />
-          )}
+          <ErrorBoundary>
+            {isShowChartConfig ? (
+              <RightComponentConfig
+                style={{
+                  backgroundColor: token.colorBgContainer,
+                }}
+              />
+            ) : (
+              <RightTheme
+                style={{
+                  backgroundColor: token.colorBgContainer,
+                }}
+              />
+            )}
+          </ErrorBoundary>
         </div>
         <div className={`${prefixCls}-left-chart-menu`}>
-          {chartMenuStatus === "pin" && (
-            <LeftChartMenu
-              style={{
-                backgroundColor: token.colorBgContainer,
-              }}
-            />
-          )}
+          <ErrorBoundary>
+            {chartMenuStatus === "pin" && (
+              <LeftChartMenu
+                style={{
+                  backgroundColor: token.colorBgContainer,
+                }}
+              />
+            )}{" "}
+          </ErrorBoundary>
         </div>
         <div className={`${prefixCls}-chart-content`}>
-          <DashBoardDesign />
+          <ErrorBoundary>
+            <DashBoardDesign />
+          </ErrorBoundary>
         </div>
       </div>
     </DndProvider>
