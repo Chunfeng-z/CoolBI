@@ -1,4 +1,4 @@
-export const data = [
+export const exampleData = [
   {
     State: "WY",
     Age: "Under 5 Years",

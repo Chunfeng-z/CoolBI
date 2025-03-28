@@ -1,6 +1,7 @@
-import React from "react";
-import { data as areaData } from "./data";
 import { VChart } from "@visactor/react-vchart";
+import React from "react";
+
+import { exampleData } from "./exampleData";
 const prefixCls = "cool-area-chart";
 interface ICoolAreaChartProps {
   /** 图表宽度 */
@@ -31,9 +32,7 @@ interface ICoolAreaChartProps {
 }
 const CoolPolyLineChart: React.FC<ICoolAreaChartProps> = (props) => {
   const {
-    width = 300,
-    height = 200,
-    data = areaData,
+    data = exampleData,
     xField = "time",
     yField = "value",
     line = {
@@ -54,8 +53,8 @@ const CoolPolyLineChart: React.FC<ICoolAreaChartProps> = (props) => {
     point: point,
   };
   return (
-    <div className={prefixCls}>
-      <VChart spec={spec} width={width} height={height} />
+    <div className={prefixCls} style={{ height: "100%" }}>
+      <VChart spec={spec} />
     </div>
   );
 };

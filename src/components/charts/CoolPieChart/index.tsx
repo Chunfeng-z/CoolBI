@@ -1,8 +1,9 @@
-import React from "react";
-import { data as TestData } from "./data";
 import { VChart } from "@visactor/react-vchart";
+import React from "react";
+
+import { exampleData } from "./exampleData";
+type IOrientType = "left" | "top" | "right" | "bottom" | "z";
 const prefixCls = "cool-pie-chart";
-import { IOrientType } from "../utils/chart-type.ts";
 interface ICoolPieChartProps {
   /** 图表宽度 */
   width?: number;
@@ -18,9 +19,7 @@ interface ICoolPieChartProps {
 }
 const CoolPieChart: React.FC<ICoolPieChartProps> = (props) => {
   const {
-    width = 400,
-    height = 300,
-    data = TestData,
+    data = exampleData,
     valueField = "value",
     categoryField = "type",
   } = props;
@@ -58,8 +57,8 @@ const CoolPieChart: React.FC<ICoolPieChartProps> = (props) => {
     },
   };
   return (
-    <div className={prefixCls}>
-      <VChart spec={spec} width={width} height={height} />
+    <div className={prefixCls} style={{ height: "100%" }}>
+      <VChart spec={spec} />
     </div>
   );
 };

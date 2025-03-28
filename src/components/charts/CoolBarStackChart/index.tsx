@@ -1,7 +1,9 @@
-import React from "react";
-const prefixCls = "cool-bar-stack-chart";
-import { data as TestData } from "./data";
 import { VChart } from "@visactor/react-vchart";
+import React from "react";
+
+const prefixCls = "cool-bar-stack-chart";
+import { exampleData } from "./exampleData";
+
 interface ICoolBarStackChartProps {
   /** 图表宽度 */
   width?: number;
@@ -19,9 +21,7 @@ interface ICoolBarStackChartProps {
 }
 const CoolBarStackChart: React.FC<ICoolBarStackChartProps> = (props) => {
   const {
-    width = 400,
-    height = 300,
-    data = TestData,
+    data = exampleData,
     xField = "State",
     yField = "Population",
     seriesField = "Age",
@@ -41,8 +41,8 @@ const CoolBarStackChart: React.FC<ICoolBarStackChartProps> = (props) => {
     },
   };
   return (
-    <div className={prefixCls}>
-      <VChart spec={spec} width={width} height={height} />
+    <div className={prefixCls} style={{ height: "100%" }}>
+      <VChart spec={spec} />
     </div>
   );
 };

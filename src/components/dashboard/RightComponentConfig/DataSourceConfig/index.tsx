@@ -5,7 +5,6 @@ import {
   MenuUnfoldOutlined,
   MoreOutlined,
   QuestionCircleOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -223,6 +222,7 @@ const DataSourceConfig: React.FC = () => {
                   <Input
                     size="middle"
                     placeholder="请输入关键字检索"
+                    allowClear
                     prefix={
                       <LeftOutlined
                         onClick={() => {
@@ -273,7 +273,7 @@ const DataSourceConfig: React.FC = () => {
                   <span>度量</span>
                 </div>
                 <div className="measure-tree-container">
-                  <CoolTree />
+                  {/* <CoolTree /> */}
                 </div>
               </div>
             </div>

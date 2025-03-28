@@ -1,4 +1,4 @@
-export const data = [
+export const exampleData = [
   { type: "oxygen", value: "46.60" },
   { type: "silicon", value: "27.72" },
   { type: "aluminum", value: "8.13" },

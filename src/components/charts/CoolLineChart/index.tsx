@@ -1,6 +1,7 @@
-import React from "react";
 import { VChart } from "@visactor/react-vchart";
-import { data as TestData } from "./data";
+import React from "react";
+
+import { exampleData } from "./exampleData";
 const prefixCls = "cool-line-chart";
 interface ICoolLineChartProps {
   /** 图表宽度 */
@@ -16,13 +17,7 @@ interface ICoolLineChartProps {
   yField?: string | string[];
 }
 const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
-  const {
-    width = 300,
-    height = 200,
-    data = TestData,
-    xField = "time",
-    yField = "value",
-  } = props;
+  const { data = exampleData, xField = "time", yField = "value" } = props;
   const spec = {
     type: "line",
     data: {
@@ -32,8 +27,8 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
     yField: yField,
   };
   return (
-    <div className={prefixCls}>
-      <VChart spec={spec} width={width} height={height} />
+    <div className={prefixCls} style={{ height: "100%" }}>
+      <VChart spec={spec} />
     </div>
   );
 };

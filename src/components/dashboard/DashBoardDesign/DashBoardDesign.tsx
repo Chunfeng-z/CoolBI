@@ -1,6 +1,12 @@
 import classNames from "classnames";
 import { throttle } from "lodash-es";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDrop } from "react-dnd";
 import ReactGridLayout from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
@@ -10,15 +16,15 @@ import { ChartTypeEnum } from "../utils";
 
 import ChartCard from "./ChartCard/ChartCard";
 
-import CoolBarChart from "@/components/common/CoolBarChart";
-import CoolBarStackChart from "@/components/common/CoolBarStackChart";
-import CoolBarStackPercentChart from "@/components/common/CoolBarStackPercentChart";
+import CoolBarChart from "@/components/charts/CoolBarChart";
+import CoolBarStackChart from "@/components/charts/CoolBarStackChart";
+import CoolBarStackPercentChart from "@/components/charts/CoolBarStackPercentChart";
+import CoolLineChart from "@/components/charts/CoolLineChart";
+import CoolPieChart from "@/components/charts/CoolPieChart";
+import CoolPolyLineChart from "@/components/charts/CoolPolyLineChart";
+import CoolPolyLineStackChart from "@/components/charts/CoolPolyLineStackChart";
+import CoolPolyLineStackPercentChart from "@/components/charts/CoolPolyLineStackPercentChart";
 import CoolIndicatorTrendChart from "@/components/common/CoolIndicatorTrendChart";
-import CoolLineChart from "@/components/common/CoolLineChart";
-import CoolPieChart from "@/components/common/CoolPieChart";
-import CoolPolyLineChart from "@/components/common/CoolPolyLineChart";
-import CoolPolyLineStackChart from "@/components/common/CoolPolyLineStackChart";
-import CoolPolyLineStackPercentChart from "@/components/common/CoolPolyLineStackPercentChart";
 import useChartStore, { ChartConfig } from "@/stores/useChartStore";
 import useRasterStore from "@/stores/useRasterStore";
 import { resizeGrid } from "@/utils/hooks";
@@ -46,10 +52,6 @@ const DashBoardDesign: React.FC = () => {
   const curChartId = useChartStore((state) => state.curChartId);
   const appendChartConfig = useChartStore((state) => state.appendChartConfig);
 
-  /** 更新选中的图表 */
-  const handleChartCardClick = (chartId: string) => {
-    setCurChartId(chartId);
-  };
   /** 设置支持图表托拽创建 */
   const ref = useRef<HTMLDivElement | null>(null);
   const [, drop] = useDrop(() => {
@@ -78,9 +80,8 @@ const DashBoardDesign: React.FC = () => {
   useEffect(() => {
     drop(ref);
   }, []);
-
   /** 渲染指定的图表 */
-  const renderChart = (chart: string) => {
+  const renderChart = useCallback((chart: string) => {
     switch (chart) {
       case ChartTypeEnum.bar:
         return <CoolBarChart />;
@@ -103,7 +104,8 @@ const DashBoardDesign: React.FC = () => {
       default:
         return <div className="error-chart">未知图表类型</div>;
     }
-  };
+  }, []);
+
   /** 图表容器的宽度 */
   const [containerWidth, setContainerWidth] = useState<number>(800);
   const contentRef = useRef<HTMLDivElement | null>(
@@ -209,6 +211,11 @@ const DashBoardDesign: React.FC = () => {
       // 取消待处理的throttle调用
       throttledSetWidth.cancel();
     };
+  }, []);
+
+  /** 更新选中的图表 */
+  const handleChartCardClick = useCallback((chartId: string) => {
+    setCurChartId(chartId);
   }, []);
 
   return (

@@ -1,4 +1,4 @@
-export const data = [
+export const exampleData = [
   {
     time: "2:00",
     value: 38,

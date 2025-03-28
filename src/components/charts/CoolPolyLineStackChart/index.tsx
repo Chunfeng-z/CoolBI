@@ -1,6 +1,7 @@
-import React from "react";
 import { VChart } from "@visactor/react-vchart";
-import { data as TestData } from "./data";
+import React from "react";
+
+import { exampleData } from "./exampleData";
 const prefixCls = "cool-poly-line-stack-chart";
 
 interface ICoolPolyLineStackChartProps {
@@ -23,9 +24,7 @@ const CoolPolyLineStackChart: React.FC<ICoolPolyLineStackChartProps> = (
   props
 ) => {
   const {
-    width = 400,
-    height = 300,
-    data = TestData,
+    data = exampleData,
     xField = "type",
     yField = "value",
     seriesField = "country",
@@ -48,8 +47,8 @@ const CoolPolyLineStackChart: React.FC<ICoolPolyLineStackChartProps> = (
   };
 
   return (
-    <div className={prefixCls}>
-      <VChart spec={spec} width={width} height={height} />
+    <div className={prefixCls} style={{ height: "100%" }}>
+      <VChart spec={spec} />
     </div>
   );
 };

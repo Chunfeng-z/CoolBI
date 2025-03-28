@@ -1,4 +1,4 @@
-export const data = [
+export const exampleData = [
   { type: "Nail polish", country: "Africa", value: 4229 },
   { type: "Nail polish", country: "EU", value: 4376 },
   { type: "Nail polish", country: "China", value: 3054 },

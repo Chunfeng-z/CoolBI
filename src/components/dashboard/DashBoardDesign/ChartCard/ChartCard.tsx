@@ -44,7 +44,7 @@ interface ChartCardProps {
   onClick?: () => void;
 }
 /** 仪表板设计-图表卡片 */
-const ChartCard: React.FC<ChartCardProps> = (props) => {
+const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
   const {
     isShowCardTitle = true,
     cardTitle = "这是图表卡片标题",
@@ -59,7 +59,7 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
     isSelected = false,
     isShowBackgroundColor = false,
     chartCardPadding = [2, 2, 2, 2],
-    backgroundColor = "#f0f2f5",
+    backgroundColor = "#e3e3e3",
     children,
     style,
     onClick,
@@ -67,60 +67,55 @@ const ChartCard: React.FC<ChartCardProps> = (props) => {
 
   return (
     <div
-      className={`${prefixCls}-container`}
-      style={{ backgroundColor: "#E9E7E0", ...style }}
+      className={`${prefixCls}-wrapper`}
+      style={{
+        padding: `${chartCardPadding[0]}px ${chartCardPadding[3]}px ${chartCardPadding[2]}px ${chartCardPadding[1]}px`,
+        backgroundColor: isShowBackgroundColor
+          ? backgroundColor
+          : "transparent",
+        border: isSelected ? "2px solid #1890ff" : "2px solid transparent",
+        borderRadius: `${borderRadius}px`,
+        ...style,
+      }}
       onClick={onClick}
     >
-      <div
-        className={`${prefixCls}-content`}
-        style={{
-          padding: `${chartCardPadding[0]}px ${chartCardPadding[3]}px ${chartCardPadding[2]}px ${chartCardPadding[1]}px`,
-          backgroundColor: isShowBackgroundColor
-            ? backgroundColor
-            : "transparent",
-          border: isSelected ? "2px solid #1890ff" : "2px solid transparent",
-          borderRadius: `${borderRadius}px`,
-          ...style,
-        }}
-      >
-        <div className="chart-card-header">
-          <div className="chart-card-header-title">
-            {isShowCardTitle && (
-              <Tooltip title={cardTitle}>
-                <EllipsisText
-                  text={cardTitle}
-                  width={200}
-                  style={{
-                    fontSize: titleFontSize,
-                    color: titleColor,
-                  }}
-                />
-              </Tooltip>
-            )}
-          </div>
-          {isShowRemark && remarkPosition === "afterTitle" && (
-            <div className="chart-card-header-middle">
-              <EllipsisText text={remark} width={150} />
-            </div>
+      <div className="chart-card-header">
+        <div className="chart-card-header-title">
+          {isShowCardTitle && (
+            <Tooltip title={cardTitle}>
+              <EllipsisText
+                text={cardTitle}
+                width={200}
+                style={{
+                  fontSize: titleFontSize,
+                  color: titleColor,
+                }}
+              />
+            </Tooltip>
           )}
-          <div className="chart-card-header-tail">
-            <HolderOutlined />
-          </div>
         </div>
-        {isShowRemark && remarkPosition === "belowTitle" && (
-          <div className="chart-card-remark-container">
-            <EllipsisText text={remark} />
+        {isShowRemark && remarkPosition === "afterTitle" && (
+          <div className="chart-card-header-middle">
+            <EllipsisText text={remark} width={150} />
           </div>
         )}
-        <div className={`${prefixCls}-chart`}>{children}</div>
-        {isShowEndNote && (
-          <div className="chart-card-endnote-container">
-            <span>{endNote}</span>
-          </div>
-        )}
+        <div className="chart-card-header-tail">
+          <HolderOutlined />
+        </div>
       </div>
+      {isShowRemark && remarkPosition === "belowTitle" && (
+        <div className="chart-card-remark-container">
+          <EllipsisText text={remark} />
+        </div>
+      )}
+      <div className={`${prefixCls}-chart`}>{children}</div>
+      {isShowEndNote && (
+        <div className="chart-card-endnote-container">
+          <span>{endNote}</span>
+        </div>
+      )}
     </div>
   );
-};
+});
 
 export default ChartCard;
