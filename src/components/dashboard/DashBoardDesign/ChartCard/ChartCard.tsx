@@ -1,6 +1,13 @@
-import { HolderOutlined } from "@ant-design/icons";
-import { Tooltip } from "antd";
-import React from "react";
+import { DeleteOutlined, HolderOutlined } from "@ant-design/icons";
+import {
+  ConfigProvider,
+  Dropdown,
+  Flex,
+  MenuProps,
+  theme,
+  Tooltip,
+} from "antd";
+import React, { useMemo } from "react";
 
 import EllipsisText from "@/components/common/EllipsisText/index";
 import "./index.scss";
@@ -42,6 +49,8 @@ interface ChartCardProps {
   style?: React.CSSProperties;
   /** 被点击的时候需要展开右侧的配置栏目 */
   onClick?: () => void;
+  /** 点击图表菜单的删除选项 */
+  onDelete?: () => void;
 }
 /** 仪表板设计-图表卡片 */
 const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
@@ -63,7 +72,27 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
     children,
     style,
     onClick,
+    onDelete,
   } = props;
+  const items: MenuProps["items"] = useMemo(
+    () => [
+      {
+        key: "1",
+        label: (
+          <Flex style={{ width: 70 }} align="center" justify="space-between">
+            <span>删除</span>
+            <DeleteOutlined />
+          </Flex>
+        ),
+        onClick: () => {
+          if (onDelete) {
+            onDelete();
+          }
+        },
+      },
+    ],
+    []
+  );
 
   return (
     <div
@@ -81,27 +110,42 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
     >
       <div className="chart-card-header">
         <div className="chart-card-header-title">
-          {isShowCardTitle && (
-            <Tooltip title={cardTitle}>
-              <EllipsisText
-                text={cardTitle}
-                width={200}
-                style={{
-                  fontSize: titleFontSize,
-                  color: titleColor,
-                }}
-              />
-            </Tooltip>
-          )}
+          <Tooltip title={cardTitle}>
+            <EllipsisText
+              text={cardTitle}
+              width={200}
+              style={{
+                fontSize: titleFontSize,
+                color: titleColor,
+                visibility: isShowCardTitle ? "visible" : "hidden",
+              }}
+            />
+          </Tooltip>
         </div>
         {isShowRemark && remarkPosition === "afterTitle" && (
           <div className="chart-card-header-middle">
             <EllipsisText text={remark} width={150} />
           </div>
         )}
-        <div className="chart-card-header-tail">
-          <HolderOutlined />
-        </div>
+
+        <ConfigProvider
+          theme={{
+            algorithm: theme.compactAlgorithm,
+            token: {
+              borderRadius: 2,
+            },
+          }}
+        >
+          <Dropdown
+            menu={{ items: items }}
+            placement="bottomLeft"
+            trigger={["click"]}
+          >
+            <div className="chart-card-header-tail">
+              <HolderOutlined />
+            </div>
+          </Dropdown>
+        </ConfigProvider>
       </div>
       {isShowRemark && remarkPosition === "belowTitle" && (
         <div className="chart-card-remark-container">

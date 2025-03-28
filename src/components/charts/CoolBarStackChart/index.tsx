@@ -39,6 +39,8 @@ const CoolBarStackChart: React.FC<ICoolBarStackChartProps> = (props) => {
     legends: {
       visible: true,
     },
+    // 关闭入场动画
+    animationAppear: false,
   };
   return (
     <div className={prefixCls} style={{ height: "100%" }}>

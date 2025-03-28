@@ -43,6 +43,8 @@ const CoolPieChart: React.FC<ICoolPieChartProps> = (props) => {
     label: {
       visible: true,
     },
+    // 关闭入场动画
+    animationAppear: false,
     tooltip: {
       mark: {
         content: [

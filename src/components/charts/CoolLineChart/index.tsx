@@ -25,6 +25,7 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
     },
     xField: xField,
     yField: yField,
+    animationAppear: false,
   };
   return (
     <div className={prefixCls} style={{ height: "100%" }}>

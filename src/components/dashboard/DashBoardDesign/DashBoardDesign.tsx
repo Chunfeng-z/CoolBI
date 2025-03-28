@@ -19,12 +19,12 @@ import ChartCard from "./ChartCard/ChartCard";
 import CoolBarChart from "@/components/charts/CoolBarChart";
 import CoolBarStackChart from "@/components/charts/CoolBarStackChart";
 import CoolBarStackPercentChart from "@/components/charts/CoolBarStackPercentChart";
+import CoolIndicatorTrendChart from "@/components/charts/CoolIndicatorTrendChart";
 import CoolLineChart from "@/components/charts/CoolLineChart";
 import CoolPieChart from "@/components/charts/CoolPieChart";
 import CoolPolyLineChart from "@/components/charts/CoolPolyLineChart";
 import CoolPolyLineStackChart from "@/components/charts/CoolPolyLineStackChart";
 import CoolPolyLineStackPercentChart from "@/components/charts/CoolPolyLineStackPercentChart";
-import CoolIndicatorTrendChart from "@/components/common/CoolIndicatorTrendChart";
 import useChartStore, { ChartConfig } from "@/stores/useChartStore";
 import useRasterStore from "@/stores/useRasterStore";
 import { resizeGrid } from "@/utils/hooks";
@@ -48,6 +48,8 @@ const DashBoardDesign: React.FC = () => {
   const chartsConfig: ChartConfig[] = useChartStore(
     (state) => state.chartsConfig
   );
+  /** 删除当前选中的图表 */
+  const deleteChartConfig = useChartStore((state) => state.deleteChartConfig);
   const setCurChartId = useChartStore((state) => state.setCurChartId);
   const curChartId = useChartStore((state) => state.curChartId);
   const appendChartConfig = useChartStore((state) => state.appendChartConfig);
@@ -151,7 +153,7 @@ const DashBoardDesign: React.FC = () => {
     });
   };
   /** 每行的高度 */
-  const rowHeight = 80;
+  const rowHeight = 50;
   /** 单个栅格的宽度 */
   const rasterWidth = useMemo(
     () => (containerWidth - (rasterNum - 1) * rasterGap) / rasterNum,
@@ -322,6 +324,9 @@ const DashBoardDesign: React.FC = () => {
                     style={{
                       width: dashboardChartsSize[index].width,
                       height: dashboardChartsSize[index].height,
+                    }}
+                    onDelete={() => {
+                      deleteChartConfig(chartId);
                     }}
                   >
                     {renderChart(type)}

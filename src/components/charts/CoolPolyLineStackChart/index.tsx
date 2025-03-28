@@ -44,6 +44,7 @@ const CoolPolyLineStackChart: React.FC<ICoolPolyLineStackChartProps> = (
     yField: yField,
     stack: true,
     seriesField,
+    animationAppear: false,
   };
 
   return (

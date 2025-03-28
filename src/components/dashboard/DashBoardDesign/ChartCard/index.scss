@@ -5,11 +5,12 @@
   flex-direction: column;
 
   .chart-card-header {
+    position: relative;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 3px;
 
-    &-title {
+    .chart-card-header-title {
       overflow: hidden;
       max-width: 80%;
       text-overflow: ellipsis;
@@ -17,8 +18,23 @@
       font-weight: 500;
     }
 
-    &-tail {
-      margin-left: auto;
+    .chart-card-header-tail {
+      position: absolute;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      visibility: hidden;
+      box-shadow: rgb(0 0 0 / 15%) 0 2px 8px;
+    }
+  }
+
+  &:hover {
+    .chart-card-header-tail {
+      visibility: visible;
     }
   }
 

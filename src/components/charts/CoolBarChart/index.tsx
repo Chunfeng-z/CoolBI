@@ -54,6 +54,7 @@ const CoolBarChart: React.FC<ICoolBarChartProps> = (props) => {
     direction: direction,
     xField: "month",
     yField: "sales",
+    animationAppear: false,
   };
   return (
     <div className={prefixCls} style={{ height: "100%" }}>

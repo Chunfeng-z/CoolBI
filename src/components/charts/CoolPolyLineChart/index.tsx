@@ -51,6 +51,7 @@ const CoolPolyLineChart: React.FC<ICoolAreaChartProps> = (props) => {
     yField: yField,
     line: line,
     point: point,
+    animationAppear: false,
   };
   return (
     <div className={prefixCls} style={{ height: "100%" }}>
