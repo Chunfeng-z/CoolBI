@@ -12,7 +12,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 import ComponentStyleConfig from "./ComponentStyleConfig";
 import ComponentWordConfig from "./ComponentWordConfig/index";
-import DataAnalysisConfig from "./DataAnalysisiConfig";
+import DataAnalysisConfig from "./DataAnalysisConfig";
 import DataSourceConfig from "./DataSourceConfig";
 
 import type { TabsProps } from "antd";
