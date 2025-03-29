@@ -291,6 +291,9 @@ const DashBoardDesign: React.FC = () => {
                 isShowTitle,
                 titleFontSize,
                 titleColor,
+                isTitleBold,
+                isTitleItalic,
+                titleAlign,
                 isShowRemark,
                 remark,
                 remarkPosition,
@@ -310,6 +313,9 @@ const DashBoardDesign: React.FC = () => {
                     cardTitle={title}
                     titleFontSize={titleFontSize}
                     titleColor={titleColor}
+                    isTitleBold={isTitleBold}
+                    isTitleItalic={isTitleItalic}
+                    titleAlign={titleAlign}
                     isShowRemark={isShowRemark}
                     remark={remark}
                     remarkPosition={remarkPosition}

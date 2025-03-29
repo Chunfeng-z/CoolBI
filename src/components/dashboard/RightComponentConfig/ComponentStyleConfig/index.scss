@@ -36,6 +36,14 @@
         margin-left: 25px;
         gap: 5px;
       }
+
+      // 文本配置的二级子项
+      .title-card-text-sub {
+        display: flex;
+        align-items: center;
+        margin-left: 55px;
+        height: 32px;
+      }
     }
 
     .draw-area-container {

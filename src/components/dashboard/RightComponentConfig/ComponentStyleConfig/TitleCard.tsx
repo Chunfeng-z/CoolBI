@@ -1,14 +1,20 @@
 import {
+  AlignCenterOutlined,
+  AlignLeftOutlined,
+  BoldOutlined,
   CaretRightOutlined,
   DesktopOutlined,
   InfoCircleOutlined,
+  ItalicOutlined,
 } from "@ant-design/icons";
 import CoolCollapse from "@comp/common/CoolCollapse";
 import {
+  Button,
   Checkbox,
   CheckboxProps,
   CollapseProps,
   ColorPicker,
+  Divider,
   Input,
   InputNumber,
   InputNumberProps,
@@ -35,6 +41,9 @@ type TitleCardProps = Pick<
   | "title"
   | "titleColor"
   | "titleFontSize"
+  | "isTitleBold"
+  | "isTitleItalic"
+  | "titleAlign"
   | "isShowRemark"
   | "remark"
   | "remarkPosition"
@@ -55,6 +64,9 @@ const TitleCard: React.FC = () => {
       "title",
       "titleColor",
       "titleFontSize",
+      "isTitleBold",
+      "isTitleItalic",
+      "titleAlign",
       "isShowRemark",
       "remark",
       "remarkPosition",
@@ -164,6 +176,33 @@ const TitleCard: React.FC = () => {
       }
     };
 
+  /** 处理标题文本配置的点击事件 */
+  const handleTitleTextConfigClick = (
+    key: "isTitleBold" | "isTitleItalic" | "titleAlign"
+  ) => {
+    if (key === "isTitleBold" || key === "isTitleItalic") {
+      setCurTitleCardConfig((prev) => {
+        return {
+          ...prev,
+          [key]: !prev?.[key],
+        };
+      });
+      setChartsConfig(curChartId!, {
+        [key]: !curTitleCardConfig?.[key],
+      });
+    } else if (key === "titleAlign") {
+      setCurTitleCardConfig((prev) => {
+        return {
+          ...prev,
+          [key]: prev?.[key] === "left" ? "center" : "left",
+        };
+      });
+      setChartsConfig(curChartId!, {
+        [key]: curTitleCardConfig?.[key] === "left" ? "center" : "left",
+      });
+    }
+  };
+
   /**  备注位置 */
   const handleRemarkPositionChange = (e: RadioChangeEvent) => {
     setCurTitleCardConfig((prev) => {
@@ -241,6 +280,67 @@ const TitleCard: React.FC = () => {
                   addonAfter="px"
                   onChange={handleInputNumberChange("titleFontSize")}
                 />
+              </div>
+              <div className="title-card-text-sub">
+                <Tooltip title="加粗">
+                  <Button
+                    type="text"
+                    icon={<BoldOutlined />}
+                    size="small"
+                    style={{
+                      color: curTitleCardConfig?.isTitleBold
+                        ? token.colorPrimary
+                        : token.colorText,
+                    }}
+                    disabled={!curTitleCardConfig?.isShowTitle}
+                    onClick={() => handleTitleTextConfigClick("isTitleBold")}
+                  />
+                </Tooltip>
+                <Tooltip title="斜体">
+                  <Button
+                    type="text"
+                    icon={<ItalicOutlined />}
+                    size="small"
+                    style={{
+                      color: curTitleCardConfig?.isTitleItalic
+                        ? token.colorPrimary
+                        : token.colorText,
+                    }}
+                    disabled={!curTitleCardConfig?.isShowTitle}
+                    onClick={() => handleTitleTextConfigClick("isTitleItalic")}
+                  />
+                </Tooltip>
+                <Divider type="vertical" style={{ borderWidth: 2 }} />
+                <Tooltip title="左对齐">
+                  <Button
+                    type="text"
+                    icon={<AlignLeftOutlined />}
+                    size="small"
+                    style={{
+                      color:
+                        curTitleCardConfig?.titleAlign === "left"
+                          ? token.colorPrimary
+                          : token.colorText,
+                    }}
+                    disabled={!curTitleCardConfig?.isShowTitle}
+                    onClick={() => handleTitleTextConfigClick("titleAlign")}
+                  />
+                </Tooltip>
+                <Tooltip title="居中对齐">
+                  <Button
+                    type="text"
+                    icon={<AlignCenterOutlined />}
+                    size="small"
+                    style={{
+                      color:
+                        curTitleCardConfig?.titleAlign === "center"
+                          ? token.colorPrimary
+                          : token.colorText,
+                    }}
+                    disabled={!curTitleCardConfig?.isShowTitle}
+                    onClick={() => handleTitleTextConfigClick("titleAlign")}
+                  />
+                </Tooltip>
               </div>
             </div>
           ),
@@ -368,8 +468,8 @@ const TitleCard: React.FC = () => {
                     key={direction}
                     addonBefore={direction}
                     addonAfter="px"
-                    min={2}
-                    max={10}
+                    min={0}
+                    max={20}
                     changeOnWheel
                     defaultValue={2}
                     style={{ width: 140 }}

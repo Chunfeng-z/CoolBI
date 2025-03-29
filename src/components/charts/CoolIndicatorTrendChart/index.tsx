@@ -2,6 +2,7 @@ import { VChart } from "@visactor/react-vchart";
 import { Avatar, Col, Row, Space } from "antd";
 import React from "react";
 
+import "./index.scss";
 import { exampleData } from "./exampleData";
 const prefixCls = "cool-indicator-trend-chart";
 interface ICoolIndicatorTrendChartProps {
@@ -171,7 +172,7 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
     padding: [0, 0, 0, 0],
   };
   return (
-    <div className={prefixCls} style={{ height: "100%" }}>
+    <div className={prefixCls}>
       <Row style={{ height: "100%" }}>
         <Col span={12} style={{ height: "100%" }}>
           <Space

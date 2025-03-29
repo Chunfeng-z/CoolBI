@@ -1,4 +1,8 @@
-import { DeleteOutlined, HolderOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  HolderOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import {
   ConfigProvider,
   Dropdown,
@@ -7,9 +11,11 @@ import {
   theme,
   Tooltip,
 } from "antd";
+import classNames from "classnames";
 import React, { useMemo } from "react";
 
 import EllipsisText from "@/components/common/EllipsisText/index";
+
 import "./index.scss";
 
 const prefixCls = "dashboard-chart-card";
@@ -23,6 +29,12 @@ interface ChartCardProps {
   titleFontSize?: string | number | undefined;
   /** 标题颜色 */
   titleColor?: string;
+  /** 标题是否加粗 */
+  isTitleBold?: boolean;
+  /** 标题是否斜体 */
+  isTitleItalic?: boolean;
+  /** 标题对齐方式 */
+  titleAlign?: "left" | "center";
   /** 是否展示备注 */
   isShowRemark?: boolean;
   /** 备注内容 */
@@ -59,6 +71,9 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
     cardTitle = "这是图表卡片标题",
     titleFontSize = 14,
     titleColor = "#1677ff",
+    isTitleBold = true,
+    isTitleItalic = false,
+    titleAlign = "left",
     isShowRemark = false,
     remark = "",
     remarkPosition = "afterTitle",
@@ -109,24 +124,50 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
       onClick={onClick}
     >
       <div className="chart-card-header">
-        <div className="chart-card-header-title">
+        <div
+          className={classNames("chart-card-header-title", {
+            "text-align-center": titleAlign === "center",
+          })}
+        >
           <Tooltip title={cardTitle}>
             <EllipsisText
               text={cardTitle}
-              width={200}
               style={{
                 fontSize: titleFontSize,
                 color: titleColor,
-                visibility: isShowCardTitle ? "visible" : "hidden",
+                display: isShowCardTitle ? "block" : "none",
+                fontWeight: isTitleBold ? 600 : 300,
+                // width: titleAlign === "center" ? "auto" : "150px",
+                maxWidth: "200px",
+                fontStyle: isTitleItalic ? "italic" : "normal",
               }}
             />
           </Tooltip>
+          {isShowRemark &&
+            remarkPosition === "afterTitle" &&
+            titleAlign === "center" && (
+              <div className="chart-card-header-middle">
+                <Tooltip title={remark}>
+                  <InfoCircleOutlined style={{ marginLeft: 3 }} />
+                </Tooltip>
+              </div>
+            )}
         </div>
-        {isShowRemark && remarkPosition === "afterTitle" && (
-          <div className="chart-card-header-middle">
-            <EllipsisText text={remark} width={150} />
-          </div>
-        )}
+        {/* 不显示的站位元素支撑标题行 */}
+        <span className="hidden-item">^v^</span>
+        {isShowRemark &&
+          remarkPosition === "afterTitle" &&
+          titleAlign === "left" && (
+            <div className="chart-card-header-middle">
+              <Tooltip title={remark}>
+                <InfoCircleOutlined
+                  style={{
+                    marginLeft: 3,
+                  }}
+                />
+              </Tooltip>
+            </div>
+          )}
 
         <ConfigProvider
           theme={{
@@ -148,15 +189,24 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
         </ConfigProvider>
       </div>
       {isShowRemark && remarkPosition === "belowTitle" && (
-        <div className="chart-card-remark-container">
-          <EllipsisText text={remark} />
-        </div>
+        <p
+          className="chart-card-remark-container"
+          style={{ lineHeight: "18px", fontSize: 12 }}
+        >
+          {remark}
+        </p>
       )}
       <div className={`${prefixCls}-chart`}>{children}</div>
       {isShowEndNote && (
-        <div className="chart-card-endnote-container">
-          <span>{endNote}</span>
-        </div>
+        <p
+          className="chart-card-endnote-container"
+          style={{
+            lineHeight: "18px",
+            fontSize: 12,
+          }}
+        >
+          {endNote}
+        </p>
       )}
     </div>
   );
