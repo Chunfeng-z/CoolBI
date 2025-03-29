@@ -457,8 +457,8 @@ const TitleCard: React.FC = () => {
                   onChange={handleInputNumberChange("borderRadius")}
                 />
               </div>
-              <div className="title-card-text" style={{ marginLeft: 0 }}>
-                <DesktopOutlined />
+              <div className="title-card-label">
+                <DesktopOutlined style={{ marginRight: 5 }} />
                 <span>卡片内边距</span>
               </div>
               <div className="title-card-text-large">

@@ -68,7 +68,7 @@ const ChartTrend: React.FC = () => {
           显示趋势图
         </Checkbox>
       </div>
-      <div className="chart-trend-row">
+      <div className="chart-trend-label">
         <span>可视化图表切换</span>
       </div>
       <div className="chart-trend-row sub-content">
@@ -97,7 +97,7 @@ const ChartTrend: React.FC = () => {
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 4,
+            gap: 2,
           }}
           value={config.lineType}
           onChange={(e) => updateConfig({ lineType: e.target.value })}
@@ -113,7 +113,7 @@ const ChartTrend: React.FC = () => {
           ]}
         />
       </div>
-      <div className="chart-trend-row">
+      <div className="chart-trend-label">
         <span>线条样式</span>
       </div>
       <div className="chart-trend-row sub-content">

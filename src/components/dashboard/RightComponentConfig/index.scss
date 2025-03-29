@@ -46,14 +46,6 @@
       flex: 1;
       flex-direction: column;
 
-      // 隐藏滚动条
-      scrollbar-width: none;
-
-      // Fallback for browsers that do not support scrollbar-width
-      &::-webkit-scrollbar {
-        display: none;
-      }
-
       .ant-tabs-nav {
         margin-bottom: 0;
       }

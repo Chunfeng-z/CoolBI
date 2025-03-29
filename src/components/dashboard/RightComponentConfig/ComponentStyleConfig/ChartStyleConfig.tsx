@@ -5,6 +5,8 @@ import ChartToolTip from "./ChartToolTip";
 import ChartTrend from "./ChartTrend";
 import DataLabel from "./DataLabel";
 import DrawArea from "./DrawArea";
+import IndicatorContent from "./IndicatorContent";
+import SeriesConfig from "./SeriesConfig";
 import TitleCard from "./TitleCard";
 
 type styleConfigItem = {
@@ -58,6 +60,16 @@ const BASE_STYLE_ITEMS: Record<string, styleConfigItem> = {
     label: "趋势图",
     component: ChartTrend,
   },
+  indicatorContent: {
+    key: "9",
+    label: "指标内容",
+    component: IndicatorContent,
+  },
+  seriesConfig: {
+    key: "10",
+    label: "系列配置",
+    component: SeriesConfig,
+  },
 };
 
 /**
@@ -68,7 +80,12 @@ export const CHART_TYPE_CONFIG_MAP: Record<
   (typeof BASE_STYLE_ITEMS.titleCard)[]
 > = {
   // 指标趋势图配置
-  indicatorTrend: [BASE_STYLE_ITEMS.titleCard, BASE_STYLE_ITEMS.chartTrend],
+  indicatorTrend: [
+    BASE_STYLE_ITEMS.titleCard,
+    BASE_STYLE_ITEMS.chartTrend,
+    BASE_STYLE_ITEMS.indicatorContent,
+    BASE_STYLE_ITEMS.seriesConfig,
+  ],
   // 柱状图配置
   bar: [
     BASE_STYLE_ITEMS.titleCard,
