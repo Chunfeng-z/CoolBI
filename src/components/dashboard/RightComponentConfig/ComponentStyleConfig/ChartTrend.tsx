@@ -1,8 +1,9 @@
 import { Checkbox, InputNumber, Radio, Select, Space, Tooltip } from "antd";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import CoolIcon from "@/components/common/CoolIcon";
+import useChartStore, { IndicatorTrendConfig } from "@/stores/useChartStore";
 const prefixCls = "chart-trend";
 
 /** 趋势图配置接口 */
@@ -10,7 +11,7 @@ interface TrendChartConfig {
   /** 是否展示趋势图 */
   isShowTrendChart: boolean;
   /** 趋势图支持的图表类型 */
-  chartType: "area" | "bar" | "line";
+  trendChartType: "area" | "bar" | "line";
   /** 线条类型：曲线或直线 */
   lineType: "curve" | "straight";
   /** 线条样式：实线或虚线 */
@@ -24,7 +25,7 @@ interface TrendChartConfig {
 /** 默认配置 */
 const defaultConfig: TrendChartConfig = {
   isShowTrendChart: true,
-  chartType: "area",
+  trendChartType: "area",
   lineType: "curve",
   lineStyle: "solid",
   lineWidth: 1,
@@ -33,6 +34,31 @@ const defaultConfig: TrendChartConfig = {
 
 /** 趋势图配置 */
 const ChartTrend: React.FC = () => {
+  /** 当前选中图表的所有配置信息 */
+  const getCurrentChartConfig = useChartStore(
+    (state) => state.getCurrentChartConfig
+  );
+  /** 当前选中图表的id信息 */
+  const curChartId = useChartStore((state) => state.curChartId);
+  /** 更新图表配置 */
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
+  // 获取当前选中图表的趋势配置
+  useEffect(() => {
+    const curConfig = getCurrentChartConfig() as IndicatorTrendConfig;
+    if (curConfig) {
+      setConfig({
+        ...config,
+        isShowTrendChart:
+          curConfig.isShowTrendChart ?? defaultConfig.isShowTrendChart,
+        trendChartType:
+          curConfig.trendChartType ?? defaultConfig.trendChartType,
+        lineType: curConfig.lineType ?? defaultConfig.lineType,
+        lineStyle: curConfig.lineStyle ?? defaultConfig.lineStyle,
+        lineWidth: curConfig.lineWidth ?? defaultConfig.lineWidth,
+        showMarkers: curConfig.showMarkers ?? defaultConfig.showMarkers,
+      });
+    }
+  }, [curChartId]);
   /** 内部状态 */
   const [config, setConfig] = useState<TrendChartConfig>(defaultConfig);
 
@@ -42,12 +68,16 @@ const ChartTrend: React.FC = () => {
       ...config,
       ...update,
     });
+    setChartsConfig(curChartId!, update);
   };
 
   /** 处理图表类型点击事件 */
-  const handleChartTypeClick = (type: TrendChartConfig["chartType"]) => {
+  const handleChartTypeClick = (type: TrendChartConfig["trendChartType"]) => {
     if (config.isShowTrendChart) {
-      updateConfig({ chartType: type });
+      updateConfig({ trendChartType: type });
+      setChartsConfig(curChartId!, {
+        trendChartType: type,
+      });
     }
   };
 
@@ -77,11 +107,13 @@ const ChartTrend: React.FC = () => {
             <Tooltip key={type} title={label}>
               <div
                 className={classNames("cool-icon-wrapper", {
-                  "is-selected": config.chartType === type,
+                  "is-selected": config.trendChartType === type,
                   "is-disabled": !config.isShowTrendChart,
                 })}
                 onClick={() =>
-                  handleChartTypeClick(type as TrendChartConfig["chartType"])
+                  handleChartTypeClick(
+                    type as TrendChartConfig["trendChartType"]
+                  )
                 }
               >
                 <CoolIcon name={icon} size={28} />

@@ -1,3 +1,29 @@
 .cool-indicator-trend-chart {
   height: 100%;
+
+  .cool-indicator-trend-chart-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    // 在右侧内容不存在的时候默认占满
+    .left-content {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:has(.right-content) {
+      .left-content {
+        min-width: 130px;
+        max-width: 160px;
+      }
+
+      .right-content {
+        // 右侧内容可以根据内容自适应宽度
+        flex: 1;
+        min-width: 130px;
+        height: 100%;
+      }
+    }
+  }
 }

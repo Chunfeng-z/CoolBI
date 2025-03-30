@@ -47,7 +47,7 @@ interface ChartCardProps {
   endNote?: string;
   /** 卡片圆角 */
   borderRadius?: number;
-  /** 是否展示组件背景 */
+  /** 是否展示组件自定义背景填充 */
   isShowBackgroundColor?: boolean;
   /** 组件背景颜色 */
   backgroundColor?: string;
@@ -114,9 +114,7 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
       className={`${prefixCls}-wrapper`}
       style={{
         padding: `${chartCardPadding[0]}px ${chartCardPadding[3]}px ${chartCardPadding[2]}px ${chartCardPadding[1]}px`,
-        backgroundColor: isShowBackgroundColor
-          ? backgroundColor
-          : "transparent",
+        backgroundColor: isShowBackgroundColor ? backgroundColor : "#fff",
         border: isSelected ? "2px solid #1890ff" : "2px solid transparent",
         borderRadius: `${borderRadius}px`,
         ...style,

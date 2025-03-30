@@ -428,7 +428,7 @@ const TitleCard: React.FC = () => {
                   checked={curTitleCardConfig?.isShowBackgroundColor}
                   onChange={handleCheckboxChange("isShowBackgroundColor")}
                 >
-                  组件背景填充
+                  自定义组件背景填充
                 </Checkbox>
               </div>
               <div className="title-card-text">

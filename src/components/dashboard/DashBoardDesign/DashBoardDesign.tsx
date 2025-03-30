@@ -25,7 +25,10 @@ import CoolPieChart from "@/components/charts/CoolPieChart";
 import CoolPolyLineChart from "@/components/charts/CoolPolyLineChart";
 import CoolPolyLineStackChart from "@/components/charts/CoolPolyLineStackChart";
 import CoolPolyLineStackPercentChart from "@/components/charts/CoolPolyLineStackPercentChart";
-import useChartStore, { ChartConfig } from "@/stores/useChartStore";
+import useChartStore, {
+  ChartConfig,
+  IndicatorTrendConfig,
+} from "@/stores/useChartStore";
 import useRasterStore from "@/stores/useRasterStore";
 import { resizeGrid } from "@/utils/hooks";
 import { generateUUID } from "@/utils/uuid";
@@ -45,7 +48,7 @@ const DashBoardDesign: React.FC = () => {
   /** 栅格的行间距 */
   const cardRowSpace = useRasterStore((state) => state.cardRowSpace);
   /** 全局的仪表板图表配置-当前仪表板存在已设计的图表 */
-  const chartsConfig: ChartConfig[] = useChartStore(
+  const chartsConfig: (ChartConfig | IndicatorTrendConfig)[] = useChartStore(
     (state) => state.chartsConfig
   );
   /** 删除当前选中的图表 */
@@ -82,31 +85,6 @@ const DashBoardDesign: React.FC = () => {
   useEffect(() => {
     drop(ref);
   }, []);
-  /** 渲染指定的图表 */
-  const renderChart = useCallback((chart: string) => {
-    switch (chart) {
-      case ChartTypeEnum.bar:
-        return <CoolBarChart />;
-      case ChartTypeEnum.line:
-        return <CoolLineChart />;
-      case ChartTypeEnum.polyline:
-        return <CoolPolyLineChart />;
-      case ChartTypeEnum.polylineStack:
-        return <CoolPolyLineStackChart />;
-      case ChartTypeEnum.polylineStackPercent:
-        return <CoolPolyLineStackPercentChart />;
-      case ChartTypeEnum.barStack:
-        return <CoolBarStackChart />;
-      case ChartTypeEnum.barStackPercent:
-        return <CoolBarStackPercentChart />;
-      case ChartTypeEnum.pie:
-        return <CoolPieChart />;
-      case ChartTypeEnum.indicatorTrend:
-        return <CoolIndicatorTrendChart />;
-      default:
-        return <div className="error-chart">未知图表类型</div>;
-    }
-  }, []);
 
   /** 图表容器的宽度 */
   const [containerWidth, setContainerWidth] = useState<number>(800);
@@ -123,10 +101,10 @@ const DashBoardDesign: React.FC = () => {
     }[]
   >([]);
 
-  // 初始化布局
+  // 初始化布局，在新增图表时也需要重新生成布局
   useEffect(() => {
     setDashBoardLayout(generateLayout());
-  }, []);
+  }, [chartsConfig.length]);
 
   // 栅格数变化时，重新生成布局
   useEffect(() => {
@@ -238,6 +216,71 @@ const DashBoardDesign: React.FC = () => {
     ); // 额外添加100px作为底部空间
   }, [dashBoardLayout, rowHeight, cardRowSpace]);
 
+  /** 渲染指定的图表
+   * @param chartType 图表类型
+   * @param chartConfig 图表配置
+   * @returns 图表组件
+   */
+  const renderChart = useCallback(
+    (chartType: string, chartConfig: ChartConfig | IndicatorTrendConfig) => {
+      // 提取通用配置
+      const commonProps = {
+        // 组件背景颜色填充,在展示自定义背景填充的时候才使用自定义背景颜色
+        backgroundColor: chartConfig.isShowBackgroundColor
+          ? chartConfig.backgroundColor
+          : "#fff",
+        // 其他通用配置...
+      };
+
+      // 根据图表类型提供不同的配置
+      switch (chartType) {
+        case ChartTypeEnum.bar:
+          return <CoolBarChart />;
+        case ChartTypeEnum.line:
+          return <CoolLineChart />;
+        case ChartTypeEnum.polyline:
+          return <CoolPolyLineChart />;
+        case ChartTypeEnum.polylineStack:
+          return <CoolPolyLineStackChart />;
+        case ChartTypeEnum.polylineStackPercent:
+          return <CoolPolyLineStackPercentChart />;
+        case ChartTypeEnum.barStack:
+          return <CoolBarStackChart />;
+        case ChartTypeEnum.barStackPercent:
+          return <CoolBarStackPercentChart />;
+        case ChartTypeEnum.pie:
+          return <CoolPieChart />;
+        case ChartTypeEnum.indicatorTrend: {
+          // 指标趋势图的特殊配置
+          const trendConfig = chartConfig as IndicatorTrendConfig;
+
+          return (
+            <CoolIndicatorTrendChart
+              {...commonProps}
+              isShowTrendChart={trendConfig.isShowTrendChart}
+              trendChartType={trendConfig.trendChartType}
+              curveType={
+                trendConfig.lineType === "curve" ? "monotone" : "linear"
+              }
+              lineDash={trendConfig.lineStyle === "solid" ? [0, 0] : [6, 4]}
+              lineWidth={trendConfig.lineWidth}
+              showMarkers={trendConfig.showMarkers}
+              indicatorContentPosition={trendConfig.indicatorContentPosition}
+              indicatorValueLineSpace={trendConfig.indicatorValueLineSpace}
+            />
+          );
+        }
+        default:
+          return (
+            <div className="error-chart">
+              当前图表类型暂不支持，请选择其他图表
+            </div>
+          );
+      }
+    },
+    []
+  );
+
   return (
     <div className={`${prefixCls}-container`} ref={ref}>
       <div className="root-container-main-header-and-content">
@@ -283,63 +326,65 @@ const DashBoardDesign: React.FC = () => {
               setDashBoardLayout(layout);
             }}
           >
-            {chartsConfig.map((config: ChartConfig, index) => {
-              const {
-                title,
-                chartId,
-                type,
-                isShowTitle,
-                titleFontSize,
-                titleColor,
-                isTitleBold,
-                isTitleItalic,
-                titleAlign,
-                isShowRemark,
-                remark,
-                remarkPosition,
-                isShowEndNote,
-                endNote,
-                borderRadius,
-                isShowBackgroundColor,
-                backgroundColor,
-                chartCardPadding,
-              } = config;
+            {chartsConfig.map(
+              (config: ChartConfig | IndicatorTrendConfig, index) => {
+                const {
+                  title,
+                  chartId,
+                  type,
+                  isShowTitle,
+                  titleFontSize,
+                  titleColor,
+                  isTitleBold,
+                  isTitleItalic,
+                  titleAlign,
+                  isShowRemark,
+                  remark,
+                  remarkPosition,
+                  isShowEndNote,
+                  endNote,
+                  borderRadius,
+                  isShowBackgroundColor,
+                  backgroundColor,
+                  chartCardPadding,
+                } = config;
 
-              return (
-                <div key={chartId}>
-                  <ChartCard
-                    key={chartId}
-                    isShowCardTitle={isShowTitle}
-                    cardTitle={title}
-                    titleFontSize={titleFontSize}
-                    titleColor={titleColor}
-                    isTitleBold={isTitleBold}
-                    isTitleItalic={isTitleItalic}
-                    titleAlign={titleAlign}
-                    isShowRemark={isShowRemark}
-                    remark={remark}
-                    remarkPosition={remarkPosition}
-                    isShowEndNote={isShowEndNote}
-                    endNote={endNote}
-                    borderRadius={borderRadius}
-                    backgroundColor={backgroundColor}
-                    isShowBackgroundColor={isShowBackgroundColor}
-                    chartCardPadding={chartCardPadding}
-                    isSelected={chartId === curChartId}
-                    onClick={() => handleChartCardClick(chartId)}
-                    style={{
-                      width: dashboardChartsSize[index].width,
-                      height: dashboardChartsSize[index].height,
-                    }}
-                    onDelete={() => {
-                      deleteChartConfig(chartId);
-                    }}
-                  >
-                    {renderChart(type)}
-                  </ChartCard>
-                </div>
-              );
-            })}
+                return (
+                  <div key={chartId}>
+                    <ChartCard
+                      key={chartId}
+                      isShowCardTitle={isShowTitle}
+                      cardTitle={title}
+                      titleFontSize={titleFontSize}
+                      titleColor={titleColor}
+                      isTitleBold={isTitleBold}
+                      isTitleItalic={isTitleItalic}
+                      titleAlign={titleAlign}
+                      isShowRemark={isShowRemark}
+                      remark={remark}
+                      remarkPosition={remarkPosition}
+                      isShowEndNote={isShowEndNote}
+                      endNote={endNote}
+                      borderRadius={borderRadius}
+                      backgroundColor={backgroundColor}
+                      isShowBackgroundColor={isShowBackgroundColor}
+                      chartCardPadding={chartCardPadding}
+                      isSelected={chartId === curChartId}
+                      onClick={() => handleChartCardClick(chartId)}
+                      style={{
+                        width: dashboardChartsSize[index]?.width,
+                        height: dashboardChartsSize[index]?.height,
+                      }}
+                      onDelete={() => {
+                        deleteChartConfig(chartId);
+                      }}
+                    >
+                      {renderChart(type, config)}
+                    </ChartCard>
+                  </div>
+                );
+              }
+            )}
           </ReactGridLayout>
         </div>
       </div>

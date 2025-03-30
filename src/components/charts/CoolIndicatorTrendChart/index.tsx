@@ -1,18 +1,37 @@
 import { VChart } from "@visactor/react-vchart";
-import { Avatar, Col, Row, Space } from "antd";
+import { Avatar, Space } from "antd";
 import React from "react";
 
 import "./index.scss";
 import { exampleData } from "./exampleData";
 const prefixCls = "cool-indicator-trend-chart";
 interface ICoolIndicatorTrendChartProps {
-  /** 图表宽度-图与文本均分 */
-  width?: number;
-  /** 图表高度 */
-  height?: number;
+  /** 图表背景色配置 */
+  backgroundColor?: string | object;
+  /** 是否显示趋势图 */
+  isShowTrendChart?: boolean;
+  /** 趋势图类型 */
+  trendChartType?: "line" | "bar" | "area";
+  /**
+   * 线条类型
+   * - monotone: 曲线
+   * - linear: 直线
+   */
+  curveType?: "linear" | "monotone";
+  /**
+   * 线条样式,设置为undefined变化时不会触发渲染，初始时设置为undefined不显示dashed
+   */
+  lineDash?: [number, number];
+  /** 线的宽度 */
+  lineWidth?: number;
+  /** 是否显示标记点 */
+  showMarkers?: boolean;
   /** 指标内容在指标块的位置 */
   indicatorContentPosition?: "left" | "center";
-  /** 指标值的行间距 */
+  /** 指标值的行间距
+   * - normal: 正常采用space的small间距
+   * - small: 紧凑，不设置间距
+   */
   indicatorValueLineSpace?: "normal" | "small";
   /** 指标字号配置 */
   indicatorFontConfig?: {
@@ -29,12 +48,6 @@ interface ICoolIndicatorTrendChartProps {
       isItalic?: boolean;
     };
   };
-  /** 是否显示指标修饰图 */
-  isShowIndicatorDecoration?: boolean;
-  /** 指标修饰图地址 */
-  indicatorDecorationUrl?: string;
-  /** 趋势图类型 */
-  trendChartType?: "line" | "bar" | "area";
   /** 指标图的x坐标轴 */
   xField?: string | string[];
   /** 指标图的y坐标轴 */
@@ -48,8 +61,15 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
   props
 ) => {
   const {
+    backgroundColor,
+    isShowTrendChart,
+    trendChartType = "area",
+    curveType = "monotone",
+    lineDash = undefined,
+    lineWidth = 2,
+    showMarkers = false,
     indicatorContentPosition = "left",
-    indicatorValueLineSpace = "normal",
+    indicatorValueLineSpace = "small",
     indicatorFontConfig = {
       name: {
         color: "#000",
@@ -64,9 +84,6 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
         isItalic: false,
       },
     },
-    isShowIndicatorDecoration = true,
-    indicatorDecorationUrl = "",
-    trendChartType = "area",
     xField = "time",
     yField = "value",
     data = exampleData,
@@ -78,13 +95,14 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
     },
     xField: xField,
     yField: yField,
+    background: backgroundColor,
     // 配置数据点的显示
     point: {
       // 默认显示图元但设置为透明
       visible: true,
       style: {
-        fill: "transparent",
-        stroke: "transparent",
+        fill: showMarkers ? "#1990FF" : "transparent",
+        stroke: showMarkers ? "#fff" : "transparent",
       },
       // 在hover时显示特定点
       state: {
@@ -108,6 +126,7 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
       {
         orient: "bottom",
         visible: false,
+        trimPadding: true,
       },
     ],
     // 关闭tooltip
@@ -134,6 +153,7 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
         },
       },
     },
+    // 面积图的配置
     area: {
       style: {
         fill: {
@@ -155,10 +175,17 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
         },
       },
     },
+    // 切换到柱状图时的配置
+    barWidth: "70%",
+    bar: {
+      style: { cornerRadius: 2 },
+    },
     // 开启平滑曲线
     line: {
       style: {
-        curveType: "monotone",
+        curveType: curveType,
+        lineDash: lineDash,
+        lineWidth: lineWidth,
       },
     },
     // 关闭入场动画
@@ -168,16 +195,16 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
       // 关闭crosshair与line相交时的point的动画
       duration: 0,
     },
-    // 图表内边距
-    padding: [0, 0, 0, 0],
+    // 图表内边距,在消除轴线的留白后预留一定的padding
+    padding: [0, 5, 0, 5],
   };
   return (
     <div className={prefixCls}>
-      <Row style={{ height: "100%" }}>
-        <Col span={12} style={{ height: "100%" }}>
+      <div className="cool-indicator-trend-chart-wrapper">
+        <div className="left-content">
           <Space
             direction="vertical"
-            size={indicatorValueLineSpace === "normal" ? "middle" : "small"}
+            size={indicatorValueLineSpace === "small" ? 0 : "small"}
             style={{
               display: "flex",
               height: "100%",
@@ -198,15 +225,6 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
                   : "normal",
               }}
             >
-              {isShowIndicatorDecoration && (
-                <Avatar
-                  style={{ backgroundColor: "#6FA4FE", color: "#FFFFFF" }}
-                  size={(indicatorFontConfig.name?.fontSize ?? 14) * 2}
-                  src={indicatorDecorationUrl}
-                >
-                  Data
-                </Avatar>
-              )}
               <span>{xField}</span>
             </div>
             <div
@@ -226,13 +244,18 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
             </div>
             <div className="sub-indicator-wrapper">x</div>
           </Space>
-        </Col>
-        <Col span={12} style={{ height: "100%" }}>
-          <div className="indicator-text-container" style={{ height: "100%" }}>
-            <VChart spec={spec} />
+        </div>
+        {isShowTrendChart && (
+          <div className="right-content">
+            <div
+              className="indicator-text-container"
+              style={{ height: "100%" }}
+            >
+              <VChart spec={spec} />
+            </div>
           </div>
-        </Col>
-      </Row>
+        )}
+      </div>
     </div>
   );
 };
