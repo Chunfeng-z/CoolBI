@@ -9,18 +9,128 @@ import {
   Select,
   Tooltip,
 } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import useChartStore, { seriesItem } from "@/stores/useChartStore";
+
 const prefixCls = "series-config";
+
+/** 默认配置 */
+const defaultConfig: seriesItem = {
+  id: "id",
+  name: "销售额",
+  lineStyle: "solid",
+  lineWidth: 2,
+  showDataLabels: false,
+  dataLabelConfig: {
+    color: "#000000",
+    fontSize: 14,
+    isBold: false,
+    isItalic: false,
+  },
+  showExtremeValue: false,
+  indicatorPrefix: "",
+  indicatorSuffix: "",
+};
 
 /** 图表系列配置 */
 const SeriesConfig: React.FC = () => {
+  /** 当前选中图表的所有配置信息 */
+  const getCurrentChartConfig = useChartStore(
+    (state) => state.getCurrentChartConfig
+  );
+  /** 当前选中图表的id信息 */
+  const curChartId = useChartStore((state) => state.curChartId);
+  /** 更新图表配置 */
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
+
+  /** 当前选中的系列的配置 */
+  const [config, setConfig] = useState<seriesItem>(defaultConfig);
+  /** 字段选项列表 */
+  const [fieldOptions, setFieldOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+
+  // 获取当前选中图表的系列配置
+  useEffect(() => {
+    const curConfig = getCurrentChartConfig();
+    // 当前图表没有系列配置采用默认值
+    if (curConfig?.seriesConfig && curConfig?.seriesConfig.length > 0) {
+      // 设置字段选项
+      const options = curConfig.seriesConfig.map((series) => ({
+        value: series.id,
+        label: series.name,
+      }));
+      setFieldOptions(options);
+
+      // 默认选择第一个系列
+      const currentSeries = curConfig.seriesConfig[0] ?? defaultConfig;
+      setConfig(currentSeries);
+    }
+  }, [curChartId]);
+
+  /** 更新配置的工具函数 */
+  const updateConfig = (update: Partial<seriesItem>) => {
+    const newConfig = {
+      ...config,
+      ...update,
+    };
+    setConfig(newConfig);
+
+    // 依据id找到对应的系列，并更新配置
+    const curConfig = getCurrentChartConfig();
+    if (curConfig?.seriesConfig) {
+      // 使用map创建新数组，替换对应id的系列配置
+      const newSeriesConfig = curConfig.seriesConfig.map((series) =>
+        series.id === config.id ? newConfig : series
+      );
+
+      setChartsConfig(curChartId!, {
+        seriesConfig: newSeriesConfig,
+      });
+    }
+  };
+
+  /** 处理数据标签配置更新 */
+  const updateDataLabelConfig = (
+    update: Partial<seriesItem["dataLabelConfig"]>
+  ) => {
+    const newDataLabelConfig = {
+      ...config.dataLabelConfig,
+      ...update,
+    };
+
+    updateConfig({
+      dataLabelConfig: newDataLabelConfig,
+    });
+  };
+
+  /** 处理字段选择的变化 */
+  const handleFieldChange = (seriesId: string) => {
+    const curConfig = getCurrentChartConfig();
+    if (curConfig?.seriesConfig) {
+      const selectedSeries = curConfig.seriesConfig.find(
+        (series) => series.id === seriesId
+      );
+      if (selectedSeries) {
+        setConfig(selectedSeries);
+      }
+    }
+  };
+
   return (
     <div className={`${prefixCls}-container`}>
       <div className="series-config-label">
         <span>请选择字段</span>
       </div>
       <div className="series-config-row">
-        <Select size="small" style={{ width: "100%" }} />
+        <Select
+          size="small"
+          style={{ width: "100%" }}
+          options={fieldOptions}
+          value={config.name}
+          onChange={handleFieldChange}
+        />
       </div>
       <Divider style={{ marginBlock: 4 }} />
       <div className="series-config-label">
@@ -31,20 +141,22 @@ const SeriesConfig: React.FC = () => {
           size="small"
           style={{ width: 110 }}
           getPopupContainer={(triggerNode) => triggerNode.parentElement!}
+          value={config.lineStyle}
+          onChange={(value) => updateConfig({ lineStyle: value })}
           options={[
             {
               value: "solid",
               label: (
-                <div className="chart-trend-line-style">
-                  <div className="chart-trend-line-style-solid" />
+                <div className="series-config-line-style">
+                  <div className="series-config-line-style-solid" />
                 </div>
               ),
             },
             {
               value: "dashed",
               label: (
-                <div className="chart-trend-line-style">
-                  <div className="chart-trend-line-style-dashed" />
+                <div className="series-config-line-style">
+                  <div className="series-config-line-style-dashed" />
                 </div>
               ),
             },
@@ -54,34 +166,75 @@ const SeriesConfig: React.FC = () => {
           size="small"
           min={1}
           max={10}
+          value={config.lineWidth}
+          onChange={(value) => updateConfig({ lineWidth: value as number })}
           style={{ width: 80 }}
           addonAfter="px"
         />
       </div>
       <div className="series-config-row">
-        <Checkbox>显示数据标签</Checkbox>
+        <Checkbox
+          checked={config.showDataLabels}
+          onChange={(e) => updateConfig({ showDataLabels: e.target.checked })}
+        >
+          显示数据标签
+        </Checkbox>
       </div>
       <div className="series-config-row">
         <span>文本</span>
-        <ColorPicker size="small" />
+        <ColorPicker
+          size="small"
+          disabled={!config.showDataLabels}
+          value={config.dataLabelConfig?.color}
+          onChange={(color) =>
+            updateDataLabelConfig({ color: color.toHexString() })
+          }
+        />
         <InputNumber
           size="small"
           min={12}
-          max={30}
-          defaultValue={14}
+          max={20}
+          disabled={!config.showDataLabels}
+          value={config.dataLabelConfig?.fontSize}
+          onChange={(value) =>
+            updateDataLabelConfig({ fontSize: value as number })
+          }
           step={1}
           style={{ width: 80 }}
           addonAfter="px"
         />
         <Tooltip title="加粗">
-          <Button type="text" icon={<BoldOutlined />} size="small" />
+          <Button
+            type={config.dataLabelConfig?.isBold ? "primary" : "text"}
+            icon={<BoldOutlined />}
+            size="small"
+            disabled={!config.showDataLabels}
+            onClick={() =>
+              updateDataLabelConfig({ isBold: !config.dataLabelConfig?.isBold })
+            }
+          />
         </Tooltip>
         <Tooltip title="斜体">
-          <Button type="text" icon={<ItalicOutlined />} size="small" />
+          <Button
+            type={config.dataLabelConfig?.isItalic ? "primary" : "text"}
+            icon={<ItalicOutlined />}
+            size="small"
+            disabled={!config.showDataLabels}
+            onClick={() =>
+              updateDataLabelConfig({
+                isItalic: !config.dataLabelConfig?.isItalic,
+              })
+            }
+          />
         </Tooltip>
       </div>
       <div className="series-config-row">
-        <Checkbox>显示最值</Checkbox>
+        <Checkbox
+          checked={config.showExtremeValue}
+          onChange={(e) => updateConfig({ showExtremeValue: e.target.checked })}
+        >
+          显示最值
+        </Checkbox>
       </div>
       <div className="series-config-label">
         <span>指标数据前后缀</span>
@@ -92,6 +245,8 @@ const SeriesConfig: React.FC = () => {
           size="small"
           placeholder="请填写(如¥)"
           maxLength={4}
+          value={config.indicatorPrefix}
+          onChange={(e) => updateConfig({ indicatorPrefix: e.target.value })}
           style={{
             width: 160,
           }}
@@ -103,6 +258,8 @@ const SeriesConfig: React.FC = () => {
           size="small"
           placeholder="请填写(如元)"
           maxLength={4}
+          value={config.indicatorSuffix}
+          onChange={(e) => updateConfig({ indicatorSuffix: e.target.value })}
           style={{
             width: 160,
           }}

@@ -1,3 +1,4 @@
+import { maxBy, minBy } from "lodash-es";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -254,4 +255,30 @@ export const resizeGrid = (
   }
 
   return adjustedRects;
+};
+
+/**
+ * 添加极值标记
+ * @param data 数据数组
+ * @param yField 需要计算的字段，可以是字符串或字符串数组
+ * @returns 带有极值标记的数据数组
+ */
+export const addExtremeValueFlags = <T extends Record<string, any>>(
+  data: T[],
+  yField: string | string[]
+): (T & { highest?: boolean; lowest?: boolean })[] => {
+  if (!data || data.length === 0) return data;
+
+  // 确定要计算的字段（支持数组，默认取第一个字段）
+  const fieldToCheck = Array.isArray(yField) ? yField[0] : yField;
+
+  // 使用 Lodash-es 找到最大值和最小值项
+  const maxItem = maxBy(data, fieldToCheck);
+  const minItem = minBy(data, fieldToCheck);
+
+  return data.map((item) => ({
+    ...item,
+    highest: item[fieldToCheck] === maxItem?.[fieldToCheck],
+    lowest: item[fieldToCheck] === minItem?.[fieldToCheck],
+  }));
 };

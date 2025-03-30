@@ -36,6 +36,37 @@ type historyItem = {
   [key: string]: any;
 };
 
+/** 系列的数据类型 */
+export interface seriesItem {
+  /** 系列的id */
+  id: string;
+  /** 系列的名称/字段 */
+  name: string;
+  /** 线条样式 */
+  lineStyle?: "solid" | "dashed";
+  /** 线条宽度 */
+  lineWidth?: number;
+  /** 是否显示数据标签 */
+  showDataLabels?: boolean;
+  /** 数据标签样式 */
+  dataLabelConfig?: {
+    /** 字体颜色 */
+    color?: string;
+    /** 字体大小 */
+    fontSize?: number;
+    /** 是否加粗 */
+    isBold?: boolean;
+    /** 是否斜体 */
+    isItalic?: boolean;
+  };
+  /** 是否显示最值 */
+  showExtremeValue?: boolean;
+  /** 指标数据前缀 */
+  indicatorPrefix?: string;
+  /** 指标数据后缀 */
+  indicatorSuffix?: string;
+}
+
 /** 图表的基本配置类型 */
 export interface ChartConfig {
   /** 图表组件id */
@@ -88,6 +119,8 @@ export interface ChartConfig {
     /** 高度 */
     h: number;
   };
+  /** 系列配置 */
+  seriesConfig?: seriesItem[];
 }
 
 /** 指标趋势图的额外配置 */
@@ -166,6 +199,36 @@ const useChartStore = create<State & Action>((set, get) => ({
       showMarkers: false,
       indicatorContentPosition: "left",
       indicatorValueLineSpace: "small",
+      indicatorNameFontConfig: {
+        color: "#000000",
+        fontSize: 14,
+        isBold: false,
+        isItalic: false,
+      },
+      indicatorValueFontConfig: {
+        color: "#000000",
+        fontSize: 22,
+        isBold: false,
+        isItalic: false,
+      },
+      seriesConfig: [
+        {
+          id: "sales",
+          name: "销售额",
+          lineStyle: "solid",
+          lineWidth: 2,
+          showDataLabels: true,
+          dataLabelConfig: {
+            color: "#000000",
+            fontSize: 14,
+            isBold: false,
+            isItalic: false,
+          },
+          showExtremeValue: false,
+          indicatorPrefix: "￥",
+          indicatorSuffix: "元",
+        },
+      ],
     },
     // {
     //   chartId: "pie",
@@ -436,6 +499,18 @@ const useChartStore = create<State & Action>((set, get) => ({
           showMarkers: false,
           indicatorContentPosition: "left",
           indicatorValueLineSpace: "small",
+          indicatorNameFontConfig: {
+            color: "#000000",
+            fontSize: 14,
+            isBold: false,
+            isItalic: false,
+          },
+          indicatorValueFontConfig: {
+            color: "#000000",
+            fontSize: 32,
+            isBold: false,
+            isItalic: false,
+          },
         };
         break;
       }

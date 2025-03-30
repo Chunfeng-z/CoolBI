@@ -267,6 +267,27 @@ const DashBoardDesign: React.FC = () => {
               showMarkers={trendConfig.showMarkers}
               indicatorContentPosition={trendConfig.indicatorContentPosition}
               indicatorValueLineSpace={trendConfig.indicatorValueLineSpace}
+              indicatorFontConfig={{
+                name: trendConfig.indicatorNameFontConfig,
+                value: trendConfig.indicatorValueFontConfig,
+              }}
+              // 指标趋势图只支持单个系列，所以这里直接取第一个系列
+              showDataLabels={trendConfig.seriesConfig![0].showDataLabels}
+              dataLabelConfig={{
+                fill: trendConfig.seriesConfig![0].dataLabelConfig?.color,
+                fontSize:
+                  trendConfig.seriesConfig![0].dataLabelConfig?.fontSize,
+                fontWeight: trendConfig.seriesConfig![0].dataLabelConfig?.isBold
+                  ? "bold"
+                  : "normal",
+                fontStyle: trendConfig.seriesConfig![0].dataLabelConfig
+                  ?.isItalic
+                  ? "italic"
+                  : "normal",
+              }}
+              showExtremeValue={trendConfig.seriesConfig![0].showExtremeValue}
+              indicatorPrefix={trendConfig.seriesConfig![0].indicatorPrefix}
+              indicatorSuffix={trendConfig.seriesConfig![0].indicatorSuffix}
             />
           );
         }

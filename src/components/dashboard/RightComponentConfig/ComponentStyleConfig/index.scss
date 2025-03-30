@@ -321,6 +321,25 @@
           margin-left: 25px;
         }
       }
+
+      .series-config-line-style {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+
+        .series-config-line-style-solid {
+          width: 100%;
+          height: 0;
+          border: 1px solid black;
+        }
+
+        .series-config-line-style-dashed {
+          width: 100%;
+          height: 0;
+          border: 1px dashed black;
+        }
+      }
     }
   }
 }

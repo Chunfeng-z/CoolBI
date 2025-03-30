@@ -1,9 +1,11 @@
 import { VChart } from "@visactor/react-vchart";
-import { Avatar, Space } from "antd";
+import { Space } from "antd";
 import React from "react";
 
 import "./index.scss";
 import { exampleData } from "./exampleData";
+
+import { addExtremeValueFlags } from "@/utils/hooks";
 const prefixCls = "cool-indicator-trend-chart";
 interface ICoolIndicatorTrendChartProps {
   /** 图表背景色配置 */
@@ -33,7 +35,10 @@ interface ICoolIndicatorTrendChartProps {
    * - small: 紧凑，不设置间距
    */
   indicatorValueLineSpace?: "normal" | "small";
-  /** 指标字号配置 */
+  /** 指标字号配置
+   * - name: 指标名称的配置
+   * - value: 指标值的配置
+   */
   indicatorFontConfig?: {
     name?: {
       color?: string;
@@ -55,6 +60,25 @@ interface ICoolIndicatorTrendChartProps {
   /** 指标趋势图数据 */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any[];
+  /** 是否显示数据标签 */
+  showDataLabels?: boolean;
+  /** 数据标签配置 */
+  dataLabelConfig?: {
+    /** 字体颜色 */
+    fill?: string;
+    /** 字体大小 */
+    fontSize?: number;
+    /** 是否加粗 */
+    fontWeight?: string | number;
+    /** 是否斜体 */
+    fontStyle?: "italic" | "normal";
+  };
+  /** 是否显示最值 */
+  showExtremeValue?: boolean;
+  /** 指标前缀 */
+  indicatorPrefix?: string;
+  /** 指标后缀 */
+  indicatorSuffix?: string;
 }
 /** 指标趋势图 */
 const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
@@ -79,7 +103,7 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
       },
       value: {
         color: "#000",
-        fontSize: 18,
+        fontSize: 32,
         isBold: false,
         isItalic: false,
       },
@@ -87,11 +111,27 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
     xField = "time",
     yField = "value",
     data = exampleData,
+    showDataLabels = true,
+    dataLabelConfig = {
+      fill: "#333",
+      fontSize: 12,
+      fontWeight: "normal",
+      fontStyle: "normal",
+    },
+    showExtremeValue = false,
+    indicatorPrefix = "",
+    indicatorSuffix = "",
   } = props;
+
+  // 添加极值标记
+  const processedData = showExtremeValue
+    ? addExtremeValueFlags(data, yField)
+    : data;
+
   const spec = {
     type: trendChartType,
     data: {
-      values: data,
+      values: processedData,
     },
     xField: xField,
     yField: yField,
@@ -180,6 +220,20 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
     bar: {
       style: { cornerRadius: 2 },
     },
+    // 添加数据标签配置
+    label: {
+      visible: showDataLabels,
+      style: {
+        fill: dataLabelConfig.fill,
+        fontSize: dataLabelConfig.fontSize,
+        fontWeight: dataLabelConfig.fontWeight,
+        fontStyle: dataLabelConfig.fontStyle,
+
+        visible: showExtremeValue
+          ? (datum: any) => !!(datum.highest || datum.lowest)
+          : true,
+      },
+    },
     // 开启平滑曲线
     line: {
       style: {
@@ -210,6 +264,7 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
               height: "100%",
               alignItems:
                 indicatorContentPosition === "center" ? "center" : "flex-start",
+              justifyContent: "center",
             }}
           >
             <div
@@ -240,9 +295,12 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
                   : "normal",
               }}
             >
-              <span>2</span>
+              <span style={{ fontSize: 14 }}>{indicatorPrefix}</span>
+              <span>数据值</span>
+              <span style={{ fontSize: 14 }}>{indicatorSuffix}</span>
             </div>
-            <div className="sub-indicator-wrapper">x</div>
+            {/* !TODO:当前系统暂不支持环比 */}
+            {/* <div className="sub-indicator-wrapper">月环比</div> */}
           </Space>
         </div>
         {isShowTrendChart && (
