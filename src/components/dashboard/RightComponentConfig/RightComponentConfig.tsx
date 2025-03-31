@@ -10,6 +10,8 @@ import { Tabs } from "antd";
 import classNames from "classnames";
 import React, { useEffect, useMemo, useState } from "react";
 
+import { ChartTypeEnum } from "../utils";
+
 import ComponentStyleConfig from "./ComponentStyleConfig";
 import ComponentWordConfig from "./ComponentWordConfig/index";
 import DataAnalysisConfig from "./DataAnalysisConfig";
@@ -17,6 +19,7 @@ import DataSourceConfig from "./DataSourceConfig";
 
 import type { TabsProps } from "antd";
 
+import EmptyTooltip from "@/components/common/EmptyTooltip";
 import useChartStore from "@/stores/useChartStore";
 const prefixCls = "right-component-config";
 
@@ -58,11 +61,14 @@ const RightComponentConfig: React.FC<RightComponentConfigProps> = (props) => {
   const setChartsConfig = useChartStore((state) => state.setChartsConfig);
   /** 当前选中图表组件的名称 */
   const [componentName, setComponentName] = useState<string>("");
+  /** 选中图表的类型 */
+  const [curChartType, setCurChartType] = useState<string>("");
   /** 当前选中的tab */
   const [activeTabKey, setActiveTabKey] = useState<string>("2");
 
   useEffect(() => {
     setComponentName(getCurrentChartConfig()?.title || "");
+    setCurChartType(getCurrentChartConfig()?.type || "");
   }, [getCurrentChartConfig, curChartId]);
 
   /** 更新选中图表组件名称 */
@@ -81,10 +87,18 @@ const RightComponentConfig: React.FC<RightComponentConfigProps> = (props) => {
       CONFIG_TABS.map((tab) => ({
         key: tab.key,
         label: tab.label,
-        children: tab.component,
+        children:
+          tab.label === "分析" &&
+          [ChartTypeEnum.indicatorTrend, ChartTypeEnum.indicatorCard].includes(
+            curChartType as ChartTypeEnum
+          ) ? (
+            <EmptyTooltip />
+          ) : (
+            tab.component
+          ),
         icon: tab.icon,
       })),
-    []
+    [curChartType]
   );
 
   /** 组件配置的展开收起状态 */

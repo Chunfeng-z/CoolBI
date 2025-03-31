@@ -32,7 +32,8 @@ import React, {
   useMemo,
 } from "react";
 
-import useChartStore, { ChartConfig } from "@/stores/useChartStore";
+import useChartStore from "@/stores/useChartStore";
+import { ChartConfig } from "@/utils/type";
 const prefixCls = "title-card";
 
 type TitleCardProps = Pick<

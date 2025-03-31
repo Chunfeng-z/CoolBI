@@ -25,12 +25,10 @@ import CoolPieChart from "@/components/charts/CoolPieChart";
 import CoolPolyLineChart from "@/components/charts/CoolPolyLineChart";
 import CoolPolyLineStackChart from "@/components/charts/CoolPolyLineStackChart";
 import CoolPolyLineStackPercentChart from "@/components/charts/CoolPolyLineStackPercentChart";
-import useChartStore, {
-  ChartConfig,
-  IndicatorTrendConfig,
-} from "@/stores/useChartStore";
+import useChartStore from "@/stores/useChartStore";
 import useRasterStore from "@/stores/useRasterStore";
 import { resizeGrid } from "@/utils/hooks";
+import { ChartConfig, IndicatorTrendConfig } from "@/utils/type";
 import { generateUUID } from "@/utils/uuid";
 import "./index.scss";
 
@@ -253,7 +251,6 @@ const DashBoardDesign: React.FC = () => {
         case ChartTypeEnum.indicatorTrend: {
           // 指标趋势图的特殊配置
           const trendConfig = chartConfig as IndicatorTrendConfig;
-
           return (
             <CoolIndicatorTrendChart
               {...commonProps}
@@ -272,22 +269,23 @@ const DashBoardDesign: React.FC = () => {
                 value: trendConfig.indicatorValueFontConfig,
               }}
               // 指标趋势图只支持单个系列，所以这里直接取第一个系列
-              showDataLabels={trendConfig.seriesConfig![0].showDataLabels}
+              showDataLabels={trendConfig.seriesConfig?.[0]?.showDataLabels}
               dataLabelConfig={{
-                fill: trendConfig.seriesConfig![0].dataLabelConfig?.color,
+                fill: trendConfig.seriesConfig?.[0]?.dataLabelConfig?.color,
                 fontSize:
-                  trendConfig.seriesConfig![0].dataLabelConfig?.fontSize,
-                fontWeight: trendConfig.seriesConfig![0].dataLabelConfig?.isBold
+                  trendConfig.seriesConfig?.[0]?.dataLabelConfig?.fontSize,
+                fontWeight: trendConfig.seriesConfig?.[0]?.dataLabelConfig
+                  ?.isBold
                   ? "bold"
                   : "normal",
-                fontStyle: trendConfig.seriesConfig![0].dataLabelConfig
+                fontStyle: trendConfig.seriesConfig?.[0]?.dataLabelConfig
                   ?.isItalic
                   ? "italic"
                   : "normal",
               }}
-              showExtremeValue={trendConfig.seriesConfig![0].showExtremeValue}
-              indicatorPrefix={trendConfig.seriesConfig![0].indicatorPrefix}
-              indicatorSuffix={trendConfig.seriesConfig![0].indicatorSuffix}
+              showExtremeValue={trendConfig.seriesConfig?.[0]?.showExtremeValue}
+              indicatorPrefix={trendConfig.seriesConfig?.[0]?.indicatorPrefix}
+              indicatorSuffix={trendConfig.seriesConfig?.[0]?.indicatorSuffix}
             />
           );
         }

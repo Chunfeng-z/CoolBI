@@ -1,8 +1,9 @@
+import { Button, Flex, Space } from "antd";
+import { debounce } from "lodash-es";
 import React, { useLayoutEffect, useState } from "react";
+
 import RecommendCard from "../RecommendCard";
 import { recommendCardListData as TempData } from "../test";
-import { debounce } from "lodash-es";
-import { Button, Flex, Space } from "antd";
 import { RecommendCardProps } from "../utils/types";
 
 const prefixCls = "recommend-card-list";
