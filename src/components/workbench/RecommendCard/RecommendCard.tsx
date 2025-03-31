@@ -1,9 +1,9 @@
-import React from "react";
-
-import { Button, Card, Flex, Typography } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import EllipsisText from "@comp/common/EllipsisText";
-import { RecommendCardProps } from "../utils/types";
+import { Button, Card, Flex, Typography } from "antd";
+import React from "react";
+
+import { RecommendCardProps } from "@/types/workbench/types";
 
 const { Paragraph } = Typography;
 // 组件的类型前缀

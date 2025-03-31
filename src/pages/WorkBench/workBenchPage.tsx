@@ -8,9 +8,10 @@ import { PageContainer, ProCard } from "@ant-design/pro-components";
 import DashboardTable from "@comp/workbench/DashboardTable/DashboardTable";
 import QuickActionsBar from "@comp/workbench/QuickActionBar/QuickActionsBar";
 import RecommendCardList from "@comp/workbench/RecommendCardList/RecommendCardList";
-import { SegmentedItems } from "@comp/workbench/utils/types";
 import { Button, Divider, Popover, Space } from "antd";
 import React, { useCallback } from "react";
+
+import { SegmentedItems } from "@/types/workbench/types";
 import "./index.scss";
 const base = import.meta.env.VITE_BASE;
 const prefixCls = "workbench-page";

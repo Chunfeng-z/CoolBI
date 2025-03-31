@@ -3,11 +3,12 @@ import { Button, Space, Table, TableProps, Tooltip } from "antd";
 import React, { useState } from "react";
 
 import { dashboardTableEditData } from "../test";
+
 import {
   DashBoardTableDataType,
   DashBoardTableDataKeys,
   DashBoardTableActions,
-} from "../utils/types";
+} from "@/types/workbench/types";
 
 const prefixCls = "dashboard-table";
 

@@ -1,4 +1,5 @@
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
+import EllipsisText from "@comp/common/EllipsisText";
 import {
   Dropdown,
   Flex,
@@ -9,8 +10,8 @@ import {
   Space,
 } from "antd";
 import React, { useState } from "react";
-import EllipsisText from "@comp/common/EllipsisText";
-import { DropdownItems, SegmentedItems } from "../utils/types";
+
+import { DropdownItems, SegmentedItems } from "@/types/workbench/types";
 
 const prefixCls = "quick-action-bar";
 

@@ -4,7 +4,8 @@ import React, { useLayoutEffect, useState } from "react";
 
 import RecommendCard from "../RecommendCard";
 import { recommendCardListData as TempData } from "../test";
-import { RecommendCardProps } from "../utils/types";
+
+import { RecommendCardProps } from "@/types/workbench/types";
 
 const prefixCls = "recommend-card-list";
 // 每个卡片的宽度+gap
