@@ -1,11 +1,11 @@
 import { VChart } from "@visactor/react-vchart";
 import { Space } from "antd";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "./index.scss";
 import { exampleData } from "./exampleData";
 
-import { addExtremeValueFlags } from "@/utils/hooks";
+import { addExtremeValueFlags, calculateSum } from "@/utils/hooks";
 const prefixCls = "cool-indicator-trend-chart";
 interface ICoolIndicatorTrendChartProps {
   /** 图表背景色配置 */
@@ -123,6 +123,15 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
     indicatorSuffix = "",
   } = props;
 
+  /** 当前数据的总和 */
+  const [curDataSum, setCurDataSum] = useState<number>(0);
+
+  useEffect(() => {
+    // 计算当前数据的总和
+    const sum = calculateSum(data, yField);
+    setCurDataSum(sum);
+  }, [data, yField]);
+
   // 添加极值标记
   const processedData = showExtremeValue
     ? addExtremeValueFlags(data, yField)
@@ -228,7 +237,7 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
         fontSize: dataLabelConfig.fontSize,
         fontWeight: dataLabelConfig.fontWeight,
         fontStyle: dataLabelConfig.fontStyle,
-
+        // 每个数据标签是否显示
         visible: showExtremeValue
           ? (datum: any) => !!(datum.highest || datum.lowest)
           : true,
@@ -296,7 +305,7 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
               }}
             >
               <span style={{ fontSize: 14 }}>{indicatorPrefix}</span>
-              <span>数据值</span>
+              <span>{curDataSum}</span>
               <span style={{ fontSize: 14 }}>{indicatorSuffix}</span>
             </div>
             {/* !TODO:当前系统暂不支持环比 */}

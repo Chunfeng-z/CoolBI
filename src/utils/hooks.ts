@@ -282,3 +282,25 @@ export const addExtremeValueFlags = <T extends Record<string, any>>(
     lowest: item[fieldToCheck] === minItem?.[fieldToCheck],
   }));
 };
+
+/**
+ * 计算数据数组中特定字段的总和
+ * @param data 数据数组
+ * @param field 需要计算总和的字段，可以是字符串或字符串数组
+ * @returns 指定字段的总和
+ */
+export const calculateSum = <T extends Record<string, any>>(
+  data: T[],
+  field: string | string[]
+): number => {
+  if (!data || data.length === 0) return 0;
+
+  // 确定要计算的字段（支持数组，默认取第一个字段）
+  const fieldToCalculate = Array.isArray(field) ? field[0] : field;
+
+  // 计算总和
+  return data.reduce((sum, item) => {
+    const value = Number(item[fieldToCalculate]);
+    return sum + (isNaN(value) ? 0 : value);
+  }, 0);
+};
