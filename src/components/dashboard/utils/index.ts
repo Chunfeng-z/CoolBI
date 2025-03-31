@@ -173,6 +173,6 @@ export enum ChartTypeEnum {
   pie = "pie",
   /** 指标趋势图 */
   indicatorTrend = "indicatorTrend",
-  /** 指标卡片图 */
+  /** 指标看板图 */
   indicatorCard = "indicatorCard",
 }

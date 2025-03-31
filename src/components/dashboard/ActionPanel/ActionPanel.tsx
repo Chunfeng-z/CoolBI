@@ -3,7 +3,7 @@ import { Button, Divider, Space, Tooltip } from "antd";
 import React, { useState } from "react";
 
 import DashBoardIcon from "@/assets/dashboard/dashboard-icon.svg";
-import useChartStore from "@/stores/useChartStore";
+// import useChartStore from "@/stores/useChartStore";
 
 const prefixCls = "action-panel";
 
@@ -14,10 +14,11 @@ interface ActionPanelProps {
 /** 仪表板操作栏 */
 const ActionPanel: React.FC<ActionPanelProps> = (props) => {
   const { style } = props;
-  const undo = useChartStore((state) => state.undo);
-  const redo = useChartStore((state) => state.redo);
-  const history = useChartStore((state) => state.history);
-  const redoStack = useChartStore((state) => state.redoStack);
+  // 暂时不支持redo和undo
+  // const undo = useChartStore((state) => state.undo);
+  // const redo = useChartStore((state) => state.redo);
+  // const history = useChartStore((state) => state.history);
+  // const redoStack = useChartStore((state) => state.redoStack);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = () => {
@@ -60,7 +61,8 @@ const ActionPanel: React.FC<ActionPanelProps> = (props) => {
               size="small"
               icon={<RollbackOutlined />}
               onClick={() => {
-                undo();
+                // undo();
+                console.log("系统稍后会支持撤销功能");
               }}
               disabled={history.length <= 1}
             >
@@ -73,8 +75,11 @@ const ActionPanel: React.FC<ActionPanelProps> = (props) => {
               size="small"
               icon={<RollbackOutlined style={{ transform: "scaleX(-1)" }} />}
               iconPosition="end"
-              onClick={redo}
-              disabled={redoStack.length === 0}
+              onClick={() => {
+                // redo();
+                console.log("系统稍后会支持重做功能");
+              }}
+              // disabled={redoStack.length === 0}
             >
               重做
             </Button>

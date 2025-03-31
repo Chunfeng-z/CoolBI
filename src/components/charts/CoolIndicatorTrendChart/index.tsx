@@ -1,6 +1,6 @@
 import { VChart } from "@visactor/react-vchart";
 import { Space } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./index.scss";
 import { exampleData } from "./exampleData";
