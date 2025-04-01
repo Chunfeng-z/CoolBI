@@ -24,8 +24,8 @@ interface State {
 }
 
 interface Action {
-  /** 设置当前选中的图表id */
-  setCurChartId: (chartId: string) => void;
+  /** 设置当前选中的图表id - 设置为null清空图表选中*/
+  setCurChartId: (chartId: string | null) => void;
   /** 更新当前选中图表组件的配置信息 */
   setChartsConfig: (
     chartId: string,
@@ -63,13 +63,20 @@ const useChartStore = create<State & Action>()(
     chartsConfig: testData,
     redoStack: [],
     history: [],
-    setCurChartId: (chartId: string) => {
+    setCurChartId: (chartId: string | null) => {
       const { setCurChartConfig } = get();
       set((state) => {
         state.curChartId = chartId;
       });
-      // 设置当前选中的图表配置
-      setCurChartConfig(chartId);
+      if (chartId !== null) {
+        // 设置当前选中的图表配置
+        setCurChartConfig(chartId);
+      } else if (chartId === null) {
+        // 清空当前选中的图表配置
+        set((state) => {
+          state.curChartConfig = null;
+        });
+      }
     },
     setCurChartConfig: (chartId: string) => {
       const { chartsConfig } = get();

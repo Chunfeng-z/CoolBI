@@ -18,19 +18,14 @@ import ErrorBoundary from "@/components/common/ErrorBoundary";
 import { useCompPanelStore } from "@/stores/useCompPanel";
 
 const prefixCls = "dashboard-page";
-const enum LeftChartMenuState {
-  "close" = "close",
-  "open" = "open",
-  "pin" = "pin",
-}
+
 /** 创建、编辑仪表板界面,独立于home页面（独立的功能） */
 const DashBoardPage: React.FC = () => {
   const { token } = useToken();
-  /** 左侧图表菜单的显示状态 */
-  // const [leftChartMenuState, setLeftChartMenuState] =
-  //   useState<LeftChartMenuState>(LeftChartMenuState.close);
   /** 在当前存在选中图表卡片的时候展示图表配置菜单 */
   const curChartId = useChartStore((state) => state.curChartId);
+  /** 更新当前选中的图表id */
+  const setCurChartId = useChartStore((state) => state.setCurChartId);
   const isShowChartConfig = !isEmpty(curChartId);
   const chartMenuStatus = useCompPanelStore((state) => state.chartMenuStatus);
 
@@ -77,7 +72,10 @@ const DashBoardPage: React.FC = () => {
             )}{" "}
           </ErrorBoundary>
         </div>
-        <div className={`${prefixCls}-chart-content`}>
+        <div
+          className={`${prefixCls}-chart-content`}
+          onClick={() => setCurChartId(null)}
+        >
           <ErrorBoundary>
             <DashBoardDesign />
           </ErrorBoundary>

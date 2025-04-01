@@ -119,7 +119,11 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
         borderRadius: `${borderRadius}px`,
         ...style,
       }}
-      onClick={onClick}
+      onClick={(e) => {
+        // 阻止事件冒泡，导致触发dashboard-page-chart-container的取消图表选中的事件
+        e.stopPropagation();
+        onClick?.();
+      }}
     >
       <div className="chart-card-header">
         <div
