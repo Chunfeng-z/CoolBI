@@ -5,51 +5,27 @@ import {
   ItalicOutlined,
 } from "@ant-design/icons";
 import { Button, ColorPicker, InputNumber, Radio, Switch, Tooltip } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import useChartStore, { IndicatorTrendConfig } from "@/stores/useChartStore";
+import { ChartTypeEnum } from "../../utils";
+
+import useChartStore from "@/stores/useChartStore";
+import { IndicatorContentConfig } from "@/types/chartConfigItems/indicatorTrendItems";
 
 const prefixCls = "indicator-content";
 
-/** 指标内容配置接口 */
-interface IndicatorContentConfig {
-  /** 内容在指标块中的位置 */
-  contentPosition: "left" | "center";
-  /** 指标值行间距 */
-  lineSpacing: "normal" | "small";
-  /** 是否启用字号设置
-   *  - true: 启用时支持自定义设置
-   *  - false: 禁用时恢复默认配置
-   */
-  enableFontSetting: boolean;
-  /** 指标名称样式 */
-  nameStyle: {
-    color: string;
-    fontSize: number;
-    isBold: boolean;
-    isItalic: boolean;
-  };
-  /** 指标值样式 */
-  valueStyle: {
-    color: string;
-    fontSize: number;
-    isBold: boolean;
-    isItalic: boolean;
-  };
-}
-
 /** 默认配置 */
 const defaultConfig: IndicatorContentConfig = {
-  contentPosition: "left",
-  lineSpacing: "small",
+  indicatorContentPosition: "left",
+  indicatorValueLineSpace: "small",
   enableFontSetting: true,
-  nameStyle: {
+  indicatorNameFontConfig: {
     color: "#000000",
     fontSize: 14,
     isBold: false,
     isItalic: false,
   },
-  valueStyle: {
+  indicatorValueFontConfig: {
     color: "#000000",
     fontSize: 32,
     isBold: false,
@@ -73,82 +49,93 @@ const IndicatorContent: React.FC = () => {
 
   // 获取当前选中图表的配置
   useEffect(() => {
-    const curConfig = getCurrentChartConfig() as IndicatorTrendConfig;
-    if (curConfig) {
-      setConfig({
-        ...config,
-        contentPosition:
-          curConfig.indicatorContentPosition ?? defaultConfig.contentPosition,
-      });
+    const curConfig = getCurrentChartConfig();
+    if (curConfig && curConfig.type === ChartTypeEnum.indicatorTrend) {
+      setConfig(curConfig.indicatorContentConfig);
     }
   }, [curChartId]);
 
   /** 更新配置的工具函数 */
-  const updateConfig = (update: Partial<IndicatorContentConfig>) => {
-    if (!("enableFontSetting" in update) || update.enableFontSetting) {
-      const newConfig = {
-        ...config,
-        ...update,
-      };
-      setConfig(newConfig);
-    } else if ("enableFontSetting" in update && !update.enableFontSetting) {
-      const newConfig = {
-        ...config,
-        ...update,
-        nameStyle: defaultConfig.nameStyle,
-        valueStyle: defaultConfig.valueStyle,
-      };
-      setConfig(newConfig);
-    }
-    switch (Object.keys(update)[0]) {
-      case "contentPosition":
-        setChartsConfig(curChartId!, {
-          indicatorContentPosition: update.contentPosition,
+  const updateConfig = useCallback(
+    (update: Partial<IndicatorContentConfig>) => {
+      if (!("enableFontSetting" in update) || update.enableFontSetting) {
+        setConfig({
+          ...config,
+          ...update,
         });
-        break;
-      case "lineSpacing":
-        setChartsConfig(curChartId!, {
-          indicatorValueLineSpace: update.lineSpacing,
+      } else if ("enableFontSetting" in update && !update.enableFontSetting) {
+        setConfig({
+          ...config,
+          ...update,
+          indicatorNameFontConfig: defaultConfig.indicatorNameFontConfig,
+          indicatorValueFontConfig: defaultConfig.indicatorValueFontConfig,
         });
-        break;
-      case "enableFontSetting": {
-        // 禁用字号设置，则恢复默认配置
-        if (!update.enableFontSetting) {
-          setChartsConfig(curChartId!, {
-            indicatorNameFontConfig: defaultConfig.nameStyle,
-            indicatorValueFontConfig: defaultConfig.valueStyle,
-          });
-        }
-        break;
       }
-    }
-  };
+      switch (Object.keys(update)[0]) {
+        case "indicatorContentPosition":
+          setChartsConfig(curChartId!, (draft) => {
+            if (draft.type === ChartTypeEnum.indicatorTrend) {
+              draft.indicatorContentConfig.indicatorContentPosition =
+                update.indicatorContentPosition!;
+            }
+          });
+          break;
+        case "indicatorValueLineSpace":
+          setChartsConfig(curChartId!, (draft) => {
+            if (draft.type === ChartTypeEnum.indicatorTrend) {
+              draft.indicatorContentConfig.indicatorValueLineSpace =
+                update.indicatorValueLineSpace!;
+            }
+          });
+          break;
+        case "enableFontSetting": {
+          // 禁用字号设置，则恢复默认配置
+          if (!update.enableFontSetting) {
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.indicatorTrend) {
+                draft.indicatorContentConfig.indicatorNameFontConfig =
+                  defaultConfig.indicatorNameFontConfig;
+                draft.indicatorContentConfig.indicatorValueFontConfig =
+                  defaultConfig.indicatorValueFontConfig;
+              }
+            });
+          }
+          break;
+        }
+      }
+    },
+    [curChartId, setChartsConfig]
+  );
 
   /** 更新指标名称样式 */
   const updateNameStyle = (
-    update: Partial<IndicatorContentConfig["nameStyle"]>
+    update: Partial<IndicatorContentConfig["indicatorNameFontConfig"]>
   ) => {
     const newNameStyle = {
-      ...config.nameStyle,
+      ...config.indicatorNameFontConfig,
       ...update,
     };
-    updateConfig({ nameStyle: newNameStyle });
-    setChartsConfig(curChartId!, {
-      indicatorNameFontConfig: newNameStyle,
+    updateConfig({ indicatorNameFontConfig: newNameStyle });
+    setChartsConfig(curChartId!, (draft) => {
+      if (draft.type === ChartTypeEnum.indicatorTrend) {
+        draft.indicatorContentConfig.indicatorNameFontConfig = newNameStyle;
+      }
     });
   };
 
   /** 更新指标值样式 */
   const updateValueStyle = (
-    update: Partial<IndicatorContentConfig["valueStyle"]>
+    update: Partial<IndicatorContentConfig["indicatorValueFontConfig"]>
   ) => {
     const newValueStyle = {
-      ...config.valueStyle,
+      ...config.indicatorValueFontConfig,
       ...update,
     };
-    updateConfig({ valueStyle: newValueStyle });
-    setChartsConfig(curChartId!, {
-      indicatorValueFontConfig: newValueStyle,
+    updateConfig({ indicatorValueFontConfig: newValueStyle });
+    setChartsConfig(curChartId!, (draft) => {
+      if (draft.type === ChartTypeEnum.indicatorTrend) {
+        draft.indicatorContentConfig.indicatorValueFontConfig = newValueStyle;
+      }
     });
   };
 
@@ -164,8 +151,10 @@ const IndicatorContent: React.FC = () => {
             flexDirection: "column",
             gap: 2,
           }}
-          value={config.contentPosition}
-          onChange={(e) => updateConfig({ contentPosition: e.target.value })}
+          value={config.indicatorContentPosition}
+          onChange={(e) =>
+            updateConfig({ indicatorContentPosition: e.target.value })
+          }
           options={[
             {
               value: "left",
@@ -200,8 +189,10 @@ const IndicatorContent: React.FC = () => {
             flexDirection: "column",
             gap: 2,
           }}
-          value={config.lineSpacing}
-          onChange={(e) => updateConfig({ lineSpacing: e.target.value })}
+          value={config.indicatorValueLineSpace}
+          onChange={(e) =>
+            updateConfig({ indicatorValueLineSpace: e.target.value })
+          }
           options={[
             {
               value: "normal",
@@ -230,7 +221,7 @@ const IndicatorContent: React.FC = () => {
           <span>名称</span>
           <ColorPicker
             size="small"
-            value={config.nameStyle.color}
+            value={config.indicatorNameFontConfig.color}
             onChange={(color) =>
               updateNameStyle({ color: color.toHexString() })
             }
@@ -240,7 +231,7 @@ const IndicatorContent: React.FC = () => {
             size="small"
             min={12}
             max={30}
-            value={config.nameStyle.fontSize}
+            value={config.indicatorNameFontConfig.fontSize}
             onChange={(value) => updateNameStyle({ fontSize: value as number })}
             step={1}
             style={{ width: 50 }}
@@ -249,22 +240,28 @@ const IndicatorContent: React.FC = () => {
           px
           <Tooltip title="加粗">
             <Button
-              type={config.nameStyle.isBold ? "primary" : "text"}
+              type={config.indicatorNameFontConfig.isBold ? "primary" : "text"}
               icon={<BoldOutlined />}
               size="small"
               onClick={() =>
-                updateNameStyle({ isBold: !config.nameStyle.isBold })
+                updateNameStyle({
+                  isBold: !config.indicatorNameFontConfig.isBold,
+                })
               }
               disabled={!config.enableFontSetting}
             />
           </Tooltip>
           <Tooltip title="斜体">
             <Button
-              type={config.nameStyle.isItalic ? "primary" : "text"}
+              type={
+                config.indicatorNameFontConfig.isItalic ? "primary" : "text"
+              }
               icon={<ItalicOutlined />}
               size="small"
               onClick={() =>
-                updateNameStyle({ isItalic: !config.nameStyle.isItalic })
+                updateNameStyle({
+                  isItalic: !config.indicatorNameFontConfig.isItalic,
+                })
               }
               disabled={!config.enableFontSetting}
             />
@@ -274,7 +271,7 @@ const IndicatorContent: React.FC = () => {
           <span>数值</span>
           <ColorPicker
             size="small"
-            value={config.valueStyle.color}
+            value={config.indicatorValueFontConfig.color}
             onChange={(color) =>
               updateValueStyle({ color: color.toHexString() })
             }
@@ -284,7 +281,7 @@ const IndicatorContent: React.FC = () => {
             size="small"
             min={12}
             max={40}
-            value={config.valueStyle.fontSize}
+            value={config.indicatorValueFontConfig.fontSize}
             onChange={(value) =>
               updateValueStyle({ fontSize: value as number })
             }
@@ -295,22 +292,28 @@ const IndicatorContent: React.FC = () => {
           px
           <Tooltip title="加粗">
             <Button
-              type={config.valueStyle.isBold ? "primary" : "text"}
+              type={config.indicatorValueFontConfig.isBold ? "primary" : "text"}
               icon={<BoldOutlined />}
               size="small"
               onClick={() =>
-                updateValueStyle({ isBold: !config.valueStyle.isBold })
+                updateValueStyle({
+                  isBold: !config.indicatorValueFontConfig.isBold,
+                })
               }
               disabled={!config.enableFontSetting}
             />
           </Tooltip>
           <Tooltip title="斜体">
             <Button
-              type={config.valueStyle.isItalic ? "primary" : "text"}
+              type={
+                config.indicatorValueFontConfig.isItalic ? "primary" : "text"
+              }
               icon={<ItalicOutlined />}
               size="small"
               onClick={() =>
-                updateValueStyle({ isItalic: !config.valueStyle.isItalic })
+                updateValueStyle({
+                  isItalic: !config.indicatorValueFontConfig.isItalic,
+                })
               }
               disabled={!config.enableFontSetting}
             />

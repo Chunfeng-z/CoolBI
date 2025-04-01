@@ -11,13 +11,15 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 
+import { ChartTypeEnum } from "../../utils";
+
 import useChartStore from "@/stores/useChartStore";
-import { seriesItem } from "@/utils/type";
+import { DataSeriesConfig } from "@/types/chartConfigItems/common";
 
 const prefixCls = "series-config";
 
 /** 默认配置 */
-const defaultConfig: seriesItem = {
+const defaultConfig: DataSeriesConfig = {
   id: "id",
   name: "销售额",
   lineStyle: "solid",
@@ -46,7 +48,7 @@ const SeriesConfig: React.FC = () => {
   const setChartsConfig = useChartStore((state) => state.setChartsConfig);
 
   /** 当前选中的系列的配置 */
-  const [config, setConfig] = useState<seriesItem>(defaultConfig);
+  const [config, setConfig] = useState<DataSeriesConfig>(defaultConfig);
   /** 字段选项列表 */
   const [fieldOptions, setFieldOptions] = useState<
     { value: string; label: string }[]
@@ -85,7 +87,7 @@ const SeriesConfig: React.FC = () => {
   }, [curChartId]);
 
   /** 更新配置的工具函数 */
-  const updateConfig = (update: Partial<seriesItem>) => {
+  const updateConfig = (update: Partial<DataSeriesConfig>) => {
     const newConfig = {
       ...config,
       ...update,
@@ -95,20 +97,23 @@ const SeriesConfig: React.FC = () => {
     // 依据id找到对应的系列，并更新配置
     const curConfig = getCurrentChartConfig();
     if (curConfig?.seriesConfig) {
-      // 使用map创建新数组，替换对应id的系列配置
-      const newSeriesConfig = curConfig.seriesConfig.map((series) =>
-        series.id === config.id ? newConfig : series
-      );
-
-      setChartsConfig(curChartId!, {
-        seriesConfig: newSeriesConfig,
+      setChartsConfig(curChartId!, (draft) => {
+        if (draft.type === ChartTypeEnum.indicatorTrend) {
+          // 遍历draft的seriesConfig找到id对应的执行更新
+          const index = draft.seriesConfig.findIndex((series) => {
+            return series.id === newConfig.id;
+          });
+          if (index !== -1) {
+            draft.seriesConfig[index] = newConfig;
+          }
+        }
       });
     }
   };
 
   /** 处理数据标签配置更新 */
   const updateDataLabelConfig = (
-    update: Partial<seriesItem["dataLabelConfig"]>
+    update: Partial<DataSeriesConfig["dataLabelConfig"]>
   ) => {
     const newDataLabelConfig = {
       ...config.dataLabelConfig,

@@ -1,26 +1,14 @@
 import { Checkbox, InputNumber, Radio, Select, Space, Tooltip } from "antd";
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import { ChartTypeEnum } from "../../utils";
 
 import CoolIcon from "@/components/common/CoolIcon";
-import useChartStore, { IndicatorTrendConfig } from "@/stores/useChartStore";
+import useChartStore from "@/stores/useChartStore";
+import { TrendChartConfig } from "@/types/chartConfigItems/indicatorTrendItems";
+import { IndicatorTrendChartConfig } from "@/types/charts";
 const prefixCls = "chart-trend";
-
-/** 趋势图配置接口 */
-interface TrendChartConfig {
-  /** 是否展示趋势图 */
-  isShowTrendChart: boolean;
-  /** 趋势图支持的图表类型 */
-  trendChartType: "area" | "bar" | "line";
-  /** 线条类型：曲线或直线 */
-  lineType: "curve" | "straight";
-  /** 线条样式：实线或虚线 */
-  lineStyle: "solid" | "dashed";
-  /** 线条宽度 */
-  lineWidth: number;
-  /** 是否显示标记点 */
-  showMarkers: boolean;
-}
 
 /** 默认配置 */
 const defaultConfig: TrendChartConfig = {
@@ -42,51 +30,58 @@ const ChartTrend: React.FC = () => {
   const curChartId = useChartStore((state) => state.curChartId);
   /** 更新图表配置 */
   const setChartsConfig = useChartStore((state) => state.setChartsConfig);
+  /** 趋势图状态 */
+  const [config, setConfig] = useState<TrendChartConfig>(defaultConfig);
   // 获取当前选中图表的趋势配置
   useEffect(() => {
-    const curConfig = getCurrentChartConfig() as IndicatorTrendConfig;
-    if (curConfig) {
-      setConfig({
-        ...config,
-        isShowTrendChart:
-          curConfig.isShowTrendChart ?? defaultConfig.isShowTrendChart,
-        trendChartType:
-          curConfig.trendChartType ?? defaultConfig.trendChartType,
-        lineType: curConfig.lineType ?? defaultConfig.lineType,
-        lineStyle: curConfig.lineStyle ?? defaultConfig.lineStyle,
-        lineWidth: curConfig.lineWidth ?? defaultConfig.lineWidth,
-        showMarkers: curConfig.showMarkers ?? defaultConfig.showMarkers,
-      });
-    }
+    const curConfig = getCurrentChartConfig() as IndicatorTrendChartConfig;
+    setConfig(curConfig.trendChartConfig);
   }, [curChartId]);
-  /** 内部状态 */
-  const [config, setConfig] = useState<TrendChartConfig>(defaultConfig);
 
   /** 更新配置的工具函数 */
-  const updateConfig = (update: Partial<TrendChartConfig>) => {
-    setConfig({
-      ...config,
-      ...update,
-    });
-    setChartsConfig(curChartId!, update);
-  };
+  const updateConfig = useCallback(
+    (update: Partial<TrendChartConfig>) => {
+      setConfig({
+        ...config,
+        ...update,
+      });
+      setChartsConfig(curChartId!, (draft) => {
+        // 联合类型需要手动缩小类型范围
+        if (draft.type === ChartTypeEnum.indicatorTrend) {
+          draft.trendChartConfig = {
+            ...draft.trendChartConfig,
+            ...update,
+          };
+        }
+      });
+    },
+    [curChartId, setChartsConfig]
+  );
 
   /** 处理图表类型点击事件 */
-  const handleChartTypeClick = (type: TrendChartConfig["trendChartType"]) => {
-    if (config.isShowTrendChart) {
-      updateConfig({ trendChartType: type });
-      setChartsConfig(curChartId!, {
-        trendChartType: type,
-      });
-    }
-  };
+  const handleChartTypeClick = useCallback(
+    (type: TrendChartConfig["trendChartType"]) => {
+      if (config.isShowTrendChart) {
+        updateConfig({ trendChartType: type });
+        setChartsConfig(curChartId!, (draft) => {
+          if (draft.type === ChartTypeEnum.indicatorTrend) {
+            draft.trendChartConfig.trendChartType = type;
+          }
+        });
+      }
+    },
+    [curChartId, setChartsConfig]
+  );
 
   /** 图表类型选项 */
-  const chartTypes = [
-    { type: "area", icon: "icon-mianjitu", label: "面积图" },
-    { type: "bar", icon: "icon-zhuzhuangtu", label: "柱图" },
-    { type: "line", icon: "icon-zhexiantu", label: "线图" },
-  ];
+  const chartTypes = useMemo(
+    () => [
+      { type: "area", icon: "icon-mianjitu", label: "面积图" },
+      { type: "bar", icon: "icon-zhuzhuangtu", label: "柱图" },
+      { type: "line", icon: "icon-zhexiantu", label: "线图" },
+    ],
+    []
+  );
 
   return (
     <div className={`${prefixCls}-container`}>
