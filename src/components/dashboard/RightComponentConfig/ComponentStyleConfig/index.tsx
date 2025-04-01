@@ -10,6 +10,8 @@ const prefixCls = "component-style-config";
 
 /** 组件样式配置 */
 const ComponentStyleConfig: React.FC = () => {
+  // 当前选中图表的id作为依赖
+  const curChartId = useChartStore((state) => state.curChartId);
   // 获取当前选中的图表配置
   const getCurrentChartConfig = useChartStore(
     (state) => state.getCurrentChartConfig
@@ -34,7 +36,7 @@ const ComponentStyleConfig: React.FC = () => {
         </div>
       ),
     }));
-  }, [getCurrentChartConfig]);
+  }, [getCurrentChartConfig, curChartId]);
 
   // 默认展开所有配置项
   const defaultActiveKey = componentStyleItems.map((item) => item.key);

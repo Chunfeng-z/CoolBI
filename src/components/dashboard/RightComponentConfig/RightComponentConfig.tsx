@@ -104,7 +104,7 @@ const RightComponentConfig: React.FC<RightComponentConfigProps> = ({
           ),
         icon: tab.icon,
       })),
-    [curChartType]
+    [curChartId]
   );
 
   /** 组件配置的展开收起状态 */

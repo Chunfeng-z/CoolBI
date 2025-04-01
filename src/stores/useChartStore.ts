@@ -8,6 +8,7 @@ import {
   IndicatorCardChartConfig,
   IndicatorTrendChartConfig,
 } from "@/types/charts";
+import { generateDefaultChartName } from "@/utils/hooks";
 
 interface State {
   /** 当前选中的图表id-用于更新选中组件的配置 */
@@ -110,7 +111,7 @@ const useChartStore = create<State & Action>()(
       const commonConfig = {
         titleCardConfig: {
           isShowTitle: true,
-          title: "",
+          title: generateDefaultChartName(config.type),
           titleFontConfig: {
             color: "#1677ff",
             fontSize: 14,

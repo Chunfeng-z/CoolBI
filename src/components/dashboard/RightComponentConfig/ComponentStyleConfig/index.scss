@@ -342,5 +342,67 @@
         }
       }
     }
+
+    .indicator-layout-container {
+      .indicator-layout-label {
+        display: flex;
+        align-items: center;
+        height: 26px;
+      }
+
+      .indicator-layout-row {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        gap: 5px;
+
+        &.sub-content {
+          margin-left: 25px;
+        }
+      }
+
+      .indicator-block-separate-container {
+        display: flex;
+        margin-left: 25px;
+        gap: 8px;
+
+        .separate-wrapper {
+          display: flex;
+          padding: 3px;
+          background-color: #f3f3f3;
+          border: 2px solid transparent;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &.is-selected {
+            border-color: #1990ff;
+          }
+        }
+
+        .separate-icon {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 4px 6px;
+          width: 50px;
+          height: 26px;
+          font-size: 14px;
+          background-color: #fff;
+          border-radius: 2px;
+          font-weight: 600;
+        }
+
+        .separate-line {
+          width: 1px;
+          height: 100%;
+          background-color: #e0e0e0;
+        }
+
+        .separate-text {
+          text-align: center;
+          line-height: 20px;
+        }
+      }
+    }
   }
 }

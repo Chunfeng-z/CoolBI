@@ -19,6 +19,7 @@ import ChartCard from "./ChartCard/ChartCard";
 import CoolBarChart from "@/components/charts/CoolBarChart";
 import CoolBarStackChart from "@/components/charts/CoolBarStackChart";
 import CoolBarStackPercentChart from "@/components/charts/CoolBarStackPercentChart";
+import CoolIndicatorCardChart from "@/components/charts/CoolIndicatorCardChart";
 import CoolIndicatorTrendChart from "@/components/charts/CoolIndicatorTrendChart";
 import CoolLineChart from "@/components/charts/CoolLineChart";
 import CoolPieChart from "@/components/charts/CoolPieChart";
@@ -27,7 +28,10 @@ import CoolPolyLineStackChart from "@/components/charts/CoolPolyLineStackChart";
 import CoolPolyLineStackPercentChart from "@/components/charts/CoolPolyLineStackPercentChart";
 import useChartStore from "@/stores/useChartStore";
 import useRasterStore from "@/stores/useRasterStore";
-import { IndicatorTrendChartConfig } from "@/types/charts";
+import {
+  IndicatorCardChartConfig,
+  IndicatorTrendChartConfig,
+} from "@/types/charts";
 import { resizeGrid } from "@/utils/hooks";
 import { generateUUID } from "@/utils/uuid";
 import "./index.scss";
@@ -46,9 +50,7 @@ const DashBoardDesign: React.FC = () => {
   /** 栅格的行间距 */
   const cardRowSpace = useRasterStore((state) => state.cardRowSpace);
   /** 全局的仪表板图表配置-当前仪表板存在已设计的图表 */
-  const chartsConfig: IndicatorTrendChartConfig[] = useChartStore(
-    (state) => state.chartsConfig
-  );
+  const chartsConfig = useChartStore((state) => state.chartsConfig);
   /** 删除当前选中的图表 */
   const deleteChartConfig = useChartStore((state) => state.deleteChartConfig);
   const setCurChartId = useChartStore((state) => state.setCurChartId);
@@ -219,7 +221,10 @@ const DashBoardDesign: React.FC = () => {
    * @returns 图表组件
    */
   const renderChart = useCallback(
-    (chartType: ChartTypeEnum, chartConfig: IndicatorTrendChartConfig) => {
+    (
+      chartType: ChartTypeEnum,
+      chartConfig: IndicatorTrendChartConfig | IndicatorCardChartConfig
+    ) => {
       // 提取通用配置
       const commonProps = {
         // 组件背景颜色填充,在展示自定义背景填充的时候才使用自定义背景颜色
@@ -247,6 +252,9 @@ const DashBoardDesign: React.FC = () => {
           return <CoolBarStackPercentChart />;
         case ChartTypeEnum.pie:
           return <CoolPieChart />;
+        case ChartTypeEnum.indicatorCard: {
+          return <CoolIndicatorCardChart />;
+        }
         case ChartTypeEnum.indicatorTrend: {
           // 指标趋势图的特殊配置
           const trendConfig = chartConfig as IndicatorTrendChartConfig;
@@ -349,7 +357,7 @@ const DashBoardDesign: React.FC = () => {
               setDashBoardLayout(layout);
             }}
           >
-            {chartsConfig.map((config: IndicatorTrendChartConfig, index) => {
+            {chartsConfig.map((config, index) => {
               // 给ChartCard添加的是通用的配置
               const { chartId, type, titleCardConfig } = config;
               const {
@@ -367,7 +375,6 @@ const DashBoardDesign: React.FC = () => {
                 borderRadius,
                 chartCardPadding,
               } = titleCardConfig;
-              console.log("isShowTitle", isShowTitle);
 
               return (
                 <div key={chartId}>

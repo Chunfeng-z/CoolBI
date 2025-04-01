@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { maxBy, minBy } from "lodash-es";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -303,4 +304,11 @@ export const calculateSum = <T extends Record<string, any>>(
     const value = Number(item[fieldToCalculate]);
     return sum + (isNaN(value) ? 0 : value);
   }, 0);
+};
+
+export const generateDefaultChartName = (name: string): string => {
+  // 使用 dayjs 获取当前时间并格式化
+  const timestamp = dayjs().format("YYYY_MM_DD_HH_mm_ss_SSS");
+  // 拼接name和时间戳
+  return `${name}_${timestamp}`;
 };

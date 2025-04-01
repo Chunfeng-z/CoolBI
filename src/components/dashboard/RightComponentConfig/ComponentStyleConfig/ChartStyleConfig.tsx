@@ -6,6 +6,7 @@ import ChartTrend from "./ChartTrend";
 import DataLabel from "./DataLabel";
 import DrawArea from "./DrawArea";
 import IndicatorContent from "./IndicatorContent";
+import IndicatorLayout from "./IndicatorLayout";
 import SeriesConfig from "./SeriesConfig";
 import TitleCard from "./TitleCard";
 
@@ -70,6 +71,11 @@ const BASE_STYLE_ITEMS: Record<string, styleConfigItem> = {
     label: "系列配置",
     component: SeriesConfig,
   },
+  IndicatorLayout: {
+    key: "11",
+    label: "指标布局",
+    component: IndicatorLayout,
+  },
 };
 
 /**
@@ -79,6 +85,13 @@ export const CHART_TYPE_CONFIG_MAP: Record<
   string,
   (typeof BASE_STYLE_ITEMS.titleCard)[]
 > = {
+  // 指标看板/卡片图配置
+  indicatorCard: [
+    BASE_STYLE_ITEMS.titleCard,
+    BASE_STYLE_ITEMS.IndicatorLayout,
+    BASE_STYLE_ITEMS.indicatorContent,
+    BASE_STYLE_ITEMS.seriesConfig,
+  ],
   // 指标趋势图配置
   indicatorTrend: [
     BASE_STYLE_ITEMS.titleCard,
