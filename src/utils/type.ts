@@ -155,6 +155,7 @@ export interface IndicatorCardConfig extends ChartConfig {
     /** 指标块分隔形式 */
     indicatorBlockGroupSeparator: "line" | "none";
     /** 分隔线颜色 */
+    indicatorBlockGroupSeparatorColor: string;
   };
   /** 指标内容 */
   indicatorContent?: {

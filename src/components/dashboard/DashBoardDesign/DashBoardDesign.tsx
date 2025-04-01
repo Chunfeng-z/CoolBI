@@ -27,8 +27,8 @@ import CoolPolyLineStackChart from "@/components/charts/CoolPolyLineStackChart";
 import CoolPolyLineStackPercentChart from "@/components/charts/CoolPolyLineStackPercentChart";
 import useChartStore from "@/stores/useChartStore";
 import useRasterStore from "@/stores/useRasterStore";
+import { IndicatorTrendChartConfig } from "@/types/charts";
 import { resizeGrid } from "@/utils/hooks";
-import { ChartConfig, IndicatorTrendConfig } from "@/utils/type";
 import { generateUUID } from "@/utils/uuid";
 import "./index.scss";
 
@@ -46,7 +46,7 @@ const DashBoardDesign: React.FC = () => {
   /** 栅格的行间距 */
   const cardRowSpace = useRasterStore((state) => state.cardRowSpace);
   /** 全局的仪表板图表配置-当前仪表板存在已设计的图表 */
-  const chartsConfig: (ChartConfig | IndicatorTrendConfig)[] = useChartStore(
+  const chartsConfig: IndicatorTrendChartConfig[] = useChartStore(
     (state) => state.chartsConfig
   );
   /** 删除当前选中的图表 */
@@ -70,11 +70,10 @@ const DashBoardDesign: React.FC = () => {
         ChartTypeEnum.pie,
         ChartTypeEnum.indicatorTrend,
       ],
-      drop(item: { chart: string }) {
+      drop(item: { chart: ChartTypeEnum }) {
         // 添加新的图表
         appendChartConfig({
           chartId: generateUUID(),
-          title: "",
           type: item.chart,
         });
       },
@@ -220,12 +219,12 @@ const DashBoardDesign: React.FC = () => {
    * @returns 图表组件
    */
   const renderChart = useCallback(
-    (chartType: string, chartConfig: ChartConfig | IndicatorTrendConfig) => {
+    (chartType: ChartTypeEnum, chartConfig: IndicatorTrendChartConfig) => {
       // 提取通用配置
       const commonProps = {
         // 组件背景颜色填充,在展示自定义背景填充的时候才使用自定义背景颜色
-        backgroundColor: chartConfig.isShowBackgroundColor
-          ? chartConfig.backgroundColor
+        backgroundColor: chartConfig.titleCardConfig.isShowBackgroundColor
+          ? chartConfig.titleCardConfig.backgroundColor
           : "#fff",
         // 其他通用配置...
       };
@@ -250,42 +249,47 @@ const DashBoardDesign: React.FC = () => {
           return <CoolPieChart />;
         case ChartTypeEnum.indicatorTrend: {
           // 指标趋势图的特殊配置
-          const trendConfig = chartConfig as IndicatorTrendConfig;
+          const trendConfig = chartConfig as IndicatorTrendChartConfig;
+          const { trendChartConfig, indicatorContentConfig, seriesConfig } =
+            trendConfig;
           return (
             <CoolIndicatorTrendChart
               {...commonProps}
-              isShowTrendChart={trendConfig.isShowTrendChart}
-              trendChartType={trendConfig.trendChartType}
+              isShowTrendChart={trendChartConfig.isShowTrendChart}
+              trendChartType={trendChartConfig.trendChartType}
               curveType={
-                trendConfig.lineType === "curve" ? "monotone" : "linear"
+                trendChartConfig.lineType === "curve" ? "monotone" : "linear"
               }
-              lineDash={trendConfig.lineStyle === "solid" ? [0, 0] : [6, 4]}
-              lineWidth={trendConfig.lineWidth}
-              showMarkers={trendConfig.showMarkers}
-              indicatorContentPosition={trendConfig.indicatorContentPosition}
-              indicatorValueLineSpace={trendConfig.indicatorValueLineSpace}
+              lineDash={
+                trendChartConfig.lineStyle === "solid" ? [0, 0] : [6, 4]
+              }
+              lineWidth={trendChartConfig.lineWidth}
+              showMarkers={trendChartConfig.showMarkers}
+              indicatorContentPosition={
+                indicatorContentConfig.indicatorContentPosition
+              }
+              indicatorValueLineSpace={
+                indicatorContentConfig.indicatorValueLineSpace
+              }
               indicatorFontConfig={{
-                name: trendConfig.indicatorNameFontConfig,
-                value: trendConfig.indicatorValueFontConfig,
+                name: indicatorContentConfig.indicatorNameFontConfig,
+                value: indicatorContentConfig.indicatorValueFontConfig,
               }}
               // 指标趋势图只支持单个系列，所以这里直接取第一个系列
-              showDataLabels={trendConfig.seriesConfig?.[0]?.showDataLabels}
+              showDataLabels={seriesConfig?.[0]?.showDataLabels}
               dataLabelConfig={{
-                fill: trendConfig.seriesConfig?.[0]?.dataLabelConfig?.color,
-                fontSize:
-                  trendConfig.seriesConfig?.[0]?.dataLabelConfig?.fontSize,
-                fontWeight: trendConfig.seriesConfig?.[0]?.dataLabelConfig
-                  ?.isBold
+                fill: seriesConfig?.[0]?.dataLabelConfig?.color,
+                fontSize: seriesConfig?.[0]?.dataLabelConfig?.fontSize,
+                fontWeight: seriesConfig?.[0]?.dataLabelConfig?.isBold
                   ? "bold"
                   : "normal",
-                fontStyle: trendConfig.seriesConfig?.[0]?.dataLabelConfig
-                  ?.isItalic
+                fontStyle: seriesConfig?.[0]?.dataLabelConfig?.isItalic
                   ? "italic"
                   : "normal",
               }}
-              showExtremeValue={trendConfig.seriesConfig?.[0]?.showExtremeValue}
-              indicatorPrefix={trendConfig.seriesConfig?.[0]?.indicatorPrefix}
-              indicatorSuffix={trendConfig.seriesConfig?.[0]?.indicatorSuffix}
+              showExtremeValue={seriesConfig?.[0]?.showExtremeValue}
+              indicatorPrefix={seriesConfig?.[0]?.indicatorPrefix}
+              indicatorSuffix={seriesConfig?.[0]?.indicatorSuffix}
             />
           );
         }
@@ -345,65 +349,61 @@ const DashBoardDesign: React.FC = () => {
               setDashBoardLayout(layout);
             }}
           >
-            {chartsConfig.map(
-              (config: ChartConfig | IndicatorTrendConfig, index) => {
-                const {
-                  title,
-                  chartId,
-                  type,
-                  isShowTitle,
-                  titleFontSize,
-                  titleColor,
-                  isTitleBold,
-                  isTitleItalic,
-                  titleAlign,
-                  isShowRemark,
-                  remark,
-                  remarkPosition,
-                  isShowEndNote,
-                  endNote,
-                  borderRadius,
-                  isShowBackgroundColor,
-                  backgroundColor,
-                  chartCardPadding,
-                } = config;
+            {chartsConfig.map((config: IndicatorTrendChartConfig, index) => {
+              // 给ChartCard添加的是通用的配置
+              const { chartId, type, titleCardConfig } = config;
+              const {
+                isShowTitle,
+                title,
+                titleFontConfig,
+                titleAlign,
+                isShowRemark,
+                remark,
+                remarkPosition,
+                isShowEndNote,
+                endNote,
+                isShowBackgroundColor,
+                backgroundColor,
+                borderRadius,
+                chartCardPadding,
+              } = titleCardConfig;
+              console.log("isShowTitle", isShowTitle);
 
-                return (
-                  <div key={chartId}>
-                    <ChartCard
-                      key={chartId}
-                      isShowCardTitle={isShowTitle}
-                      cardTitle={title}
-                      titleFontSize={titleFontSize}
-                      titleColor={titleColor}
-                      isTitleBold={isTitleBold}
-                      isTitleItalic={isTitleItalic}
-                      titleAlign={titleAlign}
-                      isShowRemark={isShowRemark}
-                      remark={remark}
-                      remarkPosition={remarkPosition}
-                      isShowEndNote={isShowEndNote}
-                      endNote={endNote}
-                      borderRadius={borderRadius}
-                      backgroundColor={backgroundColor}
-                      isShowBackgroundColor={isShowBackgroundColor}
-                      chartCardPadding={chartCardPadding}
-                      isSelected={chartId === curChartId}
-                      onClick={() => handleChartCardClick(chartId)}
-                      style={{
-                        width: dashboardChartsSize[index]?.width,
-                        height: dashboardChartsSize[index]?.height,
-                      }}
-                      onDelete={() => {
-                        deleteChartConfig(chartId);
-                      }}
-                    >
-                      {renderChart(type, config)}
-                    </ChartCard>
-                  </div>
-                );
-              }
-            )}
+              return (
+                <div key={chartId}>
+                  <ChartCard
+                    key={chartId}
+                    isShowCardTitle={isShowTitle}
+                    cardTitle={title}
+                    titleFontSize={titleFontConfig.fontSize}
+                    titleColor={titleFontConfig.color}
+                    isTitleBold={titleFontConfig.isBold}
+                    isTitleItalic={titleFontConfig.isItalic}
+                    titleAlign={titleAlign}
+                    isShowRemark={isShowRemark}
+                    remark={remark}
+                    remarkPosition={remarkPosition}
+                    isShowEndNote={isShowEndNote}
+                    endNote={endNote}
+                    borderRadius={borderRadius}
+                    backgroundColor={backgroundColor}
+                    isShowBackgroundColor={isShowBackgroundColor}
+                    chartCardPadding={chartCardPadding}
+                    isSelected={chartId === curChartId}
+                    onClick={() => handleChartCardClick(chartId)}
+                    style={{
+                      width: dashboardChartsSize[index]?.width,
+                      height: dashboardChartsSize[index]?.height,
+                    }}
+                    onDelete={() => {
+                      deleteChartConfig(chartId);
+                    }}
+                  >
+                    {renderChart(type, config)}
+                  </ChartCard>
+                </div>
+              );
+            })}
           </ReactGridLayout>
         </div>
       </div>

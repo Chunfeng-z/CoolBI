@@ -51,29 +51,34 @@ interface RightComponentConfigProps {
 }
 
 /** 仪表板右侧组件的配置菜单 */
-const RightComponentConfig: React.FC<RightComponentConfigProps> = (props) => {
-  const { style } = props;
-  /** 获取当前选中的图表 */
+const RightComponentConfig: React.FC<RightComponentConfigProps> = ({
+  style,
+}) => {
+  /** 获取当前选中的图表配置 */
   const getCurrentChartConfig = useChartStore(
     (state) => state.getCurrentChartConfig
   );
   const curChartId = useChartStore((state) => state.curChartId);
   const setChartsConfig = useChartStore((state) => state.setChartsConfig);
   /** 当前选中图表组件的名称 */
-  const [componentName, setComponentName] = useState<string>("");
+  const [componentName, setComponentName] = useState<string>();
   /** 选中图表的类型 */
-  const [curChartType, setCurChartType] = useState<string>("");
+  const [curChartType, setCurChartType] = useState<ChartTypeEnum>();
   /** 当前选中的tab */
   const [activeTabKey, setActiveTabKey] = useState<string>("2");
 
   useEffect(() => {
-    setComponentName(getCurrentChartConfig()?.title || "");
-    setCurChartType(getCurrentChartConfig()?.type || "");
+    const curChartConfigByFn = getCurrentChartConfig();
+    const { titleCardConfig } = curChartConfigByFn!;
+    setComponentName(titleCardConfig.title || "");
+    setCurChartType(curChartConfigByFn?.type);
   }, [getCurrentChartConfig, curChartId]);
 
   /** 更新选中图表组件名称 */
   const updateChartCardTitle = (name: string) => {
-    setChartsConfig(curChartId!, { title: name });
+    setChartsConfig(curChartId!, (draft) => {
+      draft.titleCardConfig.title = name;
+    });
   };
 
   /** tab切换处理 */
@@ -89,8 +94,9 @@ const RightComponentConfig: React.FC<RightComponentConfigProps> = (props) => {
         label: tab.label,
         children:
           tab.label === "分析" &&
+          curChartType !== undefined &&
           [ChartTypeEnum.indicatorTrend, ChartTypeEnum.indicatorCard].includes(
-            curChartType as ChartTypeEnum
+            curChartType
           ) ? (
             <EmptyTooltip />
           ) : (

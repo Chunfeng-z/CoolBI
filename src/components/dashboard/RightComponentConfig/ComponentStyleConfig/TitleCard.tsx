@@ -23,197 +23,219 @@ import {
   theme,
   Tooltip,
 } from "antd";
-import { pick } from "lodash-es";
-import React, {
-  CSSProperties,
-  useCallback,
-  useState,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { CSSProperties, useCallback, useState, useEffect } from "react";
 
 import useChartStore from "@/stores/useChartStore";
-import { ChartConfig } from "@/utils/type";
+import { TitleCardConfig } from "@/types/chartConfigItems/common";
+
 const prefixCls = "title-card";
 
-type TitleCardProps = Pick<
-  ChartConfig,
-  | "isShowTitle"
-  | "title"
-  | "titleColor"
-  | "titleFontSize"
-  | "isTitleBold"
-  | "isTitleItalic"
-  | "titleAlign"
-  | "isShowRemark"
-  | "remark"
-  | "remarkPosition"
-  | "isShowEndNote"
-  | "endNote"
-  | "isShowBackgroundColor"
-  | "backgroundColor"
-  | "borderRadius"
-  | "chartCardPadding"
->;
 /** 标题与卡片 */
 const TitleCard: React.FC = () => {
   const { token } = theme.useToken();
-
-  const titleCardProps = useMemo(
-    () => [
-      "isShowTitle",
-      "title",
-      "titleColor",
-      "titleFontSize",
-      "isTitleBold",
-      "isTitleItalic",
-      "titleAlign",
-      "isShowRemark",
-      "remark",
-      "remarkPosition",
-      "isShowEndNote",
-      "endNote",
-      "isShowBackgroundColor",
-      "backgroundColor",
-      "borderRadius",
-      "chartCardPadding",
-    ],
-    []
-  );
   const getCurrentChartConfig = useChartStore(
     (state) => state.getCurrentChartConfig
   );
   const curChartId = useChartStore((state) => state.curChartId);
   /** 当前图表的标题与卡片配置 */
-  const [curTitleCardConfig, setCurTitleCardConfig] =
-    useState<TitleCardProps>();
+  const [titleCardConfig, setTitleCardConfig] = useState<TitleCardConfig>();
   /** 更新图表配置 */
   const setChartsConfig = useChartStore((state) => state.setChartsConfig);
   useEffect(() => {
-    const config = getCurrentChartConfig();
-    setCurTitleCardConfig(pick(config, titleCardProps));
-  }, [getCurrentChartConfig, curChartId, titleCardProps]);
+    const curConfig = getCurrentChartConfig();
+    setTitleCardConfig(curConfig?.titleCardConfig);
+  }, [getCurrentChartConfig, curChartId]);
   /** 处理CheckBox组件的变化 */
-  const handleCheckboxChange =
+  const handleCheckboxChange = useCallback(
     (
-      key:
-        | "isShowTitle"
-        | "isShowRemark"
-        | "isShowEndNote"
-        | "isShowBackgroundColor"
-    ): CheckboxProps["onChange"] =>
-    (e) => {
-      setCurTitleCardConfig((prev) => ({
-        ...prev,
-        [key]: e.target.checked,
-      }));
-      // 更新全局的图表配置
-      setChartsConfig(curChartId!, {
-        [key]: e.target.checked,
-      });
-    };
+        key:
+          | "isShowTitle"
+          | "isShowRemark"
+          | "isShowEndNote"
+          | "isShowBackgroundColor"
+      ): CheckboxProps["onChange"] =>
+      (e) => {
+        setTitleCardConfig((prev) => {
+          // 在初始化之后prev一定存在
+          return {
+            ...prev!,
+            [key]: e.target.checked,
+          };
+        });
+        // 更新全局的图表配置
+        setChartsConfig(curChartId!, (draft) => {
+          draft.titleCardConfig[key] = e.target.checked;
+        });
+      },
+    [curChartId, setChartsConfig]
+  );
   /** 处理输入框组件的内容变化 */
-  const handleInputChange =
+  const handleInputChange = useCallback(
     (key: "title" | "remark" | "endNote") =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setCurTitleCardConfig((prev) => {
-        return {
-          ...prev,
-          [key]: e.target.value,
-        };
-      });
-      setChartsConfig(curChartId!, {
-        [key]: e.target.value,
-      });
-    };
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitleCardConfig((prev) => {
+          return {
+            ...prev!,
+            [key]: e.target.value,
+          };
+        });
+        setChartsConfig(curChartId!, (draft) => {
+          draft.titleCardConfig[key] = e.target.value;
+        });
+      },
+    [curChartId, setChartsConfig]
+  );
   /** 处理颜色选择的内容变化 */
-  const handleColorPicker = (
-    key: "titleColor" | "backgroundColor",
-    color: string
-  ) => {
-    setCurTitleCardConfig((prev) => {
-      return {
-        ...prev,
-        [key]: color,
-      };
-    });
-    setChartsConfig(curChartId!, {
-      [key]: color,
-    });
-  };
-  /** 处理输入数字输入框的内容变化 */
-  const handleInputNumberChange =
-    (
-      key: "titleFontSize" | "borderRadius" | number
-    ): InputNumberProps["onChange"] =>
-    (value) => {
-      if (key === "titleFontSize" || key === "borderRadius") {
-        setCurTitleCardConfig((prev) => {
-          return {
-            ...prev,
-            [key]: value,
-          };
-        });
-        setChartsConfig(curChartId!, {
-          [key]: value,
-        });
-      } else {
-        const padding = curTitleCardConfig?.chartCardPadding || [0, 0, 0, 0];
-        const newPadding = [...padding];
-        if (typeof key === "number" && key >= 0 && key < 4) {
-          newPadding[key] = value as number;
-        } else {
-          return;
+  const handleColorPicker = useCallback(
+    (key: "titleColor" | "backgroundColor", color: string) => {
+      switch (key) {
+        case "titleColor": {
+          setTitleCardConfig((prev) => {
+            return {
+              ...prev!,
+              titleFontConfig: {
+                ...prev!.titleFontConfig,
+                color,
+              },
+            };
+          });
+          setChartsConfig(curChartId!, (draft) => {
+            draft.titleCardConfig.titleFontConfig.color = color;
+          });
+          break;
         }
-        setCurTitleCardConfig((pre) => {
-          return {
-            ...pre,
-            chartCardPadding: newPadding,
-          };
-        });
-        setChartsConfig(curChartId!, {
-          chartCardPadding: newPadding,
-        });
+        case "backgroundColor": {
+          setTitleCardConfig((prev) => {
+            return {
+              ...prev!,
+              backgroundColor: color,
+            };
+          });
+          setChartsConfig(curChartId!, (draft) => {
+            draft.titleCardConfig.backgroundColor = color;
+          });
+          break;
+        }
       }
-    };
+    },
+    [curChartId, setChartsConfig]
+  );
+  /** 处理输入数字输入框的内容变化 */
+  const handleInputNumberChange = useCallback(
+    (
+        key: "titleFontSize" | "borderRadius" | number
+      ): InputNumberProps["onChange"] =>
+      (value) => {
+        value = Number(value);
+        switch (key) {
+          case "titleFontSize": {
+            setTitleCardConfig((prev) => {
+              return {
+                ...prev!,
+                titleFontConfig: {
+                  ...prev!.titleFontConfig,
+                  fontSize: value,
+                },
+              };
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              draft.titleCardConfig.titleFontConfig.fontSize = value;
+            });
+            break;
+          }
+          case "borderRadius": {
+            setTitleCardConfig((prev) => {
+              return {
+                ...prev!,
+                borderRadius: value,
+              };
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              draft.titleCardConfig.borderRadius = value;
+            });
+            break;
+          }
+          default: {
+            const padding = titleCardConfig?.chartCardPadding || [0, 0, 0, 0];
+            const newPadding = [...padding];
+            if (typeof key === "number" && key >= 0 && key < 4) {
+              newPadding[key] = value as number;
+            } else {
+              return;
+            }
+            setTitleCardConfig((prev) => {
+              return {
+                ...prev!,
+                chartCardPadding: newPadding,
+              };
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              draft.titleCardConfig.chartCardPadding = newPadding;
+            });
+          }
+        }
+      },
+    [curChartId, setChartsConfig, titleCardConfig?.chartCardPadding]
+  );
 
   /** 处理标题文本配置的点击事件 */
-  const handleTitleTextConfigClick = (
-    key: "isTitleBold" | "isTitleItalic" | "titleAlign"
-  ) => {
-    if (key === "isTitleBold" || key === "isTitleItalic") {
-      setCurTitleCardConfig((prev) => {
-        return {
-          ...prev,
-          [key]: !prev?.[key],
-        };
-      });
-      setChartsConfig(curChartId!, {
-        [key]: !curTitleCardConfig?.[key],
-      });
-    } else if (key === "titleAlign") {
-      setCurTitleCardConfig((prev) => {
-        return {
-          ...prev,
-          [key]: prev?.[key] === "left" ? "center" : "left",
-        };
-      });
-      setChartsConfig(curChartId!, {
-        [key]: curTitleCardConfig?.[key] === "left" ? "center" : "left",
-      });
-    }
-  };
+  const handleTitleTextConfigClick = useCallback(
+    (key: "isTitleBold" | "isTitleItalic" | "titleAlign") => {
+      if (key === "isTitleBold") {
+        setTitleCardConfig((prev) => {
+          return {
+            ...prev!,
+            titleFontConfig: {
+              ...prev!.titleFontConfig,
+              isBold: !prev?.titleFontConfig?.isBold,
+            },
+          };
+        });
+        setChartsConfig(curChartId!, (draft) => {
+          const isBold = draft.titleCardConfig.titleFontConfig.isBold;
+          draft.titleCardConfig.titleFontConfig.isBold = !isBold;
+        });
+      } else if (key === "isTitleItalic") {
+        setTitleCardConfig((prev) => {
+          return {
+            ...prev!,
+            titleFontConfig: {
+              ...prev!.titleFontConfig,
+              isItalic: !prev?.titleFontConfig?.isItalic,
+            },
+          };
+        });
+        setChartsConfig(curChartId!, (draft) => {
+          const isItalic = draft.titleCardConfig.titleFontConfig.isItalic;
+          draft.titleCardConfig.titleFontConfig.isItalic = !isItalic;
+        });
+      } else if (key === "titleAlign") {
+        setTitleCardConfig((prev) => {
+          return {
+            ...prev!,
+            titleAlign: prev?.titleAlign === "left" ? "center" : "left",
+          };
+        });
+        setChartsConfig(curChartId!, (draft) => {
+          const align = draft.titleCardConfig.titleAlign;
+          draft.titleCardConfig.titleAlign =
+            align === "left" ? "center" : "left";
+        });
+      }
+    },
+    [curChartId, setChartsConfig]
+  );
 
   /**  备注位置 */
   const handleRemarkPositionChange = (e: RadioChangeEvent) => {
-    setCurTitleCardConfig((prev) => {
+    setTitleCardConfig((prev) => {
       return {
-        ...prev,
+        ...prev!,
         remarkPosition: e.target.value,
       };
     });
-    setChartsConfig(curChartId!, {
-      remarkPosition: e.target.value,
+    setChartsConfig(curChartId!, (draft) => {
+      draft.titleCardConfig.remarkPosition = e.target.value;
     });
   };
 
@@ -232,7 +254,7 @@ const TitleCard: React.FC = () => {
             <div className="title-card-item">
               <div className="title-card-text-simple">
                 <Checkbox
-                  checked={curTitleCardConfig?.isShowTitle}
+                  checked={titleCardConfig?.isShowTitle}
                   onChange={handleCheckboxChange("isShowTitle")}
                 >
                   显示主标题
@@ -251,27 +273,27 @@ const TitleCard: React.FC = () => {
                   <InfoCircleOutlined />
                 </Tooltip>
                 <Input
-                  disabled={!curTitleCardConfig?.isShowTitle}
+                  disabled={!titleCardConfig?.isShowTitle}
                   size="small"
                   placeholder="请输入图表组件名称"
                   maxLength={100}
-                  value={curTitleCardConfig?.title}
+                  value={titleCardConfig?.title}
                   onChange={handleInputChange("title")}
                 />
               </div>
               <div className="title-card-text">
                 <span>文本</span>
                 <ColorPicker
-                  value={curTitleCardConfig?.titleColor}
+                  value={titleCardConfig?.titleFontConfig?.color}
                   size="small"
-                  disabled={!curTitleCardConfig?.isShowTitle}
+                  disabled={!titleCardConfig?.isShowTitle}
                   onChange={(color) =>
                     handleColorPicker("titleColor", color.toHexString())
                   }
                 />
                 <InputNumber
                   size="small"
-                  disabled={!curTitleCardConfig?.isShowTitle}
+                  disabled={!titleCardConfig?.isShowTitle}
                   changeOnWheel
                   min={12}
                   max={30}
@@ -285,60 +307,54 @@ const TitleCard: React.FC = () => {
               <div className="title-card-text-sub">
                 <Tooltip title="加粗">
                   <Button
-                    type="text"
+                    type={
+                      titleCardConfig?.titleFontConfig.isBold
+                        ? "primary"
+                        : "text"
+                    }
                     icon={<BoldOutlined />}
                     size="small"
-                    style={{
-                      color: curTitleCardConfig?.isTitleBold
-                        ? token.colorPrimary
-                        : token.colorText,
-                    }}
-                    disabled={!curTitleCardConfig?.isShowTitle}
+                    disabled={!titleCardConfig?.isShowTitle}
                     onClick={() => handleTitleTextConfigClick("isTitleBold")}
                   />
                 </Tooltip>
                 <Tooltip title="斜体">
                   <Button
-                    type="text"
+                    type={
+                      titleCardConfig?.titleFontConfig.isItalic
+                        ? "primary"
+                        : "text"
+                    }
                     icon={<ItalicOutlined />}
                     size="small"
-                    style={{
-                      color: curTitleCardConfig?.isTitleItalic
-                        ? token.colorPrimary
-                        : token.colorText,
-                    }}
-                    disabled={!curTitleCardConfig?.isShowTitle}
+                    disabled={!titleCardConfig?.isShowTitle}
                     onClick={() => handleTitleTextConfigClick("isTitleItalic")}
                   />
                 </Tooltip>
                 <Divider type="vertical" style={{ borderWidth: 2 }} />
                 <Tooltip title="左对齐">
                   <Button
-                    type="text"
+                    type={
+                      titleCardConfig?.titleAlign === "left"
+                        ? "primary"
+                        : "text"
+                    }
                     icon={<AlignLeftOutlined />}
                     size="small"
-                    style={{
-                      color:
-                        curTitleCardConfig?.titleAlign === "left"
-                          ? token.colorPrimary
-                          : token.colorText,
-                    }}
-                    disabled={!curTitleCardConfig?.isShowTitle}
+                    disabled={!titleCardConfig?.isShowTitle}
                     onClick={() => handleTitleTextConfigClick("titleAlign")}
                   />
                 </Tooltip>
                 <Tooltip title="居中对齐">
                   <Button
-                    type="text"
+                    type={
+                      titleCardConfig?.titleAlign === "center"
+                        ? "primary"
+                        : "text"
+                    }
                     icon={<AlignCenterOutlined />}
                     size="small"
-                    style={{
-                      color:
-                        curTitleCardConfig?.titleAlign === "center"
-                          ? token.colorPrimary
-                          : token.colorText,
-                    }}
-                    disabled={!curTitleCardConfig?.isShowTitle}
+                    disabled={!titleCardConfig?.isShowTitle}
                     onClick={() => handleTitleTextConfigClick("titleAlign")}
                   />
                 </Tooltip>
@@ -354,7 +370,7 @@ const TitleCard: React.FC = () => {
             <div className="title-card-item">
               <div className="title-card-text-simple">
                 <Checkbox
-                  checked={curTitleCardConfig?.isShowRemark}
+                  checked={titleCardConfig?.isShowRemark}
                   onChange={handleCheckboxChange("isShowRemark")}
                 >
                   备注
@@ -363,10 +379,10 @@ const TitleCard: React.FC = () => {
               <div className="title-card-text">
                 <span>内容</span>
                 <Input
-                  disabled={!curTitleCardConfig?.isShowRemark}
+                  disabled={!titleCardConfig?.isShowRemark}
                   size="small"
                   maxLength={100}
-                  value={curTitleCardConfig?.remark}
+                  value={titleCardConfig?.remark}
                   placeholder="请输入备注内容"
                   onChange={handleInputChange("remark")}
                 />
@@ -375,9 +391,9 @@ const TitleCard: React.FC = () => {
                 <span>位置</span>
                 <div className="title-card-text-right">
                   <Radio.Group
-                    disabled={!curTitleCardConfig?.isShowRemark}
+                    disabled={!titleCardConfig?.isShowRemark}
                     onChange={handleRemarkPositionChange}
-                    value={curTitleCardConfig?.remarkPosition}
+                    value={titleCardConfig?.remarkPosition}
                     style={{
                       display: "flex",
                       flexDirection: "column",
@@ -398,7 +414,7 @@ const TitleCard: React.FC = () => {
               </div>
               <div className="title-card-text-simple">
                 <Checkbox
-                  checked={curTitleCardConfig?.isShowEndNote}
+                  checked={titleCardConfig?.isShowEndNote}
                   onChange={handleCheckboxChange("isShowEndNote")}
                 >
                   尾注
@@ -407,10 +423,10 @@ const TitleCard: React.FC = () => {
               <div className="title-card-text">
                 <span>尾注内容</span>
                 <Input
-                  disabled={!curTitleCardConfig?.isShowEndNote}
+                  disabled={!titleCardConfig?.isShowEndNote}
                   size="small"
                   maxLength={100}
-                  value={curTitleCardConfig?.endNote}
+                  value={titleCardConfig?.endNote}
                   placeholder="请输入尾注内容"
                   onChange={handleInputChange("endNote")}
                 />
@@ -426,7 +442,7 @@ const TitleCard: React.FC = () => {
             <div className="title-card-item">
               <div className="title-card-text-simple">
                 <Checkbox
-                  checked={curTitleCardConfig?.isShowBackgroundColor}
+                  checked={titleCardConfig?.isShowBackgroundColor}
                   onChange={handleCheckboxChange("isShowBackgroundColor")}
                 >
                   自定义组件背景填充
@@ -436,8 +452,8 @@ const TitleCard: React.FC = () => {
                 <span>卡片颜色</span>
                 <ColorPicker
                   size="small"
-                  value={curTitleCardConfig?.backgroundColor}
-                  disabled={!curTitleCardConfig?.isShowBackgroundColor}
+                  value={titleCardConfig?.backgroundColor}
+                  disabled={!titleCardConfig?.isShowBackgroundColor}
                   onChange={(color) =>
                     handleColorPicker("backgroundColor", color.toHexString())
                   }
@@ -454,7 +470,7 @@ const TitleCard: React.FC = () => {
                   step={1}
                   changeOnWheel
                   style={{ width: 100 }}
-                  value={curTitleCardConfig?.borderRadius}
+                  value={titleCardConfig?.borderRadius}
                   onChange={handleInputNumberChange("borderRadius")}
                 />
               </div>
@@ -474,7 +490,7 @@ const TitleCard: React.FC = () => {
                     changeOnWheel
                     defaultValue={2}
                     style={{ width: 140 }}
-                    value={curTitleCardConfig?.chartCardPadding?.[index]}
+                    value={titleCardConfig?.chartCardPadding?.[index]}
                     onChange={handleInputNumberChange(index)}
                   />
                 ))}
@@ -484,12 +500,12 @@ const TitleCard: React.FC = () => {
           style: panelStyle,
         },
       ],
-      [curTitleCardConfig]
+      [titleCardConfig]
     );
   return (
     <div className={`${prefixCls}-container`}>
       <CoolCollapse
-        defaultActiveKey={["1", "2", "3"]}
+        // defaultActiveKey={["1", "2", "3"]}
         expandIcon={({ isActive }) => (
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
