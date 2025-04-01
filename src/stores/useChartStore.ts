@@ -8,7 +8,6 @@ import {
   IndicatorCardChartConfig,
   IndicatorTrendChartConfig,
 } from "@/types/charts";
-import { ChartConfig, IndicatorTrendConfig } from "@/utils/type";
 
 interface State {
   /** 当前选中的图表id-用于更新选中组件的配置 */
@@ -74,7 +73,7 @@ const useChartStore = create<State & Action>()(
     setCurChartConfig: (chartId: string) => {
       const { chartsConfig } = get();
       const index = chartsConfig.findIndex(
-        (chart: ChartConfig | IndicatorTrendConfig) => chart.chartId === chartId
+        (chart) => chart.chartId === chartId
       );
       if (index !== -1) {
         set((state) => {
@@ -104,12 +103,7 @@ const useChartStore = create<State & Action>()(
     getCurrentChartConfig: () => {
       const { curChartId, chartsConfig } = get();
       if (curChartId === null) return null;
-      return (
-        chartsConfig.find(
-          (chart: ChartConfig | IndicatorTrendConfig) =>
-            chart.chartId === curChartId
-        ) || null
-      );
+      return chartsConfig.find((chart) => chart.chartId === curChartId) || null;
     },
     /** 在添加图表的时候针对不同的图表类型预设对应的属性 */
     appendChartConfig: (config) => {
@@ -186,7 +180,7 @@ const useChartStore = create<State & Action>()(
     deleteChartConfig: (chartId: string) => {
       const { chartsConfig, curChartId } = get();
       const index = chartsConfig.findIndex(
-        (chart: ChartConfig | IndicatorTrendConfig) => chart.chartId === chartId
+        (chart) => chart.chartId === chartId
       );
       if (index !== -1) {
         // 如果删除的是当前选中的图表，则清空当前选中图表

@@ -38,6 +38,11 @@ export interface IndicatorContentConfig {
    * - small: 紧凑
    */
   indicatorValueLineSpace: "normal" | "small";
+  /** 是否启用字号设置
+   *  - true: 启用时支持自定义设置
+   *  - false: 禁用时恢复默认配置
+   */
+  enableFontSetting: boolean;
   /** 指标名称字体配置 */
   indicatorNameFontConfig: FontConfig;
   /** 指标数值字体配置 */
