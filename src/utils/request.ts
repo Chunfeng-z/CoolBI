@@ -3,7 +3,7 @@ import axios from "axios";
 
 /** axios 实例 */
 const service = axios.create({
-  // api base_url
+  // api base_url - VITE_API_BASE_URL
   baseURL: import.meta.env.VITE_API_BASE_URL,
   // 请求超时时间
   timeout: 20000,

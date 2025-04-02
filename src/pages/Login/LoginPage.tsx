@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const { useToken } = theme;
 import "./index.scss";
+import { loginByAccount } from "@/api/user";
 import logo from "@/assets/icons/logo-dark.svg";
 import StarrySky from "@/components/common/StarrySky";
 import { useThemeStore } from "@/stores/useThemeStore";
@@ -40,8 +41,12 @@ const LoginPage: React.FC = () => {
     setLoginMethod(key as LoginMethodType);
   };
 
-  const handleLogin = (values: LoginFieldType) => {
+  const handleLogin = async (values: LoginFieldType) => {
     message.success("登录成功");
+    await loginByAccount({
+      account: values.account!,
+      password: values.password!,
+    });
     navigate(`${base}/home`);
   };
 

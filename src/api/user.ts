@@ -1,0 +1,80 @@
+import { post } from "@/utils/request";
+
+/**
+ * 用户接口类型定义
+ */
+export interface LoginParams {
+  account: string;
+  password: string;
+}
+
+export interface MobileLoginParams {
+  mobile: string;
+  captcha: string;
+}
+
+export interface SendCaptchaParams {
+  mobile: string;
+}
+
+export interface ResetPasswordParams {
+  mobile: string;
+  captcha: string;
+  password: string;
+}
+
+/**
+ * 账号密码登录
+ * @param params 登录参数
+ */
+export function loginByAccount(params: LoginParams) {
+  return post("/api/user/login", params);
+}
+
+/**
+ * 手机号验证码登录
+ * @param params 登录参数
+ */
+export function loginByMobile(params: MobileLoginParams) {
+  return post("/api/user/login/mobile", params);
+}
+
+/**
+ * 发送手机验证码
+ * @param params 手机号参数
+ * @param type 验证码类型 login-登录 reset-重置密码
+ */
+export function sendCaptcha(
+  params: SendCaptchaParams,
+  type: "login" | "reset" = "login"
+) {
+  return post("/api/user/captcha", { ...params, type });
+}
+
+/**
+ * 重置密码
+ * @param params 重置密码参数
+ */
+export function resetPassword(params: ResetPasswordParams) {
+  return post("/api/user/reset-password", params);
+}
+
+/**
+ * 退出登录
+ */
+export function logout() {
+  return post("/api/user/logout");
+}
+
+/**
+ * 用户注册
+ * @param params 注册参数
+ */
+export function register(params: {
+  account: string;
+  password: string;
+  mobile: string;
+  captcha: string;
+}) {
+  return post("/api/user/register", params);
+}
