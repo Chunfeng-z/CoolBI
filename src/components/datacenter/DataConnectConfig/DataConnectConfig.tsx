@@ -142,11 +142,13 @@ const formatRowsData = (
 
 interface DataConnectConfigProps {
   /** 更新新建数据源步骤 */
-  updateStep: () => void;
+  updateStep?: () => void;
+  /** 是否显示文件上传标题 */
+  isShowUploadTitle?: boolean;
 }
 /** 文件上传和数据预览 */
 const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
-  const { updateStep } = props;
+  const { updateStep, isShowUploadTitle = true } = props;
   const { message } = App.useApp();
   const { token } = useToken();
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
@@ -355,7 +357,7 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
   const handleOk = () => {
     setIsModalOpen(false);
     message.success("文件上传成功");
-    updateStep();
+    updateStep?.();
   };
 
   const handleCancel = () => {
@@ -367,7 +369,7 @@ const DataConnectConfig: React.FC<DataConnectConfigProps> = (props) => {
       <Card
         title={
           <div className={`${prefixCls}-title`}>
-            <span>文件上传</span>
+            {isShowUploadTitle && <span>文件上传</span>}
             <div className={`${prefixCls}-steps`}>
               <Steps
                 size="small"

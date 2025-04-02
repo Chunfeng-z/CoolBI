@@ -14,6 +14,7 @@ import {
   Flex,
   Input,
   MenuProps,
+  Modal,
   Row,
   Select,
   Tabs,
@@ -29,6 +30,7 @@ import DataPreviewModal from "./DataPreviewModal";
 
 import CoolTree from "@/components/common/CoolTree";
 import EllipsisText from "@/components/common/EllipsisText";
+import DataConnectConfig from "@/components/datacenter/DataConnectConfig/DataConnectConfig";
 
 enum DSSwitchOptionEnum {
   "preview_data" = "预览数据",
@@ -88,6 +90,10 @@ const DataSourceConfig: React.FC = () => {
   const [isFieldSearchVisible, setIsFieldSearchVisible] =
     useState<boolean>(false);
 
+  /** 上传本地数据源Modal的显示状态 */
+  const [isUploadModalVisible, setIsUploadModalVisible] =
+    useState<boolean>(false);
+
   return (
     <>
       <div
@@ -141,10 +147,9 @@ const DataSourceConfig: React.FC = () => {
                 }
                 // 将下来菜单渲染到下拉框
                 getPopupContainer={(triggerNode) => triggerNode.parentElement!}
-                // option配置
-                options={options}
-                // TODO:暂时一直展示下拉菜单，便于调试
+                // TODO: 设置为true调试
                 // open={true}
+                options={options}
                 optionRender={(option) => <span>{option.label}</span>}
                 // 自定义渲染下拉菜单，可以自定义option的样式/自己注册事件
                 dropdownRender={(menu) => (
@@ -177,24 +182,25 @@ const DataSourceConfig: React.FC = () => {
                         size="small"
                         tabBarGutter={15}
                         style={{ width: "100%" }}
-                        defaultActiveKey="2"
+                        defaultActiveKey="1"
                         items={[
                           { key: "1", label: "已使用", children: menu },
                           { key: "2", label: "全部", children: "2" },
                         ]}
                       />
                     </Flex>
-                    <Flex justify="space-around" style={{ paddingTop: 5 }}>
-                      <Col span={11}>
-                        <Button size="small" type="primary" block>
-                          上传本地文件
-                        </Button>
-                      </Col>
-                      <Col span={11}>
-                        <Button size="small" type="default" block>
-                          取消
-                        </Button>
-                      </Col>
+                    <Flex
+                      justify="space-around"
+                      style={{ padding: "8px 5px 2px" }}
+                    >
+                      <Button
+                        size="small"
+                        type="primary"
+                        block
+                        onClick={() => setIsUploadModalVisible(true)}
+                      >
+                        上传本地文件
+                      </Button>
                     </Flex>
                   </div>
                 )}
@@ -283,6 +289,36 @@ const DataSourceConfig: React.FC = () => {
         handleCancel={handleCancel}
         handleOk={handleOk}
       />
+      <Modal
+        title="文件上传"
+        width={"90%"}
+        styles={{
+          body: {
+            overflowY: "scroll",
+          },
+          content: {
+            height: "780px",
+          },
+        }}
+        open={isUploadModalVisible}
+        onCancel={() => {
+          setIsUploadModalVisible(false);
+        }}
+        onOk={() => {
+          setIsUploadModalVisible(false);
+        }}
+        footer={null}
+        destroyOnClose={true}
+      >
+        <DataConnectConfig
+          isShowUploadTitle={false}
+          updateStep={() => {
+            setTimeout(() => {
+              setIsUploadModalVisible(false);
+            }, 2000);
+          }}
+        />
+      </Modal>
     </>
   );
 };
