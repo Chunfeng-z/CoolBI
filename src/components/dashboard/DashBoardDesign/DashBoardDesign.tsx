@@ -253,7 +253,14 @@ const DashBoardDesign: React.FC = () => {
         case ChartTypeEnum.pie:
           return <CoolPieChart />;
         case ChartTypeEnum.indicatorCard: {
-          return <CoolIndicatorCardChart />;
+          const { indicatorLayout, indicatorContentConfig } =
+            chartConfig as IndicatorCardChartConfig;
+          return (
+            <CoolIndicatorCardChart
+              indicatorLayout={indicatorLayout}
+              indicatorContentConfig={indicatorContentConfig}
+            />
+          );
         }
         case ChartTypeEnum.indicatorTrend: {
           // 指标趋势图的特殊配置

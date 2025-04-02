@@ -65,7 +65,7 @@ const RightComponentConfig: React.FC<RightComponentConfigProps> = ({
   /** 选中图表的类型 */
   const [curChartType, setCurChartType] = useState<ChartTypeEnum>();
   /** 当前选中的tab */
-  const [activeTabKey, setActiveTabKey] = useState<string>("2");
+  const [activeTabKey, setActiveTabKey] = useState<string>("1");
 
   useEffect(() => {
     const curChartConfigByFn = getCurrentChartConfig();
@@ -104,7 +104,7 @@ const RightComponentConfig: React.FC<RightComponentConfigProps> = ({
           ),
         icon: tab.icon,
       })),
-    [curChartId]
+    [curChartId, curChartType]
   );
 
   /** 组件配置的展开收起状态 */

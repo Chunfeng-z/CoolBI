@@ -198,7 +198,7 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
           {remark}
         </p>
       )}
-      <div className={`${prefixCls}-chart`}>{children}</div>
+      <div className="dashboard-chart-card-chart">{children}</div>
       {isShowEndNote && (
         <p
           className="chart-card-endnote-container"

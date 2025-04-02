@@ -82,8 +82,6 @@ const DataSourceConfig: React.FC = () => {
   /** 数据源选项 */
   const [options, setOptions] = useState<{ value: string; label: string }[]>([
     { value: "jack", label: "Jacksssssssssss" },
-    { value: "lucy", label: "Lucy" },
-    { value: "Yiminghe", label: "yiminghe" },
   ]);
 
   /** 数据源检索输入框展示状态 */
