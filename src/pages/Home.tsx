@@ -272,7 +272,6 @@ const Home: React.FC = () => {
             mode="horizontal"
             selectedKeys={[selectedMenuKey]}
             onSelect={handleMenuSelect}
-            defaultSelectedKeys={["workbench"]}
             items={headerMenuItems.map((item) => ({
               ...item,
               style: {
