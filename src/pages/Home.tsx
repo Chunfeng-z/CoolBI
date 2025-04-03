@@ -37,6 +37,7 @@ import "./index.scss";
 
 import logo from "@/assets/icons/logo-dark.svg";
 import { useThemeStore } from "@/stores/useThemeStore";
+import useUserInfoStore from "@/stores/useUserInfoStore";
 
 const prefixCls = "home-page";
 const base = import.meta.env.VITE_BASE;
@@ -118,20 +119,24 @@ const Home: React.FC = () => {
   const [countdown, setCountdown] = useState(0);
   const [form] = Form.useForm();
 
-  // 模拟用户信息 - 实际项目中应该从API获取
+  // zustand中维持的用户信息
+  const username = useUserInfoStore((state) => state.username);
+  const avatar = useUserInfoStore((state) => state.avatar);
+  const account = useUserInfoStore((state) => state.account);
+  const phone = useUserInfoStore((state) => state.phone);
+
+  // 模拟用户信息 - 使用全局状态初始化，只有在修改保存后才更新全局状态（避免其他模块使用用户信息的模块收到影响）
   const [userInfo, setUserInfo] = useState<{
     username: string;
     account: string;
     phone: string;
     avatar: string;
   }>({
-    username: "张三",
-    account: "zhangsan@example.com",
-    phone: "138****1234",
-    avatar:
-      "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
+    username,
+    account,
+    phone,
+    avatar,
   });
-
   // 编辑状态
   const [isEditing, setIsEditing] = useState(false);
   const [editField, setEditField] = useState<"username" | "phone" | null>(null);
@@ -336,12 +341,8 @@ const Home: React.FC = () => {
                     cursor: "pointer",
                   }}
                 >
-                  <Avatar
-                    size={28}
-                    icon={<UserOutlined />}
-                    src="https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg"
-                  />
-                  <span>User</span>
+                  <Avatar size={28} icon={<UserOutlined />} src={avatar} />
+                  <span>{username}</span>
                 </div>
               </Dropdown>
             </Space>

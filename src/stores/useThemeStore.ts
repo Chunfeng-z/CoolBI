@@ -44,7 +44,7 @@ export const useThemeStore = create<ThemeState & ThemeAction>()(
     }),
     {
       // 命名空间
-      name: "cool_bi:theme",
+      name: "cool_bi_theme",
     }
   )
 );

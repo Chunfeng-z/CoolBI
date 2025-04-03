@@ -44,12 +44,24 @@ export type LoginData = {
 /** 用户数据 */
 export type UserData = {
   success: boolean;
-  id: string;
+} & UserInfoState;
+
+export interface UserInfoState {
+  /** 用户id */
+  userId: string;
+  /** 用户名 */
   username: string;
-  name: string;
+  /** 账号 */
+  account: string;
+  /** 头像 */
+  avatar: string;
+  /** 手机号 */
+  phone: string;
+  /** 邮箱 */
   email: string;
+  /** 角色 */
   role: string;
-};
+}
 
 /** 登录响应 */
 export type LoginResponseType = ApiResponse<LoginData>;

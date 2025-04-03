@@ -67,10 +67,13 @@ export const loginHandlers = [
         message: "获取用户信息成功",
         data: {
           success: true,
-          id: "1",
-          username: "admin",
-          name: "管理员",
-          email: "111",
+          userId: "1",
+          username: "zz",
+          account: "admin1",
+          avatar:
+            "https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg",
+          phone: "11111111111",
+          email: "111@email.com",
           role: "admin",
         },
       };

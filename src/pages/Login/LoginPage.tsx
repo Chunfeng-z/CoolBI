@@ -9,6 +9,7 @@ import { getUserInfo, userLogin } from "@/api/user";
 import logo from "@/assets/icons/logo-dark.svg";
 import StarrySky from "@/components/common/StarrySky";
 import { useThemeStore } from "@/stores/useThemeStore";
+import useUserInfoStore from "@/stores/useUserInfoStore";
 import {
   AccountLogin,
   LoginMethodType,
@@ -27,6 +28,7 @@ const LoginPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { message } = App.useApp();
+  const setUserInfo = useUserInfoStore((state) => state.setUserInfo);
   // 颜色主题控制，亮色下采用自定义的颜色
   const { token } = useToken();
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
@@ -101,7 +103,16 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    console.log("获取用户信息", infoResp.data);
+    // 保存用户信息到状态管理
+    setUserInfo({
+      userId: infoResp.data.userId,
+      username: infoResp.data.username,
+      account: infoResp.data.account,
+      avatar: infoResp.data.avatar,
+      phone: infoResp.data.phone,
+      email: infoResp.data.email,
+      role: infoResp.data.role,
+    });
 
     message.success("登录成功");
     navigate(`${base}/home`);
