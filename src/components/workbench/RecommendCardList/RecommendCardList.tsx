@@ -44,7 +44,7 @@ const RecommendCardList: React.FC = () => {
     /** 获取推荐列表的数据 */
     const getRecommendData = async () => {
       const respData = await getRecommendDashboardList();
-      const list = respData.data;
+      const list: RecommendCardProps[] = respData.data;
       setAllRecommendData(list);
       setRecommendData(list);
     };

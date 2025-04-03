@@ -1,9 +1,9 @@
 import { CopyOutlined, DesktopOutlined, StarOutlined } from "@ant-design/icons";
 import { Button, Space, Table, TableProps, Tooltip } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { dashboardTableEditData } from "../test";
-
+import { getUserDashboardTableData } from "@/api/workbench";
+import { dashboardTableEditData } from "@/test/workbenchTestData";
 import {
   DashBoardTableDataType,
   DashBoardTableDataKeys,
@@ -90,9 +90,24 @@ const columns: TableProps<DashBoardTableDataType>["columns"] = [
 /** 仪表板的展示表格-最近编辑-我创建的-我收藏的 */
 const DashboardTable: React.FC = () => {
   // 分页大小控制
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState<number>(10);
   // 总共的数据量
   const [totalPage, setTotalPage] = useState(dashboardTableEditData.length);
+  // 图表数据
+  const [tableData, setTableData] = useState<DashBoardTableDataType[]>();
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getUserDashboardTableData({
+        userId: "1",
+        pageNum: 1,
+        pageSize: pageSize,
+      });
+      const respData: DashBoardTableDataType[] = data.data;
+      setTableData(respData);
+    };
+    getData();
+  }, []);
   return (
     <div className={`${prefixCls}-container`}>
       <Table<DashBoardTableDataType>
@@ -109,7 +124,7 @@ const DashboardTable: React.FC = () => {
             setPageSize(pageSize || 10);
           },
         }}
-        dataSource={dashboardTableEditData}
+        dataSource={tableData}
       />
     </div>
   );

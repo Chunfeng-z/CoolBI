@@ -79,3 +79,13 @@ type ApiResponse<T> = {
 
 /** 推荐仪表板列表数据类型 */
 export type RecommendDashBoardListDataType = ApiResponse<RecommendCardProps[]>;
+
+/** 获取工作台表格传递的参数 */
+export type GetDashBoardTableParams = {
+  userId: string;
+  pageSize: number;
+  pageNum: number;
+};
+
+/** 工作台表格数据类型 */
+export type DashBoardTableDataRespType = ApiResponse<DashBoardTableDataType[]>;
