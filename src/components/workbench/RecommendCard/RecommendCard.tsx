@@ -3,7 +3,7 @@ import EllipsisText from "@comp/common/EllipsisText";
 import { Button, Card, Flex, Typography } from "antd";
 import React from "react";
 
-import { RecommendCardProps } from "@/types/workbench/types";
+import { RecommendCardProps } from "@/types/workbench";
 
 const { Paragraph } = Typography;
 // 组件的类型前缀

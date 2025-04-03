@@ -1,11 +1,11 @@
 import { Button, Flex, Space } from "antd";
 import { debounce } from "lodash-es";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import RecommendCard from "../RecommendCard";
-import { recommendCardListData as TempData } from "../test";
 
-import { RecommendCardProps } from "@/types/workbench/types";
+import { getRecommendDashboardList } from "@/api/workbench";
+import { RecommendCardProps } from "@/types/workbench";
 
 const prefixCls = "recommend-card-list";
 // 每个卡片的宽度+gap
@@ -17,32 +17,50 @@ const RecommendCardList: React.FC = () => {
   const [displayRecommendCardList, setDisplayRecommendCardList] =
     useState(true);
   // 卡片列表展示的数据
-  const [recommendData, setRecommendData] =
-    useState<RecommendCardProps[]>(TempData);
+  const [recommendData, setRecommendData] = useState<RecommendCardProps[]>();
+  /** 获取的全部推荐数据 */
+  const [allRecommendData, setAllRecommendData] =
+    useState<RecommendCardProps[]>();
 
   const updateCardCount = () => {
+    // 移除debugger语句
+    if (!allRecommendData || allRecommendData.length === 0) {
+      return;
+    }
     const containerWidth =
       document.querySelector(`.${prefixCls}-content`)?.clientWidth || 0;
     const count = Math.min(
       Math.floor((containerWidth + 8) / cardWidth),
-      TempData.length
+      allRecommendData.length || 0
     );
-    setRecommendData(TempData.slice(0, count));
+    setRecommendData(allRecommendData.slice(0, count));
   };
 
-  /** 推荐数据更新函数防抖 */
-  const debouncedUpdateCardCount = debounce(updateCardCount, 300);
-
-  useLayoutEffect(() => {
-    updateCardCount();
+  // 初始化推荐数据
+  useEffect(() => {
+    /** 推荐数据更新函数防抖 */
+    const debouncedUpdateCardCount = debounce(updateCardCount, 300);
     window.addEventListener("resize", debouncedUpdateCardCount);
+    /** 获取推荐列表的数据 */
+    const getRecommendData = async () => {
+      const respData = await getRecommendDashboardList();
+      const list = respData.data;
+      setAllRecommendData(list);
+      setRecommendData(list);
+    };
+
+    getRecommendData();
     return () => {
-      window.removeEventListener("resize", updateCardCount);
+      window.removeEventListener("resize", debouncedUpdateCardCount);
       // 清除防抖函数
       debouncedUpdateCardCount.cancel();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 在获取到推荐数据后，更新卡片数量
+  useEffect(() => {
+    updateCardCount();
+  }, [allRecommendData]);
 
   const handleRecommendDataDisplay = () => {
     setDisplayRecommendCardList(!displayRecommendCardList);
@@ -71,7 +89,7 @@ const RecommendCardList: React.FC = () => {
         }}
       >
         <Space>
-          {recommendData.map((item: RecommendCardProps, index) => {
+          {recommendData?.map((item: RecommendCardProps, index) => {
             const {
               id = index,
               imageUrl,

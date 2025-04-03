@@ -69,3 +69,13 @@ export enum DashBoardTableActions {
   CopyLink = "copyLink",
   Collect = "collect",
 }
+
+/** 通用API响应类型 */
+type ApiResponse<T> = {
+  code: number;
+  message: string;
+  data: T;
+};
+
+/** 推荐仪表板列表数据类型 */
+export type RecommendDashBoardListDataType = ApiResponse<RecommendCardProps[]>;

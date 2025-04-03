@@ -11,7 +11,7 @@ import RecommendCardList from "@comp/workbench/RecommendCardList/RecommendCardLi
 import { Button, Divider, Popover, Space } from "antd";
 import React, { useCallback } from "react";
 
-import { SegmentedItems } from "@/types/workbench/types";
+import { SegmentedItems } from "@/types/workbench";
 import "./index.scss";
 const base = import.meta.env.VITE_BASE;
 const prefixCls = "workbench-page";

@@ -51,13 +51,6 @@ export function resetPassword(params: ResetPasswordParams) {
 }
 
 /**
- * 退出登录
- */
-export function logout() {
-  return post("/api/user/logout");
-}
-
-/**
  * 用户注册
  * @param params 注册参数
  */

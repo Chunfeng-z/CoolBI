@@ -11,7 +11,7 @@ import {
 } from "antd";
 import React, { useState } from "react";
 
-import { DropdownItems, SegmentedItems } from "@/types/workbench/types";
+import { DropdownItems, SegmentedItems } from "@/types/workbench";
 
 const prefixCls = "quick-action-bar";
 

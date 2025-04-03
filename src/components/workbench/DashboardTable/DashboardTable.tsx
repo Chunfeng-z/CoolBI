@@ -8,7 +8,7 @@ import {
   DashBoardTableDataType,
   DashBoardTableDataKeys,
   DashBoardTableActions,
-} from "@/types/workbench/types";
+} from "@/types/workbench";
 
 const prefixCls = "dashboard-table";
 
