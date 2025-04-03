@@ -1,5 +1,6 @@
 import {
   DeleteOutlined,
+  FullscreenOutlined,
   HolderOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
@@ -63,6 +64,8 @@ interface ChartCardProps {
   onClick?: () => void;
   /** 点击图表菜单的删除选项 */
   onDelete?: () => void;
+  /** 组件全屏展示选项 */
+  onFullScreen?: () => void;
 }
 /** 仪表板设计-图表卡片 */
 const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
@@ -88,6 +91,7 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
     style,
     onClick,
     onDelete,
+    onFullScreen,
   } = props;
   const items: MenuProps["items"] = useMemo(
     () => [
@@ -102,6 +106,20 @@ const ChartCard: React.FC<ChartCardProps> = React.memo((props) => {
         onClick: () => {
           if (onDelete) {
             onDelete();
+          }
+        },
+      },
+      {
+        key: "2",
+        label: (
+          <Flex style={{ width: 70 }} align="center" justify="space-between">
+            <span>全屏</span>
+            <FullscreenOutlined />
+          </Flex>
+        ),
+        onClick: () => {
+          if (onFullScreen) {
+            onFullScreen();
           }
         },
       },

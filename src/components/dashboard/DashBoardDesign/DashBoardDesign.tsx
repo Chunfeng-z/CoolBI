@@ -1,3 +1,4 @@
+import { Modal } from "antd";
 import classNames from "classnames";
 import { throttle } from "lodash-es";
 import React, {
@@ -34,6 +35,7 @@ import {
 } from "@/types/charts";
 import { resizeGrid } from "@/utils/hooks";
 import { generateUUID } from "@/utils/uuid";
+
 import "./index.scss";
 
 const prefixCls = "dashboard-design";
@@ -215,6 +217,9 @@ const DashBoardDesign: React.FC = () => {
     ); // 额外添加100px作为底部空间
   }, [dashBoardLayout, rowHeight, cardRowSpace]);
 
+  /** 选中全屏展示的图表组件-图表的id */
+  const [fullscreenChart, setFullscreenChart] = useState<string>();
+
   /** 渲染指定的图表
    * @param chartType 图表类型
    * @param chartConfig 图表配置
@@ -320,108 +325,154 @@ const DashBoardDesign: React.FC = () => {
   );
 
   return (
-    <div className={`${prefixCls}-container`} ref={ref}>
-      <div className="root-container-main-header-and-content">
-        <div className="root-container-main-header"></div>
-        <div className="root-container-main-content" ref={contentRef}>
-          <div
-            className={classNames("cool-bi-layout-indicator", {
-              "is-show": isShowPageRaster,
-            })}
-            style={{
-              gap: `${rasterGap}px`,
-              gridTemplateColumns: `repeat(${rasterNum}, 1fr)`,
-            }}
-          >
-            {Array.from({ length: rasterNum }).map((_, index) => (
-              <div key={index} className="indicator-item" />
-            ))}
+    <>
+      <div className={`${prefixCls}-container`} ref={ref}>
+        <div className="root-container-main-header-and-content">
+          <div className="root-container-main-header"></div>
+          <div className="root-container-main-content" ref={contentRef}>
+            <div
+              className={classNames("cool-bi-layout-indicator", {
+                "is-show": isShowPageRaster,
+              })}
+              style={{
+                gap: `${rasterGap}px`,
+                gridTemplateColumns: `repeat(${rasterNum}, 1fr)`,
+              }}
+            >
+              {Array.from({ length: rasterNum }).map((_, index) => (
+                <div key={index} className="indicator-item" />
+              ))}
+            </div>
+
+            <ReactGridLayout
+              className="layout"
+              style={{
+                height: layoutHeight,
+              }}
+              layout={dashBoardLayout}
+              cols={rasterNum}
+              rowHeight={rowHeight}
+              useCSSTransforms={true}
+              // 使用动态宽度
+              width={containerWidth}
+              isDraggable={true}
+              isResizable={true}
+              // 为真时，容器的高度会自适应内容的高度
+              autoSize={false}
+              resizeHandles={["w", "se"]}
+              // 设置元素之间的间距
+              margin={[rasterGap, cardRowSpace]}
+              // 设置容器内边距
+              containerPadding={[0, 0]}
+              // 布局变化时触发
+              onLayoutChange={(layout) => {
+                console.log("布局变化：", layout);
+                setDashBoardLayout(layout);
+              }}
+            >
+              {chartsConfig.map((config, index) => {
+                // 给ChartCard添加的是通用的配置
+                const { chartId, type, titleCardConfig } = config;
+                const {
+                  isShowTitle,
+                  title,
+                  titleFontConfig,
+                  titleAlign,
+                  isShowRemark,
+                  remark,
+                  remarkPosition,
+                  isShowEndNote,
+                  endNote,
+                  isShowBackgroundColor,
+                  backgroundColor,
+                  borderRadius,
+                  chartCardPadding,
+                } = titleCardConfig;
+
+                return (
+                  <div key={chartId}>
+                    <ChartCard
+                      key={chartId}
+                      isShowCardTitle={isShowTitle}
+                      cardTitle={title}
+                      titleFontSize={titleFontConfig.fontSize}
+                      titleColor={titleFontConfig.color}
+                      isTitleBold={titleFontConfig.isBold}
+                      isTitleItalic={titleFontConfig.isItalic}
+                      titleAlign={titleAlign}
+                      isShowRemark={isShowRemark}
+                      remark={remark}
+                      remarkPosition={remarkPosition}
+                      isShowEndNote={isShowEndNote}
+                      endNote={endNote}
+                      borderRadius={borderRadius}
+                      backgroundColor={backgroundColor}
+                      isShowBackgroundColor={isShowBackgroundColor}
+                      chartCardPadding={chartCardPadding}
+                      isSelected={chartId === curChartId}
+                      onClick={() => handleChartCardClick(chartId)}
+                      style={{
+                        width: dashboardChartsSize[index]?.width,
+                        height: dashboardChartsSize[index]?.height,
+                      }}
+                      onDelete={() => {
+                        deleteChartConfig(chartId);
+                      }}
+                      onFullScreen={() => {
+                        setFullscreenChart(chartId);
+                      }}
+                    >
+                      {renderChart(type, config)}
+                    </ChartCard>
+                  </div>
+                );
+              })}
+            </ReactGridLayout>
           </div>
-
-          <ReactGridLayout
-            className="layout"
-            style={{
-              height: layoutHeight,
-            }}
-            layout={dashBoardLayout}
-            cols={rasterNum}
-            rowHeight={rowHeight}
-            useCSSTransforms={true}
-            // 使用动态宽度
-            width={containerWidth}
-            isDraggable={true}
-            isResizable={true}
-            // 为真时，容器的高度会自适应内容的高度
-            autoSize={false}
-            resizeHandles={["w", "se"]}
-            // 设置元素之间的间距
-            margin={[rasterGap, cardRowSpace]}
-            // 设置容器内边距
-            containerPadding={[0, 0]}
-            // 布局变化时触发
-            onLayoutChange={(layout) => {
-              console.log("布局变化：", layout);
-              setDashBoardLayout(layout);
-            }}
-          >
-            {chartsConfig.map((config, index) => {
-              // 给ChartCard添加的是通用的配置
-              const { chartId, type, titleCardConfig } = config;
-              const {
-                isShowTitle,
-                title,
-                titleFontConfig,
-                titleAlign,
-                isShowRemark,
-                remark,
-                remarkPosition,
-                isShowEndNote,
-                endNote,
-                isShowBackgroundColor,
-                backgroundColor,
-                borderRadius,
-                chartCardPadding,
-              } = titleCardConfig;
-
-              return (
-                <div key={chartId}>
-                  <ChartCard
-                    key={chartId}
-                    isShowCardTitle={isShowTitle}
-                    cardTitle={title}
-                    titleFontSize={titleFontConfig.fontSize}
-                    titleColor={titleFontConfig.color}
-                    isTitleBold={titleFontConfig.isBold}
-                    isTitleItalic={titleFontConfig.isItalic}
-                    titleAlign={titleAlign}
-                    isShowRemark={isShowRemark}
-                    remark={remark}
-                    remarkPosition={remarkPosition}
-                    isShowEndNote={isShowEndNote}
-                    endNote={endNote}
-                    borderRadius={borderRadius}
-                    backgroundColor={backgroundColor}
-                    isShowBackgroundColor={isShowBackgroundColor}
-                    chartCardPadding={chartCardPadding}
-                    isSelected={chartId === curChartId}
-                    onClick={() => handleChartCardClick(chartId)}
-                    style={{
-                      width: dashboardChartsSize[index]?.width,
-                      height: dashboardChartsSize[index]?.height,
-                    }}
-                    onDelete={() => {
-                      deleteChartConfig(chartId);
-                    }}
-                  >
-                    {renderChart(type, config)}
-                  </ChartCard>
-                </div>
-              );
-            })}
-          </ReactGridLayout>
         </div>
       </div>
-    </div>
+      <Modal
+        title={
+          chartsConfig.find((config) => config.chartId === fullscreenChart)
+            ?.titleCardConfig.title || "图表全屏展示"
+        }
+        open={!!fullscreenChart}
+        width={"100vw"}
+        onCancel={() => {
+          setFullscreenChart(undefined);
+        }}
+        className="fullscreen-modal"
+        styles={{
+          header: {
+            height: 35,
+            borderBottom: "1px solid #e8e8e8",
+          },
+          content: {
+            height: "100vh",
+          },
+          body: {
+            height: "calc(100vh - 95px)",
+            overflowY: "scroll",
+          },
+        }}
+        destroyOnClose={true}
+        footer={null}
+      >
+        {fullscreenChart && (
+          <div style={{ width: "100%", height: "100%" }}>
+            {(() => {
+              const config = chartsConfig.find(
+                (config) => config.chartId === fullscreenChart
+              );
+              if (config) {
+                return renderChart(config.type, config);
+              }
+              return null;
+            })()}
+          </div>
+        )}
+      </Modal>
+    </>
   );
 };
 
