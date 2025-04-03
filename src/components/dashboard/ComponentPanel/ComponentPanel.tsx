@@ -4,7 +4,9 @@ import {
   LineChartOutlined,
   TableOutlined,
   InfoCircleOutlined,
+  CloseSquareTwoTone,
 } from "@ant-design/icons";
+import { useKeyPress } from "ahooks";
 import {
   Button,
   Tooltip,
@@ -20,6 +22,7 @@ import React, { useMemo, useState } from "react";
 import LeftChartMenu from "../LeftChartMenu";
 import { pageRasterOptions as options } from "../utils";
 
+import useChartStore from "@/stores/useChartStore";
 import { useCompPanelStore } from "@/stores/useCompPanel";
 import useRasterStore from "@/stores/useRasterStore";
 import { useThemeStore } from "@/stores/useThemeStore";
@@ -65,6 +68,11 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
   const setRasterGap = useRasterStore((state) => state.setRasterGap);
   const cardRowSpace = useRasterStore((state) => state.cardRowSpace);
   const setCardRowSpace = useRasterStore((state) => state.setCardRowSpace);
+  /** 更新当前选中的图表id */
+  const setCurChartId = useChartStore((state) => state.setCurChartId);
+  useKeyPress("esc", () => {
+    setCurChartId(null);
+  });
 
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   /** 图表菜单的显示状态 */
@@ -216,6 +224,24 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
               {chartMenuStatus === "expand" && <LeftChartMenu />}
             </div>
             <div className={`${prefixCls}-right`}>
+              <Tooltip
+                placement="left"
+                title={
+                  <>
+                    <div>关闭组件配置面板</div>
+                    <div>快捷键：esc</div>
+                  </>
+                }
+              >
+                <Button
+                  type="text"
+                  icon={<CloseSquareTwoTone style={{ fontWeight: 500 }} />}
+                  size="small"
+                  onClick={() => {
+                    setCurChartId(null);
+                  }}
+                />
+              </Tooltip>
               <Tooltip title="布局缩放">
                 <Dropdown
                   menu={{ items, onClick: handleMenuClick }}

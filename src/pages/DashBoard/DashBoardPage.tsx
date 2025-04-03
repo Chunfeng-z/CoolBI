@@ -24,8 +24,6 @@ const DashBoardPage: React.FC = () => {
   const { token } = useToken();
   /** 在当前存在选中图表卡片的时候展示图表配置菜单 */
   const curChartId = useChartStore((state) => state.curChartId);
-  /** 更新当前选中的图表id */
-  const setCurChartId = useChartStore((state) => state.setCurChartId);
   const isShowChartConfig = !isEmpty(curChartId);
   const chartMenuStatus = useCompPanelStore((state) => state.chartMenuStatus);
 
@@ -72,10 +70,7 @@ const DashBoardPage: React.FC = () => {
             )}{" "}
           </ErrorBoundary>
         </div>
-        <div
-          className={`${prefixCls}-chart-content`}
-          onClick={() => setCurChartId(null)}
-        >
+        <div className={`${prefixCls}-chart-content`}>
           <ErrorBoundary>
             <DashBoardDesign />
           </ErrorBoundary>
