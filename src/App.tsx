@@ -42,7 +42,7 @@ export default function App() {
             <Routes>
               <Route
                 path={`${base}/`}
-                element={<Navigate to={`${base}/home`}></Navigate>}
+                element={<Navigate to={`${base}/login`}></Navigate>}
               />
               <Route path={`${base}/home`} element={<Home />}>
                 {/* 默认加载工作台 */}

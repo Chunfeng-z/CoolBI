@@ -1,12 +1,5 @@
-import { post } from "@/utils/request";
-
-/**
- * 用户接口类型定义
- */
-export interface LoginParams {
-  account: string;
-  password: string;
-}
+import { AccountLogin, GetUserInfoParams, MobileLogin } from "@/types/login";
+import { get, post } from "@/utils/request";
 
 export interface MobileLoginParams {
   mobile: string;
@@ -24,19 +17,17 @@ export interface ResetPasswordParams {
 }
 
 /**
- * 账号密码登录
- * @param params 登录参数
+ * 用户登陆
  */
-export function loginByAccount(params: LoginParams) {
+export function userLogin(params: AccountLogin | MobileLogin) {
   return post("/api/user/login", params);
 }
 
 /**
- * 手机号验证码登录
- * @param params 登录参数
+ * 获取用户信息和权限
  */
-export function loginByMobile(params: MobileLoginParams) {
-  return post("/api/user/login/mobile", params);
+export function getUserInfo(params: GetUserInfoParams) {
+  return get("/api/user/info", params);
 }
 
 /**

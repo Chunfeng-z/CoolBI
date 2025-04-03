@@ -31,25 +31,24 @@ service.interceptors.request.use(
 /* 全局响应拦截器 */
 service.interceptors.response.use(
   (response) => {
-    const res = response.data;
     // 这里可以根据后端的数据结构定制
-    // 假设后端返回的数据结构为 { code: number, data: any, message: string }
-    if (res.code === 200) {
-      return res.data;
+    if (response.data.code === 200) {
+      return response;
     }
     // 未登录或登录过期
-    if (res.code === 401) {
+    if (response.data.code === 401) {
       // token 过期或未登录
       localStorage.removeItem(TokenName);
       // 显示提示信息
-      message.warning("请先登录");
+      message.warning("身份已过期，请重新登录");
       // 可以在这里添加重定向到登录页的逻辑
-      window.location.href = "/login";
+      setTimeout(() => {
+        window.location.href = "/CoolBI/login";
+      }, 2000);
       return Promise.reject(new Error("未登录或登录过期"));
     }
-
     // 其他错误情况
-    return Promise.reject(new Error(res.message || "请求失败"));
+    return Promise.reject(new Error(response.data.message || "请求失败"));
   },
   (error) => {
     console.log("响应错误：", error);
@@ -63,6 +62,9 @@ export const get = (url: string, params = {}) => {
     url,
     method: "get",
     params,
+  }).then((res) => {
+    // 处理响应数据
+    return res.data;
   });
 };
 
@@ -88,6 +90,9 @@ export const post = (url: string, data = {}) => {
     url,
     method: "post",
     data,
+  }).then((res) => {
+    // 处理响应数据
+    return res.data;
   });
 };
 
@@ -97,6 +102,9 @@ export const put = (url: string, data = {}) => {
     url,
     method: "put",
     data,
+  }).then((res) => {
+    // 处理响应数据
+    return res.data;
   });
 };
 
@@ -106,6 +114,9 @@ export const del = (url: string, data = {}) => {
     url,
     method: "delete",
     data,
+  }).then((res) => {
+    // 处理响应数据
+    return res.data;
   });
 };
 

@@ -5,22 +5,26 @@ import { useNavigate } from "react-router-dom";
 
 const { useToken } = theme;
 import "./index.scss";
-import { loginByAccount } from "@/api/user";
+import { getUserInfo, userLogin } from "@/api/user";
 import logo from "@/assets/icons/logo-dark.svg";
 import StarrySky from "@/components/common/StarrySky";
 import { useThemeStore } from "@/stores/useThemeStore";
+import {
+  AccountLogin,
+  LoginMethodType,
+  LoginResponseType,
+  MobileLogin,
+  UserInfoType,
+} from "@/types/login";
 const base = import.meta.env.VITE_BASE;
 const prefixCls = "login-page";
 
-type LoginMethodType = "account" | "mobile";
-
-type LoginFieldType = {
-  account: string;
-  password: string;
-};
-
 const LoginPage: React.FC = () => {
-  const [form] = Form.useForm();
+  // 为不同登录方式创建独立的表单实例
+  const [accountForm] = Form.useForm();
+  const [mobileForm] = Form.useForm();
+  const [forgotPasswordForm] = Form.useForm();
+
   const navigate = useNavigate();
   const { message } = App.useApp();
   // 颜色主题控制，亮色下采用自定义的颜色
@@ -39,14 +43,67 @@ const LoginPage: React.FC = () => {
   /** 登陆方式切换 */
   const handleLoginMethodChange = (key: string) => {
     setLoginMethod(key as LoginMethodType);
+    // 切换登录方式时清除表单数据
+    if (key === "account") {
+      accountForm.resetFields();
+    } else if (key === "mobile") {
+      mobileForm.resetFields();
+    }
   };
 
-  const handleLogin = async (values: LoginFieldType) => {
-    message.success("登录成功");
-    await loginByAccount({
-      account: values.account!,
-      password: values.password!,
+  const handleLogin = async (
+    values:
+      | Pick<AccountLogin, "account" | "password">
+      | Pick<MobileLogin, "mobile" | "captcha">
+  ) => {
+    let loginData: AccountLogin | MobileLogin;
+    if (loginMethod === "account") {
+      const accountValues = values as Pick<
+        AccountLogin,
+        "account" | "password"
+      >;
+      loginData = {
+        type: "account",
+        account: accountValues.account,
+        password: accountValues.password,
+      };
+    } else if (loginMethod === "mobile") {
+      const mobileValues = values as Pick<MobileLogin, "mobile" | "captcha">;
+      loginData = {
+        type: "mobile",
+        mobile: mobileValues.mobile,
+        captcha: mobileValues.captcha,
+      };
+    } else {
+      message.error("当前的登陆方式暂不支持");
+      return;
+    }
+
+    const loginResp: LoginResponseType = await userLogin(loginData);
+
+    if (!loginResp.data.success || !loginResp.data.userId) {
+      const errorMsg =
+        loginMethod === "account" ? "账号或密码错误" : "手机号或验证码错误";
+      message.error(errorMsg);
+      return;
+    }
+
+    // 登录成功后保存 token
+    localStorage.setItem("cool_bi_token", loginResp.data.token || "");
+
+    // 登录成功后处理
+    const infoResp: UserInfoType = await getUserInfo({
+      userId: loginResp.data.userId,
     });
+
+    if (!infoResp.data.success) {
+      message.error("获取用户信息失败,请重试");
+      return;
+    }
+
+    console.log("获取用户信息", infoResp.data);
+
+    message.success("登录成功");
     navigate(`${base}/home`);
   };
 
@@ -63,7 +120,7 @@ const LoginPage: React.FC = () => {
 
   /** 发送请求获取手机登录验证码 */
   const handleSendCode = () => {
-    form
+    mobileForm
       .validateFields(["mobile"])
       .then(() => {
         setCountdown(60);
@@ -84,7 +141,7 @@ const LoginPage: React.FC = () => {
 
   /** 发送请求获取忘记密码验证码 */
   const handleSendForgotPasswordCode = () => {
-    form
+    forgotPasswordForm
       .validateFields(["mobile"])
       .then(() => {
         setForgotPasswordCountdown(60);
@@ -136,7 +193,7 @@ const LoginPage: React.FC = () => {
                 <div className="forgot-password-form">
                   <div className="forgot-password-form-title">找回密码</div>
                   <Form
-                    form={form}
+                    form={forgotPasswordForm}
                     size="large"
                     variant="filled"
                     onFinish={handleForgotPassword}
@@ -272,7 +329,7 @@ const LoginPage: React.FC = () => {
                         label: "密码登录",
                         children: (
                           <Form
-                            form={form}
+                            form={accountForm}
                             variant="filled"
                             size="large"
                             onFinish={handleLogin}
@@ -335,7 +392,7 @@ const LoginPage: React.FC = () => {
                         label: "手机号登录",
                         children: (
                           <Form
-                            form={form}
+                            form={mobileForm}
                             variant="filled"
                             size="large"
                             onFinish={handleLogin}
