@@ -36,6 +36,7 @@ const DashBoardPage: React.FC = () => {
   /** 初始进入仪表板界面获取数据 */
   useEffect(() => {
     const getData = async () => {
+      // 获取当前仪表板的图表配置数据
       const respData = await getDashboardData({
         dashboardId: "dashboard1",
       });

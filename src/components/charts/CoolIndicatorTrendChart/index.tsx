@@ -3,8 +3,7 @@ import { Space } from "antd";
 import React, { useEffect, useState } from "react";
 
 import "./index.scss";
-import { exampleData } from "./exampleData";
-
+import { exampleData } from "@/mocks/test-charts-data/trend-chart";
 import { addExtremeValueFlags, calculateSum } from "@/utils/hooks";
 const prefixCls = "cool-indicator-trend-chart";
 interface ICoolIndicatorTrendChartProps {

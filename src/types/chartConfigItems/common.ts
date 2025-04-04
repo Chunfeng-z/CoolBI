@@ -93,3 +93,29 @@ export interface DataSeriesConfig {
   /** 指标/字段数据后缀 */
   indicatorSuffix: string;
 }
+
+/** 数据源的数据字段的类型 */
+export interface DataSourceField {
+  /** 字段id */
+  id: string;
+  /** 字段名称 */
+  name: string;
+  /** 字段类型 */
+  type: "Measure" | "Dimension";
+  /** 数据的column */
+  column: string;
+  /** 字段的数据类型 */
+  dataType: "string" | "number" | "datetime";
+  /** 数据聚合方式 - 比如利润可以计算总和和平均 */
+  aggregation?: "sum" | "avg" | "count" | "max" | "min";
+}
+
+/** 数据图表使用的数据源的信息-已使用的部分 */
+export interface DataSourceConfig {
+  /** 当前使用的数据源表单的id */
+  dataFromId: string;
+  /** 当前使用到的数据源的维度字段 */
+  dimensionFields: DataSourceField[];
+  /** 当前使用到的数据源的指标字段 */
+  measureFields: DataSourceField[];
+}

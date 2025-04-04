@@ -1,6 +1,7 @@
 import {
   ChartLayout,
   DataSeriesConfig,
+  DataSourceConfig,
   TitleCardConfig,
 } from "../chartConfigItems/common";
 import {
@@ -26,4 +27,6 @@ export interface IndicatorTrendChartConfig {
   seriesConfig: DataSeriesConfig[];
   /** 图表在仪表板中的布局位置 */
   layout: ChartLayout;
+  /** 图表使用的数据源配置 */
+  dataSourceConfig: DataSourceConfig;
 }

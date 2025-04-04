@@ -1,3 +1,4 @@
+import { DataSourceField } from "../chartConfigItems/common";
 import { IndicatorCardChartConfig, IndicatorTrendChartConfig } from "../charts";
 
 /** 通用API响应类型 */
@@ -7,34 +8,20 @@ type ApiResponse<T> = {
   data: T;
 };
 
-/** 响应仪表板数据 */
+/** 仪表板数据 */
 export type DashboardDataResponse = ApiResponse<
   (IndicatorTrendChartConfig | IndicatorCardChartConfig)[]
 >;
 
-/** 数据源的数据字段的类型 */
-export interface DataSourceField {
-  /** 字段id */
-  id: string;
-  /** 字段名称 */
-  name: string;
-  /** 字段类型 */
-  type: "Measure" | "Dimension";
-  /** 数据的column */
-  column: string;
-  /** 字段的数据类型 */
-  dataType: "string" | "number" | "date";
-}
-
-/** 数据图表使用的数据源的信息-已使用的部分 */
-export interface DataSourceConfig {
-  /** 当前使用的数据源表单的id */
-  dataFromId: string;
-  /** 当前使用到的数据源的维度字段 */
-  dimensionFields: DataSourceField[];
-  /** 当前使用到的数据源的指标字段 */
-  measureFields: DataSourceField[];
-}
+/** 图表数据的响应 */
+export type ChartDataResponse = ApiResponse<{
+  columns: DataSourceField[];
+  /** 数据的值
+   * - v: 数据的值
+   * - r: 数据的原始值
+   */
+  values: { v: string | number; r?: string | number }[][];
+}>;
 
 /** 单个数据源的全部信息 */
 export interface DataSourceInfo {

@@ -86,6 +86,27 @@ export const testData: (
       w: 3,
       h: 3,
     },
+    dataSourceConfig: {
+      dataFromId: "dataSource1",
+      dimensionFields: [
+        {
+          id: "field1",
+          name: "字段1",
+          type: "Dimension",
+          column: "COL_1",
+          dataType: "string",
+        },
+      ],
+      measureFields: [
+        {
+          id: "field2",
+          name: "字段2",
+          type: "Measure",
+          column: "COL_2",
+          dataType: "number",
+        },
+      ],
+    },
   },
   {
     chartId: "indicatorTrend",
@@ -160,5 +181,26 @@ export const testData: (
         indicatorSuffix: "元",
       },
     ],
+    dataSourceConfig: {
+      dataFromId: "dataSource2",
+      dimensionFields: [
+        {
+          id: "field3",
+          name: "订单日期",
+          type: "Dimension",
+          column: "COL_3",
+          dataType: "datetime",
+        },
+      ],
+      measureFields: [
+        {
+          id: "field4",
+          name: "销售额",
+          type: "Measure",
+          column: "COL_4",
+          dataType: "number",
+        },
+      ],
+    },
   },
 ];
