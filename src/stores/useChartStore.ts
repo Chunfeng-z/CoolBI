@@ -3,7 +3,6 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 import { ChartTypeEnum } from "@/components/dashboard/utils";
-import { testData } from "@/test/chartStoreTestData";
 import {
   IndicatorCardChartConfig,
   IndicatorTrendChartConfig,
@@ -24,6 +23,10 @@ interface State {
 }
 
 interface Action {
+  /** 初始化图表的配置信息 */
+  initChartsConfig: (
+    chartsConfig: (IndicatorCardChartConfig | IndicatorTrendChartConfig)[]
+  ) => void;
   /** 设置当前选中的图表id - 设置为null清空图表选中*/
   setCurChartId: (chartId: string | null) => void;
   /** 更新当前选中图表组件的配置信息 */
@@ -60,9 +63,14 @@ const useChartStore = create<State & Action>()(
   immer((set, get) => ({
     curChartId: null,
     curChartConfig: null,
-    chartsConfig: testData,
+    chartsConfig: [],
     redoStack: [],
     history: [],
+    initChartsConfig: (chartsConfig) => {
+      set((state) => {
+        state.chartsConfig = chartsConfig;
+      });
+    },
     setCurChartId: (chartId: string | null) => {
       const { setCurChartConfig } = get();
       set((state) => {

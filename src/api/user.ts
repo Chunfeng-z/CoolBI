@@ -1,11 +1,6 @@
 import { AccountLogin, GetUserInfoParams, MobileLogin } from "@/types/login";
 import { get, post } from "@/utils/request";
 
-export interface MobileLoginParams {
-  mobile: string;
-  captcha: string;
-}
-
 export interface SendCaptchaParams {
   mobile: string;
 }

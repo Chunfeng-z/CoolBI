@@ -6,7 +6,7 @@ import RightComponentConfig from "@comp/dashboard/RightComponentConfig";
 import RightTheme from "@comp/dashboard/RightTheme";
 import { theme } from "antd";
 import { isEmpty } from "lodash-es";
-import React from "react";
+import React, { useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -14,8 +14,13 @@ const { useToken } = theme;
 import "./index.scss";
 import useChartStore from "../../stores/useChartStore";
 
+import { getDashboardData } from "@/api/dashboard";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import { useCompPanelStore } from "@/stores/useCompPanel";
+import {
+  IndicatorCardChartConfig,
+  IndicatorTrendChartConfig,
+} from "@/types/charts";
 
 const prefixCls = "dashboard-page";
 
@@ -26,6 +31,22 @@ const DashBoardPage: React.FC = () => {
   const curChartId = useChartStore((state) => state.curChartId);
   const isShowChartConfig = !isEmpty(curChartId);
   const chartMenuStatus = useCompPanelStore((state) => state.chartMenuStatus);
+  /** 初始化仪表板的所有图表配置信息 */
+  const initChartsConfig = useChartStore((state) => state.initChartsConfig);
+  /** 初始进入仪表板界面获取数据 */
+  useEffect(() => {
+    const getData = async () => {
+      const respData = await getDashboardData({
+        dashboardId: "dashboard1",
+      });
+      const chartsConfigList: (
+        | IndicatorCardChartConfig
+        | IndicatorTrendChartConfig
+      )[] = respData.data;
+      initChartsConfig(chartsConfigList);
+    };
+    getData();
+  }, []);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -67,7 +88,7 @@ const DashBoardPage: React.FC = () => {
                   backgroundColor: token.colorBgContainer,
                 }}
               />
-            )}{" "}
+            )}
           </ErrorBoundary>
         </div>
         <div className={`${prefixCls}-chart-content`}>

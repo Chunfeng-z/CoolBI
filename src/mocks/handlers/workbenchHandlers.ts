@@ -4,7 +4,7 @@ import queryString from "query-string";
 import {
   recommendCardListData,
   dashboardTableEditData,
-} from "@/test/workbenchTestData";
+} from "@/mocks/test/workbenchTestData";
 import {
   DashBoardTableDataRespType,
   GetDashBoardTableParams,

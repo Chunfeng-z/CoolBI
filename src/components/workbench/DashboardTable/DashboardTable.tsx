@@ -3,7 +3,6 @@ import { Button, Space, Table, TableProps, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { getUserDashboardTableData } from "@/api/workbench";
-import { dashboardTableEditData } from "@/test/workbenchTestData";
 import {
   DashBoardTableDataType,
   DashBoardTableDataKeys,
@@ -92,7 +91,7 @@ const DashboardTable: React.FC = () => {
   // 分页大小控制
   const [pageSize, setPageSize] = useState<number>(10);
   // 总共的数据量
-  const [totalPage, setTotalPage] = useState(dashboardTableEditData.length);
+  const [totalPage, setTotalPage] = useState<number>();
   // 图表数据
   const [tableData, setTableData] = useState<DashBoardTableDataType[]>();
 
@@ -105,6 +104,7 @@ const DashboardTable: React.FC = () => {
       });
       const respData: DashBoardTableDataType[] = data.data;
       setTableData(respData);
+      setTotalPage(respData.length);
     };
     getData();
   }, []);
