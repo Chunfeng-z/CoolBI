@@ -13,6 +13,8 @@ export type DashboardDataResponse = ApiResponse<
   (IndicatorTrendChartConfig | IndicatorCardChartConfig)[]
 >;
 
+export type DataSourceValues = { v: string | number; r?: string | number }[][];
+
 /** 图表数据的响应 */
 export type ChartDataResponse = ApiResponse<{
   columns: DataSourceField[];
@@ -20,7 +22,7 @@ export type ChartDataResponse = ApiResponse<{
    * - v: 数据的值
    * - r: 数据的原始值
    */
-  values: { v: string | number; r?: string | number }[][];
+  values: DataSourceValues;
 }>;
 
 /** 单个数据源的全部信息 */

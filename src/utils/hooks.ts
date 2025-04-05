@@ -1,10 +1,13 @@
 import dayjs from "dayjs";
-import { maxBy, minBy } from "lodash-es";
+import { map, maxBy, minBy, zipObject } from "lodash-es";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 
 import { FieldType } from "./type";
+
+import { DataSourceField } from "@/types/chartConfigItems/common";
+import { DataSourceValues } from "@/types/dashboard";
 const base = import.meta.env.VITE_BASE;
 /** 出现异常返回主页，返回/,自动定位到主页 */
 export const useNavigateToHome = (baseUrl: string = base) => {
@@ -264,6 +267,7 @@ export const resizeGrid = (
  * @param yField 需要计算的字段，可以是字符串或字符串数组
  * @returns 带有极值标记的数据数组
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const addExtremeValueFlags = <T extends Record<string, any>>(
   data: T[],
   yField: string | string[]
@@ -290,6 +294,7 @@ export const addExtremeValueFlags = <T extends Record<string, any>>(
  * @param field 需要计算总和的字段，可以是字符串或字符串数组
  * @returns 指定字段的总和
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const calculateSum = <T extends Record<string, any>>(
   data: T[],
   field: string | string[]
@@ -311,4 +316,16 @@ export const generateDefaultChartName = (name: string): string => {
   const timestamp = dayjs().format("YYYY_MM_DD_HH_mm_ss_SSS");
   // 拼接name和时间戳
   return `${name}_${timestamp}`;
+};
+
+/** 图表数据格式转化，转换为visactor可以直接使用的格式 */
+export const convertDataToVisactorFormat = (
+  columns: DataSourceField[],
+  values: DataSourceValues
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Record<string, any>[] => {
+  if (!columns || !values) return [];
+  const columnNames = columns.map((column) => column.column);
+  // zipObject([ 'time', 'value' ], [ '2:00', 8 ]) => { time: '2:00', value: 8 }
+  return map(values, (row) => zipObject(columnNames, map(row, "v")));
 };

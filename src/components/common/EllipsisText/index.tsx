@@ -4,7 +4,7 @@ const { Text } = Typography;
 
 interface IEllipsisTextProps {
   /** 展示的内容 */
-  text: string | number;
+  text?: string | number;
   /** 内容宽度 */
   width?: number | string;
   /** 左边距 */

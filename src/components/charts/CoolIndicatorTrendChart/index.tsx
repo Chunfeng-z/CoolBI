@@ -1,10 +1,22 @@
+import { CloseCircleOutlined } from "@ant-design/icons";
 import { VChart } from "@visactor/react-vchart";
-import { Space } from "antd";
+import { useRequest } from "ahooks";
+import { Flex, Space, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 
 import "./index.scss";
-import { exampleData } from "@/mocks/test-charts-data/trend-chart";
-import { addExtremeValueFlags, calculateSum } from "@/utils/hooks";
+import { queryChartData } from "@/api/dashboard";
+import {
+  DataSourceConfig,
+  DataSourceField,
+} from "@/types/chartConfigItems/common";
+import { DataSourceValues } from "@/types/dashboard";
+import {
+  addExtremeValueFlags,
+  calculateSum,
+  convertDataToVisactorFormat,
+} from "@/utils/hooks";
+
 const prefixCls = "cool-indicator-trend-chart";
 interface ICoolIndicatorTrendChartProps {
   /** 图表背景色配置 */
@@ -52,13 +64,6 @@ interface ICoolIndicatorTrendChartProps {
       isItalic?: boolean;
     };
   };
-  /** 指标图的x坐标轴 */
-  xField?: string | string[];
-  /** 指标图的y坐标轴 */
-  yField?: string | string[];
-  /** 指标趋势图数据 */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: any[];
   /** 是否显示数据标签 */
   showDataLabels?: boolean;
   /** 数据标签配置 */
@@ -78,6 +83,8 @@ interface ICoolIndicatorTrendChartProps {
   indicatorPrefix?: string;
   /** 指标后缀 */
   indicatorSuffix?: string;
+  /** 图表使用的数据源的配置 */
+  dataSourceConfig: DataSourceConfig;
 }
 /** 指标趋势图 */
 const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
@@ -107,9 +114,6 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
         isItalic: false,
       },
     },
-    xField = "time",
-    yField = "value",
-    data = exampleData,
     showDataLabels = true,
     dataLabelConfig = {
       fill: "#333",
@@ -120,21 +124,95 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
     showExtremeValue = false,
     indicatorPrefix = "",
     indicatorSuffix = "",
+    dataSourceConfig,
   } = props;
 
   /** 当前数据的总和 */
   const [curDataSum, setCurDataSum] = useState<number>(0);
+  /** x轴字段 - 使用Dimension类型的字段 */
+  const [xField, setXField] = useState<string>("");
+  /** y轴字段 - 使用Measure类型的字段 */
+  const [yField, setYField] = useState<string>("");
+  /** 处理后的图表数据 */
+  const [processedData, setProcessedData] = useState<any[]>([]);
+
+  // 使用useRequest获取图表数据
+  const { data, error, loading } = useRequest(
+    () => queryChartData(dataSourceConfig),
+    {
+      ready: !!dataSourceConfig,
+      loadingDelay: 300,
+      refreshDeps: [dataSourceConfig],
+    }
+  );
 
   useEffect(() => {
-    // 计算当前数据的总和
-    const sum = calculateSum(data, yField);
-    setCurDataSum(sum);
-  }, [data, yField]);
+    if (data && data.data) {
+      const respData: {
+        columns: DataSourceField[];
+        values: DataSourceValues;
+      } = data.data;
 
-  // 添加极值标记
-  const processedData = showExtremeValue
-    ? addExtremeValueFlags(data, yField)
-    : data;
+      // 找出Dimension类型的字段作为X轴
+      const dimensionField = respData.columns.find(
+        (col) => col.type === "Dimension"
+      );
+      // 找出Measure类型的字段作为Y轴
+      const measureField = respData.columns.find(
+        (col) => col.type === "Measure"
+      );
+
+      if (dimensionField && measureField) {
+        setYField(measureField.column);
+        setXField(dimensionField.column);
+
+        const chartData = convertDataToVisactorFormat(
+          respData.columns,
+          respData.values
+        );
+
+        // 计算总和，只在数据加载后计算一次
+        setCurDataSum(calculateSum(chartData, measureField.column));
+
+        // 添加极值标记
+        const dataWithFlags = showExtremeValue
+          ? addExtremeValueFlags(chartData, measureField.column)
+          : chartData;
+
+        setProcessedData(dataWithFlags);
+      }
+    }
+  }, [data, showExtremeValue]);
+
+  if (error) {
+    return (
+      <Flex
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+        vertical
+        justify="center"
+        align="center"
+      >
+        <CloseCircleOutlined />
+        <div className="text">获取数据失败</div>
+      </Flex>
+    );
+  }
+  if (loading) {
+    return (
+      <Spin
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      />
+    );
+  }
 
   const spec = {
     type: trendChartType,

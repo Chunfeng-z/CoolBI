@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import queryString from "query-string";
 
 import { indicatorCardData } from "../test-charts-data/indicator-card-chart";
@@ -29,6 +29,7 @@ export const dashboardHandlers = [
   http.post(baseUrl + "api/dashboard/queryChartData", async ({ request }) => {
     const data = (await request.json()) as DataSourceConfig;
     if (data.dataFromId === "dataSource2") {
+      await delay(2000);
       const respData: ChartDataResponse = {
         code: 200,
         message: "获取图表数据成功",
@@ -38,14 +39,14 @@ export const dashboardHandlers = [
               id: "field3",
               name: "订单日期",
               type: "Dimension",
-              column: "COL_3",
+              column: "time",
               dataType: "datetime",
             },
             {
               id: "field4",
               name: "销售额",
               type: "Measure",
-              column: "COL_4",
+              column: "value",
               dataType: "number",
             },
           ],
@@ -60,7 +61,7 @@ export const dashboardHandlers = [
         data: {
           columns: [
             {
-              id: "field2",
+              id: "field4",
               name: "销售额",
               type: "Measure",
               column: "COL_2",

@@ -1,11 +1,24 @@
-import React from "react";
+import { CloseCircleOutlined } from "@ant-design/icons";
+import { useRequest } from "ahooks";
+import { Flex, Spin } from "antd";
+import { debounce } from "lodash-es";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 
-import "./index.scss";
-import EllipsisText from "@/components/common/EllipsisText";
+import IndicatorItem from "./IndicatorItem";
+
+import { queryChartData } from "@/api/dashboard";
 import {
+  DataSourceConfig,
+  DataSourceField,
+} from "@/types/chartConfigItems/common";
+import {
+  IndicatorCardDataSeriesConfig,
   IndicatorContentConfig,
   IndicatorLayout,
 } from "@/types/chartConfigItems/indicatorCardItems";
+import "./index.scss";
+import { DataSourceValues } from "@/types/dashboard";
+
 const prefixCls = "cool-indicator-card-chart";
 
 interface ICoolIndicatorCardChartProps {
@@ -13,6 +26,10 @@ interface ICoolIndicatorCardChartProps {
   indicatorLayout: IndicatorLayout;
   /** 指标内容配置 */
   indicatorContentConfig: IndicatorContentConfig;
+  /** 图表使用的数据源的配置 */
+  dataSourceConfig: DataSourceConfig;
+  /** 数据系列配置-支持多度量下的前后缀配置 */
+  seriesConfig: IndicatorCardDataSeriesConfig[];
 }
 
 const defaultIndicatorLayout: IndicatorLayout = {
@@ -56,102 +73,229 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
 ) => {
   const {
     indicatorLayout = defaultIndicatorLayout,
-    indicatorContentConfig = defaultIndicatorContentConfig,
+    dataSourceConfig,
+    seriesConfig,
   } = props;
-  const {
-    indicatorRelation,
-    indicatorBlockGroupType,
-    maxGroupCount,
-    indicatorBlockSeparator,
-    indicatorBlockSeparatorColor,
-  } = indicatorLayout;
+  const { indicatorRelation } = indicatorLayout;
+  /** 格式化后的图表数据 */
+  const [formattedData, setFormattedData] = useState<
+    (DataSourceField & { value: string | number })[]
+  >([]);
+
+  /** 用于引用容器元素 */
+  const containerRef = useRef<HTMLDivElement>(null);
+  /** 容器的大小 */
+  const [containerSize, setContainerSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
+  // 获取图表数据
+  const { data, error, loading } = useRequest(
+    () => queryChartData(dataSourceConfig),
+    {
+      ready: !!dataSourceConfig,
+      loadingDelay: 300,
+    }
+  );
+
+  /** 单个指标的时候指标item的样式 */
+  const indicatorItemStyle = useMemo(() => {
+    return {
+      height: "100%",
+    };
+  }, []);
+
+  /** 多指标并排列的时候样式 */
+  const indicatorItemStyle2: React.CSSProperties[] = useMemo(() => {
+    if (
+      formattedData.length > 1 &&
+      indicatorRelation === "same-level" &&
+      containerSize.width &&
+      containerSize.height
+    ) {
+      const minItemWidth = 120;
+      const minItemHeight = 80;
+      // 指标的个数
+      const indicatorCount = formattedData.length;
+      const canShowInOneLine =
+        containerSize.width / indicatorCount >= minItemWidth;
+      // 分隔线的宽度
+      const dividerWidth = 2;
+      // 1.可以在一行显示
+      if (canShowInOneLine) {
+        const itemWidth =
+          (containerSize.width - (indicatorCount - 1) * dividerWidth) /
+          indicatorCount;
+        return formattedData.map((_item, index) => {
+          return {
+            width: `${itemWidth}px`,
+            height: "100%",
+            position: "absolute",
+            left: `${itemWidth * index}px`,
+            borderRight:
+              index === indicatorCount - 1
+                ? "none"
+                : `${dividerWidth}px solid #E0E0E0`,
+          };
+        });
+      }
+      // 2.不能在一行显示的情况下
+      let count = 0;
+      for (let i = indicatorCount; i > 0; i--) {
+        if (containerSize.width / i >= minItemWidth) {
+          count = i;
+          break;
+        }
+      }
+      // 当前宽度比最小宽度还小
+      if (count === 0) {
+        count = 1;
+      }
+      // 计算每个指标的宽度
+      const itemWidth =
+        (containerSize.width - (count - 1) * dividerWidth) / count;
+      // 显示的行数
+      const rowCount = Math.ceil(formattedData.length / count);
+      let itemHeight = containerSize.height / rowCount;
+      if (itemHeight < minItemHeight) {
+        itemHeight = minItemHeight;
+      }
+
+      // 计算每个指标的布局样式
+      // 1.在一行都可以显示的情况下
+      const itemStyles = [];
+      for (let i = 0; i < rowCount; i++) {
+        for (let j = 0; j < count; j++) {
+          const left = j * itemWidth;
+          const top = i * itemHeight;
+          itemStyles.push({
+            width: `${itemWidth}px`,
+            height: `${itemHeight}px`,
+            position: "absolute",
+            left: `${left}px`,
+            top: `${top}px`,
+            borderRight:
+              j === count - 1 ? "none" : `${dividerWidth}px solid #E0E0E0`,
+            borderBottom:
+              i === rowCount - 1 ? "none" : `${dividerWidth}px solid #E0E0E0`,
+          });
+        }
+      }
+      return itemStyles;
+    }
+  }, [containerSize, formattedData, indicatorRelation]);
+
+  useEffect(() => {
+    if (!containerRef.current) {
+      return;
+    }
+    // 获取容器的宽高
+    const updateContainerSize = () => {
+      if (containerRef.current) {
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        setContainerSize({
+          width,
+          height,
+        });
+      }
+    };
+
+    // 初始测量
+    updateContainerSize();
+    const debounceUpdateContainerSize = debounce(updateContainerSize, 200);
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === containerRef.current) {
+          debounceUpdateContainerSize();
+        }
+      }
+    });
+    resizeObserver.observe(containerRef.current);
+    // 清理函数
+    return () => {
+      resizeObserver.disconnect();
+      debounceUpdateContainerSize.cancel();
+    };
+  }, [containerRef]);
+
+  useEffect(() => {
+    if (data && data.data) {
+      const respData: {
+        columns: DataSourceField[];
+        values: DataSourceValues;
+      } = data.data;
+      setFormattedData(
+        respData.columns.map((col, index) => {
+          return {
+            ...col,
+            value: respData.values[0][index].v,
+          };
+        })
+      );
+    }
+  }, [data, dataSourceConfig]);
+
+  if (error) {
+    return (
+      <Flex
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+        vertical
+        justify="center"
+        align="center"
+      >
+        <CloseCircleOutlined />
+        <div className="text">获取数据失败</div>
+      </Flex>
+    );
+  }
+  if (loading) {
+    return (
+      <Spin
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      />
+    );
+  }
+
   return (
     <div className={prefixCls}>
-      <div className="indicator-container">
-        <div
-          className="indicator-item"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div className="indicator-main">
-            <div className="indicator-name">
-              <div className="indicator-icon-wrapper"></div>
-              <EllipsisText
-                text="xxxxxxxxxxxxxx"
-                width={100}
-                className="indicator-name-text"
+      <div className="indicator-container" ref={containerRef}>
+        {/* 1. 看板只存在一个数据指标的时候居中展示，此时与指标间主副关系设置无关 */}
+        {formattedData.length === 1 && (
+          <IndicatorItem
+            indicatorName={formattedData[0].name}
+            indicatorValue={formattedData[0].value}
+            indicatorValuePrefix={seriesConfig[0].indicatorPrefix}
+            indicatorValueSuffix={seriesConfig[0].indicatorSuffix}
+            style={indicatorItemStyle}
+          />
+        )}
+        {/* 2.存在多个指标同时并列显示的时候 */}
+        {formattedData.length > 1 &&
+          indicatorRelation === "same-level" &&
+          indicatorItemStyle2 &&
+          formattedData.map((item, index) => {
+            const itemStyle = indicatorItemStyle2[index];
+            return (
+              <IndicatorItem
+                key={item.id}
+                indicatorName={item.name}
+                indicatorValue={item.value}
+                indicatorValuePrefix={seriesConfig[index].indicatorPrefix}
+                indicatorValueSuffix={seriesConfig[index].indicatorSuffix}
+                style={itemStyle}
               />
-            </div>
-            <div className="indicator-value">
-              <EllipsisText
-                text="这是指标值的前缀"
-                className="indicator-value-prefix"
-                style={{
-                  maxWidth: 50,
-                }}
-              />
-              <EllipsisText
-                text="121"
-                className="value"
-                style={{
-                  maxWidth: 100,
-                  fontSize: 24,
-                }}
-              />
-              <EllipsisText
-                text="这是指标值的后缀"
-                className="indicator-value-suffix"
-                style={{
-                  maxWidth: 50,
-                }}
-              />
-            </div>
-            <div className="sub-indicator-row">
-              <div className="sub-indicator-name-wrapper">
-                <div className="sub-indicator-name">
-                  <EllipsisText
-                    text="环比的值是xxx"
-                    className="sub-indicator-name-text"
-                    style={{
-                      fontSize: 12,
-                    }}
-                  />
-                </div>
-                <div className="sub-indicator-name">
-                  <EllipsisText
-                    text="环比"
-                    className="sub-indicator-name-text"
-                    style={{
-                      fontSize: 12,
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="sub-indicator-value-wrapper">
-                <div className="sub-indicator-value">
-                  <EllipsisText
-                    text="21322222"
-                    className="sub-indicator-value-text"
-                    style={{
-                      fontSize: 12,
-                    }}
-                  />
-                </div>
-                <div className="sub-indicator-value">
-                  <EllipsisText
-                    text="3.134321"
-                    className="sub-indicator-value-text"
-                    style={{
-                      fontSize: 12,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+            );
+          })}
       </div>
     </div>
   );

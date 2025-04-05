@@ -44,6 +44,7 @@ const DashBoardPage: React.FC = () => {
         | IndicatorCardChartConfig
         | IndicatorTrendChartConfig
       )[] = respData.data;
+
       initChartsConfig(chartsConfigList);
     };
     getData();

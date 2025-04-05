@@ -236,6 +236,8 @@ const DashBoardDesign: React.FC = () => {
         backgroundColor: chartConfig.titleCardConfig.isShowBackgroundColor
           ? chartConfig.titleCardConfig.backgroundColor
           : "#fff",
+        /** 图表使用的数据源的配置 */
+        dataSourceConfig: chartConfig.dataSourceConfig,
         // 其他通用配置...
       };
 
@@ -258,12 +260,14 @@ const DashBoardDesign: React.FC = () => {
         case ChartTypeEnum.pie:
           return <CoolPieChart />;
         case ChartTypeEnum.indicatorCard: {
-          const { indicatorLayout, indicatorContentConfig } =
+          const { indicatorLayout, indicatorContentConfig, seriesConfig } =
             chartConfig as IndicatorCardChartConfig;
           return (
             <CoolIndicatorCardChart
+              {...commonProps}
               indicatorLayout={indicatorLayout}
               indicatorContentConfig={indicatorContentConfig}
+              seriesConfig={seriesConfig}
             />
           );
         }
@@ -392,7 +396,7 @@ const DashBoardDesign: React.FC = () => {
                 return (
                   <div key={chartId}>
                     <ChartCard
-                      key={chartId}
+                      // key={chartId}
                       isShowCardTitle={isShowTitle}
                       cardTitle={title}
                       titleFontSize={titleFontConfig.fontSize}
