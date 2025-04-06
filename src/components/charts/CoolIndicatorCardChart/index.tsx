@@ -8,11 +8,11 @@ import IndicatorItem from "./IndicatorItem";
 
 import { queryChartData } from "@/api/dashboard";
 import {
+  DataSeriesConfig,
   DataSourceConfig,
   DataSourceField,
 } from "@/types/chartConfigItems/common";
 import {
-  IndicatorCardDataSeriesConfig,
   IndicatorContentConfig,
   IndicatorLayout,
 } from "@/types/chartConfigItems/indicatorCardItems";
@@ -29,35 +29,8 @@ interface ICoolIndicatorCardChartProps {
   /** 图表使用的数据源的配置 */
   dataSourceConfig: DataSourceConfig;
   /** 数据系列配置-支持多度量下的前后缀配置 */
-  seriesConfig: IndicatorCardDataSeriesConfig[];
+  seriesConfig: DataSeriesConfig[];
 }
-
-const defaultIndicatorContentConfig: IndicatorContentConfig = {
-  indicatorContentPosition: "center",
-  indicatorValueLineSpace: "normal",
-  enableFontSetting: true,
-  indicatorNameFontConfig: {
-    color: "#000000",
-    fontSize: 14,
-    isBold: false,
-    isItalic: false,
-  },
-  indicatorValueFontConfig: {
-    color: "#000000",
-    fontSize: 22,
-    isBold: false,
-    isItalic: false,
-  },
-  isShowIndicatorDecoration: true,
-  indicatorDecorationConfig: [
-    {
-      id: "icon",
-      name: "icon-zhihang",
-      color: "#000000",
-      icon: "xxx",
-    },
-  ],
-};
 
 /** 指标看板图 */
 const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
@@ -96,7 +69,7 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
   });
 
   // 获取图表数据
-  const { data, error, loading } = useRequest(
+  const { error, loading } = useRequest(
     () => queryChartData(dataSourceConfig),
     {
       ready: !!dataSourceConfig,

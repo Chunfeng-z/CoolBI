@@ -79,15 +79,15 @@ export interface DataSeriesConfig {
    * - solid: 实线
    * - dashed: 虚线
    */
-  lineStyle: "solid" | "dashed";
+  lineStyle?: "solid" | "dashed";
   /** 系列的线条宽度 */
-  lineWidth: number;
+  lineWidth?: number;
   /** 是否显示数据标签 */
-  showDataLabels: boolean;
+  showDataLabels?: boolean;
   /** 数据标签的配置 */
-  dataLabelConfig: FontConfig;
+  dataLabelConfig?: FontConfig;
   /** 是否显示极值 */
-  showExtremeValue: boolean;
+  showExtremeValue?: boolean;
   /** 指标/字段数据前缀 */
   indicatorPrefix: string;
   /** 指标/字段数据后缀 */

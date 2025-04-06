@@ -1,10 +1,10 @@
 import {
   ChartLayout,
+  DataSeriesConfig,
   DataSourceConfig,
   TitleCardConfig,
 } from "../chartConfigItems/common";
 import {
-  IndicatorCardDataSeriesConfig,
   IndicatorContentConfig,
   IndicatorLayout,
 } from "../chartConfigItems/indicatorCardItems";
@@ -23,8 +23,8 @@ export interface IndicatorCardChartConfig {
   indicatorLayout: IndicatorLayout;
   /** 指标内容配置 */
   indicatorContentConfig: IndicatorContentConfig;
-  /** 系列配置-只有存在数据的时候才可以配置 */
-  seriesConfig: IndicatorCardDataSeriesConfig[];
+  /** 系列配置-只使用id、name、indicatorPrefix、indicatorSuffix */
+  seriesConfig: DataSeriesConfig[];
   /** 图表在仪表板中的布局位置 */
   layout: ChartLayout;
   /** 图表使用的数据源配置 */

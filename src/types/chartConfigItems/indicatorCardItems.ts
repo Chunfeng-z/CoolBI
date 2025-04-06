@@ -2,11 +2,7 @@
  * @description: 指标卡片的特殊配置项
  */
 
-import {
-  DataSeriesConfig,
-  FontConfig,
-  IndicatorDecorationImgConfig,
-} from "./common";
+import { FontConfig, IndicatorDecorationImgConfig } from "./common";
 
 /** 指标布局 */
 export interface IndicatorLayout {
@@ -59,9 +55,3 @@ export interface IndicatorContentConfig {
   /** 指标修饰图配置 */
   indicatorDecorationConfig: IndicatorDecorationImgConfig[];
 }
-
-/** 指标看板的数据系列类型 */
-export type IndicatorCardDataSeriesConfig = Pick<
-  DataSeriesConfig,
-  "id" | "name" | "indicatorPrefix" | "indicatorSuffix"
->;
