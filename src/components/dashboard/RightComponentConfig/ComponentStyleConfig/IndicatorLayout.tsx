@@ -87,6 +87,8 @@ const IndicatorLayout: React.FC = () => {
           style={{
             display: "flex",
           }}
+          // 主副展示的时候不支持平铺的样式切换
+          disabled={config.indicatorRelation === "sub-level"}
           value={config.indicatorBlockGroupType}
           onChange={(e) =>
             updateConfig({ indicatorBlockGroupType: e.target.value })
@@ -110,6 +112,11 @@ const IndicatorLayout: React.FC = () => {
           min={1}
           max={10}
           value={config.maxGroupCount}
+          // TODO: 目前系统左右滑动也支持调整个数
+          disabled={
+            config.indicatorRelation === "sub-level" ||
+            config.indicatorBlockGroupType === "swipe"
+          }
           onChange={(value) => updateConfig({ maxGroupCount: value as number })}
           style={{ width: 100 }}
           addonAfter="个"

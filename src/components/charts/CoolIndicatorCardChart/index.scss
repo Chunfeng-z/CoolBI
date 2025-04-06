@@ -10,8 +10,8 @@
 
     .indicator-item {
       display: flex;
-      justify-content: center;
       align-items: center;
+      padding: 5px;
 
       .indicator-main {
         display: flex;
@@ -40,6 +40,23 @@
         max-width: 45px;
         flex-direction: column;
         gap: 5px;
+      }
+    }
+
+    .indicator-carousel-container {
+      // 修改antd 轮播默认样式
+      .indicator-carousel {
+        .indicator-item {
+          display: flex !important;
+        }
+
+        .slick-arrow.slick-next {
+          color: rgb(135 183 235);
+        }
+
+        .slick-arrow.slick-prev {
+          color: rgb(135 183 235);
+        }
       }
     }
   }

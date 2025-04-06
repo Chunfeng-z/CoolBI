@@ -1,6 +1,6 @@
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import { Flex, Spin } from "antd";
+import { Carousel, Flex, Spin } from "antd";
 import { debounce } from "lodash-es";
 import React, { useEffect, useMemo, useState, useRef } from "react";
 
@@ -31,14 +31,6 @@ interface ICoolIndicatorCardChartProps {
   /** 数据系列配置-支持多度量下的前后缀配置 */
   seriesConfig: IndicatorCardDataSeriesConfig[];
 }
-
-const defaultIndicatorLayout: IndicatorLayout = {
-  indicatorRelation: "same-level",
-  indicatorBlockGroupType: "swipe",
-  maxGroupCount: 2,
-  indicatorBlockSeparator: "line",
-  indicatorBlockSeparatorColor: "#000000",
-};
 
 const defaultIndicatorContentConfig: IndicatorContentConfig = {
   indicatorContentPosition: "center",
@@ -72,11 +64,24 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
   props
 ) => {
   const {
-    indicatorLayout = defaultIndicatorLayout,
+    indicatorLayout,
+    indicatorContentConfig,
     dataSourceConfig,
     seriesConfig,
   } = props;
-  const { indicatorRelation } = indicatorLayout;
+  const {
+    indicatorRelation,
+    indicatorBlockGroupType,
+    maxGroupCount,
+    indicatorBlockSeparator,
+    indicatorBlockSeparatorColor,
+  } = indicatorLayout;
+  const {
+    indicatorContentPosition,
+    indicatorValueLineSpace,
+    indicatorNameFontConfig,
+    indicatorValueFontConfig,
+  } = indicatorContentConfig;
   /** 格式化后的图表数据 */
   const [formattedData, setFormattedData] = useState<
     (DataSourceField & { value: string | number })[]
@@ -114,31 +119,45 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
     }
   );
 
-  /** 单个指标的时候指标item的样式 */
+  /** 指标前缀列表 */
+  const indicatorValuePrefixList = useMemo(() => {
+    return seriesConfig.map((item) => item.indicatorPrefix);
+  }, [seriesConfig]);
+  /** 指标后缀列表 */
+  const indicatorValueSuffixList = useMemo(() => {
+    return seriesConfig.map((item) => item.indicatorSuffix);
+  }, [seriesConfig]);
+
+  /** 单个指标/主副展示的时候指标item的样式 */
   const indicatorItemStyle = useMemo(() => {
     return {
       height: "100%",
+      justifyContent:
+        indicatorContentPosition === "center" ? "center" : "flex-start",
     };
-  }, []);
+  }, [indicatorContentPosition]);
 
   /** 多指标并排列的时候样式 */
   const indicatorItemStyle2: React.CSSProperties[] = useMemo(() => {
     if (
       formattedData.length > 1 &&
       indicatorRelation === "same-level" &&
+      indicatorBlockGroupType === "line-feed" &&
       containerSize.width > 0 &&
       containerSize.height > 0
     ) {
       const minItemWidth = 120;
       const minItemHeight = 80;
+      // 是否显示分隔线
+      const isShowDivider = indicatorBlockSeparator === "line";
       // 指标的个数
       const indicatorCount = formattedData.length;
       const canShowInOneLine =
         containerSize.width / indicatorCount >= minItemWidth;
       // 分隔线的宽度
       const dividerWidth = 2;
-      // 1.可以在一行显示
-      if (canShowInOneLine) {
+      // 1.可以在一行显示并且设置的一行显示的指标个数大于等于当前指标个数
+      if (canShowInOneLine && maxGroupCount >= indicatorCount) {
         const itemWidth =
           (containerSize.width - (indicatorCount - 1) * dividerWidth) /
           indicatorCount;
@@ -146,20 +165,24 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
           return {
             width: `${itemWidth}px`,
             height: "100%",
+            justifyContent:
+              indicatorContentPosition === "center" ? "center" : "flex-start",
             position: "absolute",
             left: `${itemWidth * index}px`,
             borderRight:
               index === indicatorCount - 1
                 ? "none"
-                : `${dividerWidth}px solid #E0E0E0`,
+                : isShowDivider
+                ? `${dividerWidth}px solid ${indicatorBlockSeparatorColor}`
+                : `${dividerWidth}px dashed transparent`,
           };
         });
       }
-      // 2.不能在一行显示的情况下
+      // 2.不能在一行显示的情况下(分到的宽度小于最小宽度/或者设置的一行显示的指标个数小于当前指标个数)
       let count = 0;
       for (let i = indicatorCount; i > 0; i--) {
         if (containerSize.width / i >= minItemWidth) {
-          count = i;
+          count = Math.min(i, maxGroupCount);
           break;
         }
       }
@@ -188,18 +211,37 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
             width: `${itemWidth}px`,
             height: `${itemHeight}px`,
             position: "absolute",
+            justifyContent:
+              indicatorContentPosition === "center" ? "center" : "flex-start",
             left: `${left}px`,
             top: `${top}px`,
             borderRight:
-              j === count - 1 ? "none" : `${dividerWidth}px solid #E0E0E0`,
+              j === count - 1
+                ? "none"
+                : isShowDivider
+                ? `${dividerWidth}px dashed ${indicatorBlockSeparatorColor}`
+                : `${dividerWidth}px dashed transparent`,
             borderBottom:
-              i === rowCount - 1 ? "none" : `${dividerWidth}px solid #E0E0E0`,
+              i === rowCount - 1
+                ? "none"
+                : isShowDivider
+                ? `${dividerWidth}px solid ${indicatorBlockSeparatorColor}`
+                : `${dividerWidth}px dashed transparent`,
           });
         }
       }
       return itemStyles;
     }
-  }, [containerSize, formattedData, indicatorRelation]);
+  }, [
+    containerSize,
+    formattedData,
+    indicatorRelation,
+    indicatorBlockGroupType,
+    maxGroupCount,
+    indicatorBlockSeparator,
+    indicatorBlockSeparatorColor,
+    indicatorContentPosition,
+  ]);
 
   useEffect(() => {
     if (!containerRef.current) {
@@ -272,14 +314,18 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
           <IndicatorItem
             indicatorName={formattedData[0].name}
             indicatorValue={formattedData[0].value}
-            indicatorValuePrefix={seriesConfig[0].indicatorPrefix}
-            indicatorValueSuffix={seriesConfig[0].indicatorSuffix}
+            indicatorValuePrefix={indicatorValuePrefixList[0]}
+            indicatorValueSuffix={indicatorValueSuffixList[0]}
             style={indicatorItemStyle}
+            isCompactLayout={indicatorValueLineSpace === "small"}
+            indicatorNameFontConfig={indicatorNameFontConfig}
+            indicatorValueFontConfig={indicatorValueFontConfig}
           />
         )}
-        {/* 2.存在多个指标同时并列显示的时候 */}
+        {/* 2.1存在多个指标同时并列以及换行显示的时候 */}
         {formattedData.length > 1 &&
           indicatorRelation === "same-level" &&
+          indicatorBlockGroupType === "line-feed" &&
           indicatorItemStyle2 &&
           formattedData.map((item, index) => {
             const itemStyle = indicatorItemStyle2[index];
@@ -288,12 +334,57 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
                 key={item.id}
                 indicatorName={item.name}
                 indicatorValue={item.value}
-                indicatorValuePrefix={seriesConfig[index].indicatorPrefix}
-                indicatorValueSuffix={seriesConfig[index].indicatorSuffix}
+                indicatorValuePrefix={indicatorValuePrefixList[index]}
+                indicatorValueSuffix={indicatorValueSuffixList[index]}
                 style={itemStyle}
+                isCompactLayout={indicatorValueLineSpace === "small"}
+                indicatorNameFontConfig={indicatorNameFontConfig}
+                indicatorValueFontConfig={indicatorValueFontConfig}
               />
             );
           })}
+        {/* 2.2 存在多个指标同时主副显示的时候 */}
+        {formattedData.length > 1 && indicatorRelation === "sub-level" && (
+          <IndicatorItem
+            indicatorList={formattedData}
+            isShowSubIndicator={true}
+            indicatorValuePrefixList={indicatorValuePrefixList}
+            indicatorValueSuffixList={indicatorValueSuffixList}
+            style={indicatorItemStyle}
+            isCompactLayout={indicatorValueLineSpace === "small"}
+            indicatorNameFontConfig={indicatorNameFontConfig}
+            indicatorValueFontConfig={indicatorValueFontConfig}
+          />
+        )}
+        {/* 2.3 存在多个指标滑动显示 */}
+        {formattedData.length > 1 &&
+          indicatorRelation === "same-level" &&
+          indicatorBlockGroupType === "swipe" && (
+            <div className="indicator-carousel-container">
+              <Carousel
+                arrows
+                infinite={false}
+                // antd通用属性
+                rootClassName="indicator-carousel"
+                dots={false}
+              >
+                {formattedData.map((item, index) => {
+                  return (
+                    <IndicatorItem
+                      key={item.id}
+                      indicatorName={item.name}
+                      indicatorValue={item.value}
+                      indicatorValuePrefix={indicatorValuePrefixList[index]}
+                      indicatorValueSuffix={indicatorValueSuffixList[index]}
+                      isCompactLayout={indicatorValueLineSpace === "small"}
+                      indicatorNameFontConfig={indicatorNameFontConfig}
+                      indicatorValueFontConfig={indicatorValueFontConfig}
+                    />
+                  );
+                })}
+              </Carousel>
+            </div>
+          )}
       </div>
     </div>
   );

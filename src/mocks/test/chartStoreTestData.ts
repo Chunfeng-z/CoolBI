@@ -34,10 +34,10 @@ export const testData: (
     },
     indicatorLayout: {
       indicatorRelation: "same-level",
-      indicatorBlockGroupType: "swipe",
+      indicatorBlockGroupType: "line-feed",
       maxGroupCount: 2,
       indicatorBlockSeparator: "line",
-      indicatorBlockSeparatorColor: "#000000",
+      indicatorBlockSeparatorColor: "#e0e0e0",
     },
     indicatorContentConfig: {
       indicatorContentPosition: "center",

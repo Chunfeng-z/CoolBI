@@ -74,7 +74,10 @@ const IndicatorContent: React.FC = () => {
       switch (Object.keys(update)[0]) {
         case "indicatorContentPosition":
           setChartsConfig(curChartId!, (draft) => {
-            if (draft.type === ChartTypeEnum.indicatorTrend) {
+            if (
+              draft.type === ChartTypeEnum.indicatorTrend ||
+              draft.type === ChartTypeEnum.indicatorCard
+            ) {
               draft.indicatorContentConfig.indicatorContentPosition =
                 update.indicatorContentPosition!;
             }
@@ -82,7 +85,10 @@ const IndicatorContent: React.FC = () => {
           break;
         case "indicatorValueLineSpace":
           setChartsConfig(curChartId!, (draft) => {
-            if (draft.type === ChartTypeEnum.indicatorTrend) {
+            if (
+              draft.type === ChartTypeEnum.indicatorTrend ||
+              draft.type === ChartTypeEnum.indicatorCard
+            ) {
               draft.indicatorContentConfig.indicatorValueLineSpace =
                 update.indicatorValueLineSpace!;
             }
@@ -92,7 +98,10 @@ const IndicatorContent: React.FC = () => {
           // 禁用字号设置，则恢复默认配置
           if (!update.enableFontSetting) {
             setChartsConfig(curChartId!, (draft) => {
-              if (draft.type === ChartTypeEnum.indicatorTrend) {
+              if (
+                draft.type === ChartTypeEnum.indicatorTrend ||
+                draft.type === ChartTypeEnum.indicatorCard
+              ) {
                 draft.indicatorContentConfig.indicatorNameFontConfig =
                   defaultConfig.indicatorNameFontConfig;
                 draft.indicatorContentConfig.indicatorValueFontConfig =
@@ -104,7 +113,7 @@ const IndicatorContent: React.FC = () => {
         }
       }
     },
-    [curChartId, setChartsConfig]
+    [config, curChartId, setChartsConfig]
   );
 
   /** 更新指标名称样式 */
@@ -117,7 +126,10 @@ const IndicatorContent: React.FC = () => {
     };
     updateConfig({ indicatorNameFontConfig: newNameStyle });
     setChartsConfig(curChartId!, (draft) => {
-      if (draft.type === ChartTypeEnum.indicatorTrend) {
+      if (
+        draft.type === ChartTypeEnum.indicatorTrend ||
+        draft.type === ChartTypeEnum.indicatorCard
+      ) {
         draft.indicatorContentConfig.indicatorNameFontConfig = newNameStyle;
       }
     });
@@ -133,7 +145,10 @@ const IndicatorContent: React.FC = () => {
     };
     updateConfig({ indicatorValueFontConfig: newValueStyle });
     setChartsConfig(curChartId!, (draft) => {
-      if (draft.type === ChartTypeEnum.indicatorTrend) {
+      if (
+        draft.type === ChartTypeEnum.indicatorTrend ||
+        draft.type === ChartTypeEnum.indicatorCard
+      ) {
         draft.indicatorContentConfig.indicatorValueFontConfig = newValueStyle;
       }
     });
