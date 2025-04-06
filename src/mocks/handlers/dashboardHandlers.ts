@@ -55,6 +55,7 @@ export const dashboardHandlers = [
       };
       return HttpResponse.json(respData);
     } else if (data.dataFromId === "dataSource1") {
+      await delay(2000);
       const respData: ChartDataResponse = {
         code: 200,
         message: "获取图表数据成功",

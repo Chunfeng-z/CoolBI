@@ -96,6 +96,21 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
     {
       ready: !!dataSourceConfig,
       loadingDelay: 300,
+      refreshDeps: [dataSourceConfig],
+      onSuccess: (data) => {
+        const respData: {
+          columns: DataSourceField[];
+          values: DataSourceValues;
+        } = data.data;
+        setFormattedData(
+          respData.columns.map((col, index) => {
+            return {
+              ...col,
+              value: respData.values[0][index].v,
+            };
+          })
+        );
+      },
     }
   );
 
@@ -111,8 +126,8 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
     if (
       formattedData.length > 1 &&
       indicatorRelation === "same-level" &&
-      containerSize.width &&
-      containerSize.height
+      containerSize.width > 0 &&
+      containerSize.height > 0
     ) {
       const minItemWidth = 120;
       const minItemHeight = 80;
@@ -217,24 +232,7 @@ const CoolIndicatorCardChart: React.FC<ICoolIndicatorCardChartProps> = (
       resizeObserver.disconnect();
       debounceUpdateContainerSize.cancel();
     };
-  }, [containerRef]);
-
-  useEffect(() => {
-    if (data && data.data) {
-      const respData: {
-        columns: DataSourceField[];
-        values: DataSourceValues;
-      } = data.data;
-      setFormattedData(
-        respData.columns.map((col, index) => {
-          return {
-            ...col,
-            value: respData.values[0][index].v,
-          };
-        })
-      );
-    }
-  }, [data, dataSourceConfig]);
+  }, [containerRef.current]);
 
   if (error) {
     return (
