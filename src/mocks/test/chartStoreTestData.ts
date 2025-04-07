@@ -47,6 +47,91 @@ export const testData: (
       lineStyle: "solid",
       lineWidth: 2,
     },
+    axisConfig: {
+      xAxisConfig: {
+        isShowAxis: true,
+        axisTitleConfig: {
+          isShowTitleAndUnit: true,
+          title: "时间",
+          unit: "天",
+          fontConfig: {
+            color: "#000000",
+            fontSize: 12,
+            isBold: false,
+            isItalic: false,
+          },
+        },
+        axisLabelConfig: {
+          isShowAxisLabel: true,
+          fontConfig: {
+            color: "#000000",
+            fontSize: 12,
+            isBold: false,
+            isItalic: false,
+          },
+        },
+        isShowTickLine: true,
+        axisLineConfig: {
+          isShowLine: true,
+          lineStyle: "solid",
+          lineColor: "#e0e0e0",
+          lineWidth: 1,
+        },
+        axisGridConfig: {
+          isShowLine: true,
+          lineStyle: "solid",
+          lineColor: "#e0e0e0",
+          lineWidth: 1,
+        },
+      },
+      yAxisConfig: {
+        isShowAxis: true,
+        axisTitleConfig: {
+          isShowTitleAndUnit: true,
+          title: "销售额",
+          unit: "元",
+          fontConfig: {
+            color: "#000000",
+            fontSize: 12,
+            isBold: false,
+            isItalic: false,
+          },
+          position: "top",
+        },
+        axisLabelConfig: {
+          isShowAxisLabel: true,
+          fontConfig: {
+            color: "#000000",
+            fontSize: 12,
+            isBold: false,
+            isItalic: false,
+          },
+        },
+        isShowTickLine: true,
+        axisLineConfig: {
+          isShowLine: true,
+          lineStyle: "solid",
+          lineColor: "#e0e0e0",
+          lineWidth: 1,
+        },
+        axisGridConfig: {
+          isShowLine: true,
+          lineStyle: "solid",
+          lineColor: "#e0e0e0",
+          lineWidth: 1,
+        },
+        axisRangeConfig: {
+          isMaxRangeModeAuto: true,
+          isMinRangeModeAuto: true,
+          maxValue: undefined,
+          minValue: undefined,
+        },
+        intervalConfig: {
+          isEnableCustomInterval: false,
+          intervalCount: 2,
+        },
+      },
+    },
   },
   {
     chartId: "indicatorCard",

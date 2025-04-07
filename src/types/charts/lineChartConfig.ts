@@ -1,5 +1,8 @@
 import { ChartLayout, TitleCardConfig } from "../chartConfigItems/common";
-import { LineDrawAreaConfig } from "../chartConfigItems/lineItems";
+import {
+  LineAxisConfig,
+  LineDrawAreaConfig,
+} from "../chartConfigItems/lineItems";
 
 import { ChartTypeEnum } from "@/components/dashboard/utils";
 
@@ -14,4 +17,6 @@ export interface LineChartConfig {
   layout: ChartLayout;
   /** 绘图区域配置 */
   drawAreaConfig: LineDrawAreaConfig;
+  /** 坐标轴配置 */
+  axisConfig: LineAxisConfig;
 }

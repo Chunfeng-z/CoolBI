@@ -27,6 +27,7 @@ import React, { CSSProperties, useCallback, useState, useEffect } from "react";
 
 import useChartStore from "@/stores/useChartStore";
 import { TitleCardConfig } from "@/types/chartConfigItems/common";
+import "./index.scss";
 
 const prefixCls = "title-card";
 

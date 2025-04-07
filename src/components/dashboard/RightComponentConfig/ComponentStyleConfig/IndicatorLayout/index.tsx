@@ -2,12 +2,13 @@ import { ColorPicker, InputNumber, Radio } from "antd";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 
-import { ChartTypeEnum } from "../../utils";
+import { ChartTypeEnum } from "../../../utils";
 
 import useChartStore from "@/stores/useChartStore";
 import { IndicatorLayout as IndicatorLayoutType } from "@/types/chartConfigItems/indicatorCardItems";
 
 const prefixCls = "indicator-layout";
+import "./index.scss";
 
 /** 默认配置 */
 const defaultConfig: IndicatorLayoutType = {

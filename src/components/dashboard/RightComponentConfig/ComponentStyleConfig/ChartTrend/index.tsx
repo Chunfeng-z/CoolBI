@@ -2,12 +2,13 @@ import { Checkbox, InputNumber, Radio, Select, Space, Tooltip } from "antd";
 import classNames from "classnames";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { ChartTypeEnum } from "../../utils";
+import { ChartTypeEnum } from "../../../utils";
 
 import CoolIcon from "@/components/common/CoolIcon";
 import useChartStore from "@/stores/useChartStore";
 import { TrendChartConfig } from "@/types/chartConfigItems/indicatorTrendItems";
 import { IndicatorTrendChartConfig } from "@/types/charts";
+import "./index.scss";
 const prefixCls = "chart-trend";
 
 /** 默认配置 */

@@ -15,7 +15,8 @@ import {
 } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 
-import { ChartTypeEnum } from "../../utils";
+import "./index.scss";
+import { ChartTypeEnum } from "../../../utils";
 
 import useChartStore from "@/stores/useChartStore";
 import { LineDrawAreaConfig } from "@/types/chartConfigItems/lineItems";

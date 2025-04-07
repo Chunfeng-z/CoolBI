@@ -7,11 +7,11 @@ import {
 import { Button, ColorPicker, InputNumber, Radio, Switch, Tooltip } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 
-import { ChartTypeEnum } from "../../utils";
+import { ChartTypeEnum } from "../../../utils";
 
 import useChartStore from "@/stores/useChartStore";
 import { IndicatorContentConfig } from "@/types/chartConfigItems/indicatorTrendItems";
-
+import "./index.scss";
 const prefixCls = "indicator-content";
 
 /** 默认配置 */
@@ -54,7 +54,14 @@ const IndicatorContent: React.FC = () => {
       console.error("指标内容配置，获取当前图表配置失败");
       return;
     }
-    setConfig(curConfig.indicatorContentConfig);
+    if (
+      curConfig.type === ChartTypeEnum.indicatorCard ||
+      curConfig.type === ChartTypeEnum.indicatorTrend
+    ) {
+      setConfig(curConfig.indicatorContentConfig);
+    } else {
+      console.error("当前组件不支持配置指标内容");
+    }
   }, [curChartId]);
 
   /** 更新配置的工具函数 */

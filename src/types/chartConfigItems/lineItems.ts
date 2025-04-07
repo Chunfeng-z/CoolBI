@@ -37,9 +37,9 @@ export interface LineAxisLabelConfig {
 }
 
 /**  轴线的网格配置 */
-export interface LineAxisGridConfig {
-  /** 是否显示网格线 */
-  isShowAxisGrid: boolean;
+export interface LineConfig {
+  /** 是否展示线条 */
+  isShowLine: boolean;
   /** 网格线样式 */
   lineStyle: "solid" | "dashed";
   /** 网格线颜色 */
@@ -48,56 +48,66 @@ export interface LineAxisGridConfig {
   lineWidth: number;
 }
 
+/** x轴配置项 */
+export interface LineXAxisConfig {
+  /** 显示轴 */
+  isShowAxis: boolean;
+  /** x轴标题和单位配置 */
+  axisTitleConfig: LineAxisTitleAndUnitConfig;
+  /** x轴轴标签配置 */
+  axisLabelConfig: LineAxisLabelConfig;
+  /** 是否显示刻度线 */
+  isShowTickLine: boolean;
+  /** x轴线配置 */
+  axisLineConfig: LineConfig;
+  /** x轴网格线配置 */
+  axisGridConfig: LineConfig;
+}
+
+/** y轴配置 */
+export interface LineYAxisConfig {
+  /** 显示轴 */
+  isShowAxis: boolean;
+  /** y轴标题和单位配置 */
+  axisTitleConfig: LineAxisTitleAndUnitConfig & {
+    /** y轴标题和单位显示位置
+     * - top: 轴上方
+     * - outer: 轴外侧
+     */
+    position: "top" | "outer";
+  };
+  /** y轴轴标签配置 */
+  axisLabelConfig: LineAxisLabelConfig;
+  /** 是否显示刻度线 */
+  isShowTickLine: boolean;
+  /** y轴线配置 */
+  axisLineConfig: LineConfig;
+  /** y轴网格线配置 */
+  axisGridConfig: LineConfig;
+  /** 轴值范围与间隔配置 */
+  axisRangeConfig: {
+    /** 最大轴值范围模式 */
+    isMaxRangeModeAuto: boolean;
+    /** 最小轴值范围模式 */
+    isMinRangeModeAuto: boolean;
+    /** 最小值 */
+    minValue: number | undefined;
+    /** 最大值 */
+    maxValue: number | undefined;
+  };
+  /** 间隔配置 */
+  intervalConfig: {
+    /** 是否启用自定义间隔配置*/
+    isEnableCustomInterval: boolean;
+    /** 间隔等分的数量 */
+    intervalCount: number;
+  };
+}
+
 /** 坐标轴配置 */
 export interface LineAxisConfig {
   /** x轴配置 */
-  xAxisConfig: {
-    /** 显示轴 */
-    isShowAxis: boolean;
-    /** x轴标题和单位配置 */
-    axisTitleConfig: LineAxisTitleAndUnitConfig;
-    /** x轴轴标签配置 */
-    axisLabelConfig: LineAxisLabelConfig;
-    /** 是否显示刻度线 */
-    isShowTickLine: boolean;
-    /** x轴网格线配置 */
-    axisGridConfig: LineAxisGridConfig;
-  };
+  xAxisConfig: LineXAxisConfig;
   /** y轴配置 */
-  yAxisConfig: {
-    /** 显示轴 */
-    isShowAxis: boolean;
-    /** y轴标题和单位配置 */
-    axisTitleConfig: LineAxisTitleAndUnitConfig & {
-      /** y轴标题和单位显示位置
-       * - top: 轴上方
-       * - outer: 轴外侧
-       */
-      position: "top" | "outer";
-    };
-    /** y轴轴标签配置 */
-    axisLabelConfig: LineAxisLabelConfig;
-    /** 是否显示刻度线 */
-    isShowTickLine: boolean;
-    /** y轴网格线配置 */
-    axisGridConfig: LineAxisGridConfig;
-    /** 轴值范围与间隔配置 */
-    axisRangeConfig: {
-      /** 最大轴值范围模式 */
-      maxRangeMode: "auto" | "custom";
-      /** 最小轴值范围模式 */
-      minRangeMode: "auto" | "custom";
-      /** 最小值 */
-      minValue: number;
-      /** 最大值 */
-      maxValue: number;
-    };
-    /** 间隔配置 */
-    intervalConfig: {
-      /** 是否启用自定义间隔配置*/
-      isEnableCustomInterval: boolean;
-      /** 间隔等分的数量 */
-      intervalCount: number;
-    };
-  };
+  yAxisConfig: LineYAxisConfig;
 }
