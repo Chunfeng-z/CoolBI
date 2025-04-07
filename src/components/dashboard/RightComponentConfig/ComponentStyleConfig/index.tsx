@@ -4,6 +4,7 @@ import "./index.scss";
 import { CHART_TYPE_CONFIG_MAP } from "./ChartStyleConfig.tsx";
 
 import CoolCollapse from "@/components/common/CoolCollapse";
+import ErrorBoundary from "@/components/common/ErrorBoundary/index.tsx";
 import useChartStore from "@/stores/useChartStore";
 
 const prefixCls = "component-style-config";
@@ -32,7 +33,9 @@ const ComponentStyleConfig: React.FC = () => {
       label: item.label,
       children: (
         <div className="style-item">
-          <item.component />
+          <ErrorBoundary>
+            <item.component />
+          </ErrorBoundary>
         </div>
       ),
     }));

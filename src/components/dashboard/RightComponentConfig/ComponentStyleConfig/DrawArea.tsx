@@ -4,22 +4,65 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import {
+  Checkbox,
   Flex,
   InputNumber,
   InputNumberProps,
   Radio,
+  Select,
   Slider,
   Tooltip,
 } from "antd";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
+import { ChartTypeEnum } from "../../utils";
+
+import useChartStore from "@/stores/useChartStore";
+import { LineDrawAreaConfig } from "@/types/chartConfigItems/lineItems";
 const prefixCls = "draw-area";
-interface IDrawAreaProps {
-  /** 当前组件的类型 */
-  chartType?: "bar" | "pie";
-}
+
 /** 组件样式配置-绘制区域 */
-const DrawArea: React.FC<IDrawAreaProps> = (props) => {
-  const { chartType = "bar" } = props;
+const DrawArea: React.FC = () => {
+  const curChartId = useChartStore((state) => state.curChartId);
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
+  const getCurrentChartConfig = useChartStore(
+    (state) => state.getCurrentChartConfig
+  );
+
+  /** 当前选中图表的类型 */
+  const [chartType, setChartType] = useState<ChartTypeEnum>();
+  /** 绘图区域配置 */
+  const [config, setConfig] = useState<LineDrawAreaConfig>();
+  useEffect(() => {
+    const curConfig = getCurrentChartConfig();
+    if (!curConfig) {
+      console.error("绘图区域获取图表配置失败");
+      return;
+    }
+    if (curConfig.type === ChartTypeEnum.line) {
+      setChartType(curConfig.type);
+      setConfig(curConfig.drawAreaConfig);
+    }
+  }, [curChartId]);
+  /** 更新图表配置 */
+  const updateConfig = useCallback(
+    (update: Partial<LineDrawAreaConfig>) => {
+      // 使用函数式更新状态，解决闭包问题
+      setConfig((prev) => ({
+        ...prev!,
+        ...update,
+      }));
+      setChartsConfig(curChartId!, (draft) => {
+        if (draft.type === ChartTypeEnum.line) {
+          draft.drawAreaConfig = {
+            ...draft.drawAreaConfig,
+            ...update,
+          };
+        }
+      });
+    },
+    [curChartId]
+  );
   /** 柱体宽度百分比 */
   const [barWidthPercent, setBarWidthPercent] = useState(10);
   const handleBarWidthChange: InputNumberProps["onChange"] = (newValue) => {
@@ -27,10 +70,90 @@ const DrawArea: React.FC<IDrawAreaProps> = (props) => {
   };
   /** 图表对齐方式 */
   const [chartAlign, setChartAlign] = useState<"left" | "right">("left");
+
   /** 根据不同的图表类型返回不同的配置 */
-  const renderChart = () => {
+  const renderChart = (chartType: ChartTypeEnum) => {
+    if (!config) return <div className="text">获取组件配置失败</div>;
     switch (chartType) {
-      case "bar":
+      case ChartTypeEnum.line:
+        return (
+          <div className={`${prefixCls}-line`}>
+            <div className="draw-area-row">
+              <Checkbox
+                checked={config.isShowGradient}
+                onChange={(e) =>
+                  updateConfig({ isShowGradient: e.target.checked })
+                }
+              >
+                开启渐变效果
+              </Checkbox>
+            </div>
+            <div className="draw-area-row-vertical">
+              <span>线条类型</span>
+              <Radio.Group
+                value={config.lineType}
+                onChange={(e) => updateConfig({ lineType: e.target.value })}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                }}
+                options={[
+                  {
+                    value: "curve",
+                    label: <span>曲线</span>,
+                  },
+                  {
+                    value: "straight",
+                    label: <span>直线</span>,
+                  },
+                ]}
+              />
+            </div>
+            <div className="draw-area-label">
+              <span>线条样式</span>
+            </div>
+            <div className="draw-area-row sub-content">
+              <Select
+                size="small"
+                style={{ width: 110 }}
+                value={config.lineStyle}
+                onChange={(value) => updateConfig({ lineStyle: value })}
+                getPopupContainer={(triggerNode) => triggerNode.parentElement!}
+                options={[
+                  {
+                    value: "solid",
+                    label: (
+                      <div className="draw-area-line-style">
+                        <div className="draw-area-line-style-solid" />
+                      </div>
+                    ),
+                  },
+                  {
+                    value: "dashed",
+                    label: (
+                      <div className="draw-area-line-style">
+                        <div className="draw-area-line-style-dashed" />
+                      </div>
+                    ),
+                  },
+                ]}
+              />
+              <InputNumber
+                size="small"
+                min={1}
+                max={10}
+                value={config.lineWidth}
+                onChange={(value) =>
+                  updateConfig({ lineWidth: value as number })
+                }
+                style={{ width: 80 }}
+                addonAfter="px"
+              />
+            </div>
+          </div>
+        );
+      case ChartTypeEnum.bar:
         return (
           <div className={`${prefixCls}-bar`}>
             <div className="draw-area-text-vertical">
@@ -96,14 +219,16 @@ const DrawArea: React.FC<IDrawAreaProps> = (props) => {
             </div>
           </div>
         );
-      case "pie":
-        return <div className={`${prefixCls}-pie`}>Pie Chart</div>;
       default:
-        return null;
+        return <div className="text">当前组件暂不支持绘图组件配置</div>;
     }
   };
 
-  return <div className={`${prefixCls}-container`}>{renderChart()}</div>;
+  return (
+    <div className={`${prefixCls}-container`}>
+      {config && chartType && renderChart(chartType)}
+    </div>
+  );
 };
 
 export default DrawArea;

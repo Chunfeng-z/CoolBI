@@ -2,5 +2,10 @@
 
 import { IndicatorCardChartConfig } from "./IndicatorCardChartConfig";
 import { IndicatorTrendChartConfig } from "./IndicatorTrendChartConfig";
+import { LineChartConfig } from "./lineChartConfig";
 
-export type { IndicatorCardChartConfig, IndicatorTrendChartConfig };
+export type {
+  IndicatorCardChartConfig,
+  IndicatorTrendChartConfig,
+  LineChartConfig,
+};

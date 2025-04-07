@@ -245,8 +245,6 @@ const DashBoardDesign: React.FC = () => {
       switch (chartType) {
         case ChartTypeEnum.bar:
           return <CoolBarChart />;
-        case ChartTypeEnum.line:
-          return <CoolLineChart />;
         case ChartTypeEnum.polyline:
           return <CoolPolyLineChart />;
         case ChartTypeEnum.polylineStack:
@@ -259,6 +257,8 @@ const DashBoardDesign: React.FC = () => {
           return <CoolBarStackPercentChart />;
         case ChartTypeEnum.pie:
           return <CoolPieChart />;
+        case ChartTypeEnum.line:
+          return <CoolLineChart />;
         case ChartTypeEnum.indicatorCard: {
           const { indicatorLayout, indicatorContentConfig, seriesConfig } =
             chartConfig as IndicatorCardChartConfig;

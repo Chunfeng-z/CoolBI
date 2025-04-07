@@ -45,14 +45,16 @@ const IndicatorContent: React.FC = () => {
   const setChartsConfig = useChartStore((state) => state.setChartsConfig);
 
   /** 内部状态 */
-  const [config, setConfig] = useState<IndicatorContentConfig>(defaultConfig);
+  const [config, setConfig] = useState<IndicatorContentConfig>();
 
   // 获取当前选中图表的配置
   useEffect(() => {
     const curConfig = getCurrentChartConfig();
-    if (curConfig && curConfig.type === ChartTypeEnum.indicatorTrend) {
-      setConfig(curConfig.indicatorContentConfig);
+    if (!curConfig) {
+      console.error("指标内容配置，获取当前图表配置失败");
+      return;
     }
+    setConfig(curConfig.indicatorContentConfig);
   }, [curChartId]);
 
   /** 更新配置的工具函数 */
@@ -60,12 +62,12 @@ const IndicatorContent: React.FC = () => {
     (update: Partial<IndicatorContentConfig>) => {
       if (!("enableFontSetting" in update) || update.enableFontSetting) {
         setConfig({
-          ...config,
+          ...config!,
           ...update,
         });
       } else if ("enableFontSetting" in update && !update.enableFontSetting) {
         setConfig({
-          ...config,
+          ...config!,
           ...update,
           indicatorNameFontConfig: defaultConfig.indicatorNameFontConfig,
           indicatorValueFontConfig: defaultConfig.indicatorValueFontConfig,
@@ -121,7 +123,7 @@ const IndicatorContent: React.FC = () => {
     update: Partial<IndicatorContentConfig["indicatorNameFontConfig"]>
   ) => {
     const newNameStyle = {
-      ...config.indicatorNameFontConfig,
+      ...config!.indicatorNameFontConfig,
       ...update,
     };
     updateConfig({ indicatorNameFontConfig: newNameStyle });
@@ -140,7 +142,7 @@ const IndicatorContent: React.FC = () => {
     update: Partial<IndicatorContentConfig["indicatorValueFontConfig"]>
   ) => {
     const newValueStyle = {
-      ...config.indicatorValueFontConfig,
+      ...config!.indicatorValueFontConfig,
       ...update,
     };
     updateConfig({ indicatorValueFontConfig: newValueStyle });
@@ -153,6 +155,10 @@ const IndicatorContent: React.FC = () => {
       }
     });
   };
+
+  if (!config) {
+    return <div className="text">获取指标内容配置失败</div>;
+  }
 
   return (
     <div className={`${prefixCls}-container`}>

@@ -102,13 +102,9 @@ const ChartLegend: React.FC = () => {
         {directions.map(({ position, icon, tooltip }) => (
           <Tooltip key={position} title={tooltip}>
             <Button
-              type="text"
+              type={selectedOption === position ? "primary" : "text"}
               size="small"
               icon={icon}
-              style={{
-                backgroundColor:
-                  selectedPosition === position ? "#F5F5F5" : undefined,
-              }}
               onClick={() => handlePositionSelect(position)}
             />
           </Tooltip>

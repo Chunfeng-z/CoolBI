@@ -99,8 +99,8 @@ export const CHART_TYPE_CONFIG_MAP: Record<
     BASE_STYLE_ITEMS.indicatorContent,
     BASE_STYLE_ITEMS.seriesConfig,
   ],
-  // 柱状图配置
-  bar: [
+  // 折线图配置
+  line: [
     BASE_STYLE_ITEMS.titleCard,
     BASE_STYLE_ITEMS.drawArea,
     BASE_STYLE_ITEMS.chartAxis,
@@ -109,8 +109,8 @@ export const CHART_TYPE_CONFIG_MAP: Record<
     BASE_STYLE_ITEMS.toolTip,
     BASE_STYLE_ITEMS.auxiliaryConfig,
   ],
-  // 折线图配置
-  line: [
+  // 柱状图配置
+  bar: [
     BASE_STYLE_ITEMS.titleCard,
     BASE_STYLE_ITEMS.drawArea,
     BASE_STYLE_ITEMS.chartAxis,

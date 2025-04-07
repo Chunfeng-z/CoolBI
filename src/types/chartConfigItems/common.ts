@@ -119,3 +119,24 @@ export interface DataSourceConfig {
   /** 当前使用到的数据源的指标字段 */
   measureFields: DataSourceField[];
 }
+
+/** 图表图例配置  */
+export interface LegendConfig {
+  /** 是否显示图例 */
+  isShowLegend: boolean;
+  /** 图例位置
+   * - top: 上方
+   * - bottom: 下方
+   * - left: 左侧
+   * - right: 右侧
+   */
+  legendPosition: "top" | "bottom" | "left" | "right";
+  /** 图例对齐方式
+   * - start: 左对齐
+   * - center: 居中对齐
+   * - end: 右对齐
+   */
+  legendAlign: "start" | "center" | "end";
+  /** 图例字体配置 */
+  legendFontConfig: FontConfig;
+}

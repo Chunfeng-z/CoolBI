@@ -6,16 +6,23 @@ import { ChartTypeEnum } from "@/components/dashboard/utils";
 import {
   IndicatorCardChartConfig,
   IndicatorTrendChartConfig,
+  LineChartConfig,
 } from "@/types/charts";
 import { generateDefaultChartName } from "@/utils/hooks";
+
+// 当前系统支持的图表类型
+type SupportedChartType =
+  | IndicatorCardChartConfig
+  | IndicatorTrendChartConfig
+  | LineChartConfig;
 
 interface State {
   /** 当前选中的图表id-用于更新选中组件的配置 */
   curChartId: string | null;
   /** 图表组件的所有配置信息 */
-  chartsConfig: (IndicatorCardChartConfig | IndicatorTrendChartConfig)[];
+  chartsConfig: SupportedChartType[];
   /** 当前选中的图表的所有配置信息 */
-  curChartConfig: IndicatorCardChartConfig | IndicatorTrendChartConfig | null;
+  curChartConfig: SupportedChartType | null;
   /** 图表的操作历史记录 */
   history: historyItem[];
   /** 图表操作的重做栈 */
@@ -24,27 +31,20 @@ interface State {
 
 interface Action {
   /** 初始化图表的配置信息 */
-  initChartsConfig: (
-    chartsConfig: (IndicatorCardChartConfig | IndicatorTrendChartConfig)[]
-  ) => void;
+  initChartsConfig: (chartsConfig: SupportedChartType[]) => void;
   /** 设置当前选中的图表id - 设置为null清空图表选中*/
   setCurChartId: (chartId: string | null) => void;
   /** 更新当前选中图表组件的配置信息 */
   setChartsConfig: (
     chartId: string,
-    updater: (
-      draft: IndicatorCardChartConfig | IndicatorTrendChartConfig
-    ) => void
+    updater: (draft: SupportedChartType) => void
   ) => boolean;
   /** 更新当前选中的图表的配置信息-会在更新curChartId的时候自动更新 */
   setCurChartConfig: (chartId: string) => boolean;
   /** 获取当前选中图表的配置信息-少使用curChartConfig是因为一旦任意一个配置更新都会导致所有的依赖全部重新渲染 */
-  getCurrentChartConfig: () =>
-    | IndicatorCardChartConfig
-    | IndicatorTrendChartConfig
-    | null;
+  getCurrentChartConfig: () => SupportedChartType | null;
   /** 追加新的图表组件 */
-  appendChartConfig: (config: IndicatorTrendChartConfig) => void;
+  appendChartConfig: (config: SupportedChartType) => void;
   /** 删除指定图表配置 */
   deleteChartConfig: (chartId: string) => boolean;
   /** 撤销 */

@@ -30,12 +30,17 @@ const IndicatorLayout: React.FC = () => {
   const setChartsConfig = useChartStore((state) => state.setChartsConfig);
 
   /** 内部状态 */
-  const [config, setConfig] = useState<IndicatorLayoutType>(defaultConfig);
+  const [config, setConfig] = useState<IndicatorLayoutType>();
 
   // 获取当前选中图表的配置
   useEffect(() => {
     const curConfig = getCurrentChartConfig();
-    if (curConfig && curConfig.type === ChartTypeEnum.indicatorCard) {
+    if (!curConfig) {
+      console.error("指标布局配置，获取当前图表配置失败");
+      return;
+    }
+    // ts类型收缩
+    if (curConfig.type === ChartTypeEnum.indicatorCard) {
       setConfig(curConfig.indicatorLayout);
     }
   }, [curChartId, getCurrentChartConfig]);
@@ -45,7 +50,7 @@ const IndicatorLayout: React.FC = () => {
     const newConfig = {
       ...config,
       ...update,
-    };
+    } as IndicatorLayoutType;
     setConfig(newConfig);
     // 更新全局状态
     setChartsConfig(curChartId!, (draft) => {
@@ -54,6 +59,10 @@ const IndicatorLayout: React.FC = () => {
       }
     });
   };
+
+  if (!config) {
+    return <div className="text">获取指标布局配置失败</div>;
+  }
 
   return (
     <div className={`${prefixCls}-container`}>

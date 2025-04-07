@@ -2,13 +2,52 @@ import { ChartTypeEnum } from "@/components/dashboard/utils";
 import {
   IndicatorCardChartConfig,
   IndicatorTrendChartConfig,
+  LineChartConfig,
 } from "@/types/charts";
 
 /** 测试数据 */
 export const testData: (
   | IndicatorCardChartConfig
   | IndicatorTrendChartConfig
+  | LineChartConfig
 )[] = [
+  {
+    chartId: "lineChart1",
+    type: ChartTypeEnum.line,
+    titleCardConfig: {
+      isShowTitle: true,
+      title: "折线图",
+      titleFontConfig: {
+        color: "#1677ff",
+        fontSize: 16,
+        isBold: true,
+        isItalic: false,
+      },
+      titleAlign: "left",
+      isShowRemark: false,
+      remark: "备注1",
+      remarkPosition: "afterTitle",
+      isShowEndNote: false,
+      endNote: "",
+      isShowBackgroundColor: true,
+      backgroundColor: "#ffffff",
+      borderRadius: 4,
+      chartCardPadding: [5, 10, 10, 10],
+    },
+    layout: {
+      i: "lineChart1",
+      x: 0,
+      y: 0,
+      w: 5,
+      h: 5,
+    },
+    drawAreaConfig: {
+      isShowGradient: true,
+      lineType: "curve",
+      lineStyle: "solid",
+      lineWidth: 2,
+    },
+  },
   {
     chartId: "indicatorCard",
     type: ChartTypeEnum.indicatorCard,
@@ -88,7 +127,7 @@ export const testData: (
     layout: {
       i: "indicatorCard",
       x: 0,
-      y: 0,
+      y: 5,
       w: 3,
       h: 3,
     },
@@ -164,8 +203,8 @@ export const testData: (
     },
     layout: {
       i: "indicatorTrend",
-      x: 3,
-      y: 0,
+      x: 0,
+      y: 8,
       w: 3,
       h: 3,
     },
