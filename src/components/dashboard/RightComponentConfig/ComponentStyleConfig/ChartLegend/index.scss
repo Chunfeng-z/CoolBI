@@ -1,0 +1,22 @@
+.chart-legend-container {
+  .chart-legend-label {
+    display: flex;
+    align-items: center;
+    height: 26px;
+  }
+
+  .chart-legend-row {
+    display: flex;
+    align-items: center;
+    height: 32px;
+
+    > span {
+      white-space: nowrap;
+    }
+
+    &.sub-content {
+      margin-left: 25px;
+      gap: 4px;
+    }
+  }
+}

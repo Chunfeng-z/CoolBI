@@ -13,7 +13,6 @@ import TitleCard from "./TitleCard";
 type styleConfigItem = {
   key: string;
   label: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: React.FC<any>;
 };
 

@@ -1,0 +1,22 @@
+.data-label-container {
+  .data-label-row {
+    display: flex;
+    align-items: center;
+    height: 32px;
+
+    &.sub-content {
+      margin-left: 25px;
+      gap: 4px;
+
+      > span {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .data-label-label {
+    display: flex;
+    align-items: center;
+    height: 26px;
+  }
+}

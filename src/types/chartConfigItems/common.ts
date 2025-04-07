@@ -120,23 +120,43 @@ export interface DataSourceConfig {
   measureFields: DataSourceField[];
 }
 
+/** cool bi图例位置
+ * - top: 上方
+ * - bottom: 下方
+ * - left: 左侧
+ * - right: 右侧
+ */
+export type CoolBILegendPosition = "top" | "bottom" | "left" | "right";
+/** cool bi对齐方式
+ * - start: 左对齐
+ * - center: 居中对齐
+ * - end: 右对齐
+ */
+export type CoolBILegendAlign = "start" | "center" | "end";
+
 /** 图表图例配置  */
 export interface LegendConfig {
   /** 是否显示图例 */
   isShowLegend: boolean;
-  /** 图例位置
-   * - top: 上方
-   * - bottom: 下方
-   * - left: 左侧
-   * - right: 右侧
-   */
-  legendPosition: "top" | "bottom" | "left" | "right";
-  /** 图例对齐方式
-   * - start: 左对齐
-   * - center: 居中对齐
-   * - end: 右对齐
-   */
-  legendAlign: "start" | "center" | "end";
+  /** 图例位置 */
+  legendPosition: CoolBILegendPosition;
+  /** 图例对齐方式 */
+  legendAlign: CoolBILegendAlign;
   /** 图例字体配置 */
   legendFontConfig: FontConfig;
+}
+
+/** 图表数据标签配置 */
+export interface DataLabelConfig {
+  /** 是否显示数据标签 */
+  isShowDataLabel: boolean;
+  /** 数据标签的显示模式
+   * - auto: 自动
+   * - all: 全量显示
+   */
+  showMode: "auto" | "all";
+  /** 数据标签的字体配置 */
+  fontConfig: FontConfig;
+  /** 数据标签的位置 */
+  position?: "auto" | "top" | "bottom" | "inside" | "outside";
 }

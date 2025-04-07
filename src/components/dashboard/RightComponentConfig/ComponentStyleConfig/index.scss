@@ -11,42 +11,6 @@
   }
 
   .style-item {
-    .chart-legend-container {
-      .chart-legend-text-simple {
-        display: flex;
-        align-items: center;
-        height: 32px;
-      }
-
-      .chart-legend-text {
-        display: flex;
-        align-items: center;
-        margin-left: 25px;
-        height: 32px;
-        gap: 5px;
-
-        /* stylelint-disable-next-line no-descending-specificity */
-        > span {
-          white-space: nowrap;
-        }
-      }
-    }
-
-    .data-label-container {
-      .data-label-text-simple {
-        display: flex;
-        align-items: center;
-        height: 32px;
-      }
-
-      .data-label-text {
-        display: flex;
-        align-items: center;
-        height: 32px;
-        gap: 5px;
-      }
-    }
-
     .chart-tooltip-container {
       .chart-tooltip-text-simple {
         display: flex;

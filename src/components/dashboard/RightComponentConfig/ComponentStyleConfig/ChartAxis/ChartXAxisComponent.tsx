@@ -113,7 +113,7 @@ const ChartXAxisComponent: React.FC<{
           max={20}
           defaultValue={12}
           step={1}
-          style={{ width: 100 }}
+          style={{ width: 85 }}
           disabled={isTitleAndUnitDisabled}
           value={config.axisTitleConfig.fontConfig.fontSize}
           onChange={(value) => {
@@ -185,7 +185,7 @@ const ChartXAxisComponent: React.FC<{
           max={20}
           defaultValue={12}
           step={1}
-          style={{ width: 100 }}
+          style={{ width: 85 }}
           disabled={isAxisLabelDisabled}
           value={config.axisLabelConfig.fontConfig.fontSize}
           onChange={(value) => {
