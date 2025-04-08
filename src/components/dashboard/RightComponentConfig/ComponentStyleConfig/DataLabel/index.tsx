@@ -1,18 +1,9 @@
-import { BoldOutlined, ItalicOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Checkbox,
-  ColorPicker,
-  InputNumber,
-  Radio,
-  Select,
-  Tooltip,
-} from "antd";
-import { Color } from "antd/es/color-picker";
+import { Checkbox, Radio, Select } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import { useImmer } from "use-immer";
 
 import "./index.scss";
+import FontConfigPanel from "@/components/common/FontConfigPanel";
 import { ChartTypeEnum } from "@/components/dashboard/utils";
 import useChartStore from "@/stores/useChartStore";
 import { DataLabelConfig } from "@/types/chartConfigItems/common";
@@ -149,59 +140,34 @@ const DataLabel: React.FC = () => {
         </div>
       )}
       <div className="data-label-row sub-content">
-        <span>文本</span>
-        <ColorPicker
-          size="small"
-          value={config.fontConfig.color}
-          disabled={!config.isShowDataLabel}
-          onChangeComplete={(color: Color) => {
+        <FontConfigPanel
+          colorValue={config.fontConfig.color}
+          fontSizeValue={config.fontConfig.fontSize}
+          boldButtonType={config.fontConfig.isBold ? "primary" : "text"}
+          italicButtonType={config.fontConfig.isItalic ? "primary" : "text"}
+          inputWidth={82}
+          isDisabled={!config.isShowDataLabel}
+          onColorChange={(color) =>
             updataConfig((draft) => {
               draft.fontConfig.color = color.toHexString();
-            });
-          }}
-        />
-        <InputNumber
-          size="small"
-          addonAfter="px"
-          min={12}
-          max={20}
-          defaultValue={12}
-          step={1}
-          style={{ width: 85 }}
-          value={config.fontConfig.fontSize}
-          disabled={!config.isShowDataLabel}
-          onChange={(value) => {
+            })
+          }
+          onFontSizeChange={(value) =>
             updataConfig((draft) => {
               draft.fontConfig.fontSize = Number(value);
-            });
-          }}
+            })
+          }
+          onBoldClick={() =>
+            updataConfig((draft) => {
+              draft.fontConfig.isBold = !draft.fontConfig.isBold;
+            })
+          }
+          onItalicClick={() =>
+            updataConfig((draft) => {
+              draft.fontConfig.isItalic = !draft.fontConfig.isItalic;
+            })
+          }
         />
-        <Tooltip title="加粗">
-          <Button
-            type={config.fontConfig.isBold ? "primary" : "text"}
-            icon={<BoldOutlined />}
-            size="small"
-            disabled={!config.isShowDataLabel}
-            onClick={() => {
-              updataConfig((draft) => {
-                draft.fontConfig.isBold = !draft.fontConfig.isBold;
-              });
-            }}
-          />
-        </Tooltip>
-        <Tooltip title="斜体">
-          <Button
-            type={config.fontConfig.isItalic ? "primary" : "text"}
-            icon={<ItalicOutlined />}
-            size="small"
-            disabled={!config.isShowDataLabel}
-            onClick={() => {
-              updataConfig((draft) => {
-                draft.fontConfig.isItalic = !draft.fontConfig.isItalic;
-              });
-            }}
-          />
-        </Tooltip>
       </div>
     </div>
   );

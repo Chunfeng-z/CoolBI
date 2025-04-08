@@ -1,10 +1,5 @@
+import { InfoCircleOutlined } from "@ant-design/icons";
 import {
-  BoldOutlined,
-  InfoCircleOutlined,
-  ItalicOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
   Checkbox,
   ColorPicker,
   Input,
@@ -12,9 +7,11 @@ import {
   Select,
   Tooltip,
 } from "antd";
-import { memo, useMemo } from "react";
+import { Color } from "antd/es/color-picker";
+import { memo, useCallback, useMemo } from "react";
 import { useImmer } from "use-immer";
 
+import FontConfigPanel from "@/components/common/FontConfigPanel";
 import LineStyleSelect from "@/components/common/LineStyleSelect";
 import { LineYAxisConfig } from "@/types/chartConfigItems/lineItems";
 
@@ -52,6 +49,67 @@ const ChartYAxisComponent: React.FC<{
   const isCustomIntervalDisabled = useMemo(() => {
     return !config.isShowAxis || !config.intervalConfig.isEnableCustomInterval;
   }, [config.isShowAxis, config.intervalConfig.isEnableCustomInterval]);
+
+  /** 标题和单位配置的更新 */
+  const handleTitleUnitFontColorChange = useCallback(
+    (color: Color) => {
+      updateConfig((draft) => {
+        draft.axisTitleConfig.fontConfig.color = color.toHexString();
+      });
+    },
+    [updateConfig]
+  );
+  const handleTitleUnitFontSizeChange = useCallback(
+    (value: number | null) => {
+      updateConfig((draft) => {
+        draft.axisTitleConfig.fontConfig.fontSize = value ?? 12;
+      });
+    },
+    [updateConfig]
+  );
+  const handleTitleUnitBoldClick = useCallback(() => {
+    updateConfig((draft) => {
+      draft.axisTitleConfig.fontConfig.isBold =
+        !draft.axisTitleConfig.fontConfig.isBold;
+    });
+  }, [updateConfig]);
+  const handleTitleUnitItalicClick = useCallback(() => {
+    updateConfig((draft) => {
+      draft.axisTitleConfig.fontConfig.isItalic =
+        !draft.axisTitleConfig.fontConfig.isItalic;
+    });
+  }, [updateConfig]);
+
+  /** 坐标轴标签配置的更新 */
+  const handleAxisLabelFontColorChange = useCallback(
+    (color: Color) => {
+      updateConfig((draft) => {
+        draft.axisLabelConfig.fontConfig.color = color.toHexString();
+      });
+    },
+    [updateConfig]
+  );
+  const handleAxisLabelFontSizeChange = useCallback(
+    (value: number | null) => {
+      updateConfig((draft) => {
+        draft.axisLabelConfig.fontConfig.fontSize = value ?? 12;
+      });
+    },
+    [updateConfig]
+  );
+  const handleAxisLabelBoldClick = useCallback(() => {
+    updateConfig((draft) => {
+      draft.axisLabelConfig.fontConfig.isBold =
+        !draft.axisLabelConfig.fontConfig.isBold;
+    });
+  }, [updateConfig]);
+  const handleAxisLabelItalicClick = useCallback(() => {
+    updateConfig((draft) => {
+      draft.axisLabelConfig.fontConfig.isItalic =
+        !draft.axisLabelConfig.fontConfig.isItalic;
+    });
+  }, [updateConfig]);
+
   return (
     <div className="chart-axis-y-content">
       <div className="chart-axis-row">
@@ -133,63 +191,23 @@ const ChartYAxisComponent: React.FC<{
         />
       </div>
       <div className="chart-axis-row sub-content">
-        <span>文本</span>
-        <ColorPicker
-          size="small"
-          disabled={isTitleAndUnitDisabled}
-          value={config.axisTitleConfig.fontConfig.color}
-          onChangeComplete={(color) => {
-            updateConfig((draft) => {
-              draft.axisTitleConfig.fontConfig.color = color.toHexString();
-            });
-          }}
+        <FontConfigPanel
+          label="文本"
+          colorValue={config.axisTitleConfig.fontConfig.color}
+          fontSizeValue={config.axisTitleConfig.fontConfig.fontSize}
+          boldButtonType={
+            config.axisTitleConfig.fontConfig.isBold ? "primary" : "text"
+          }
+          italicButtonType={
+            config.axisTitleConfig.fontConfig.isItalic ? "primary" : "text"
+          }
+          inputWidth={82}
+          isDisabled={isTitleAndUnitDisabled}
+          onColorChange={handleTitleUnitFontColorChange}
+          onFontSizeChange={handleTitleUnitFontSizeChange}
+          onBoldClick={handleTitleUnitBoldClick}
+          onItalicClick={handleTitleUnitItalicClick}
         />
-        <InputNumber
-          size="small"
-          addonAfter="px"
-          min={12}
-          max={20}
-          defaultValue={12}
-          step={1}
-          style={{ width: 100 }}
-          disabled={isTitleAndUnitDisabled}
-          value={config.axisTitleConfig.fontConfig.fontSize}
-          onChange={(value) => {
-            updateConfig((draft) => {
-              draft.axisTitleConfig.fontConfig.fontSize = value ?? 12;
-            });
-          }}
-        />
-        <Tooltip title="加粗">
-          <Button
-            type={config.axisTitleConfig.fontConfig.isBold ? "primary" : "text"}
-            icon={<BoldOutlined />}
-            size="small"
-            disabled={isTitleAndUnitDisabled}
-            onClick={() => {
-              updateConfig((draft) => {
-                draft.axisTitleConfig.fontConfig.isBold =
-                  !draft.axisTitleConfig.fontConfig.isBold;
-              });
-            }}
-          />
-        </Tooltip>
-        <Tooltip title="斜体">
-          <Button
-            type={
-              config.axisTitleConfig.fontConfig.isItalic ? "primary" : "text"
-            }
-            icon={<ItalicOutlined />}
-            size="small"
-            disabled={isTitleAndUnitDisabled}
-            onClick={() => {
-              updateConfig((draft) => {
-                draft.axisTitleConfig.fontConfig.isItalic =
-                  !draft.axisTitleConfig.fontConfig.isItalic;
-              });
-            }}
-          />
-        </Tooltip>
       </div>
       <div className="chart-axis-label">
         <Checkbox
@@ -205,63 +223,23 @@ const ChartYAxisComponent: React.FC<{
         </Checkbox>
       </div>
       <div className="chart-axis-row sub-content">
-        <span>文本</span>
-        <ColorPicker
-          size="small"
-          disabled={isAxisLabelDisabled}
-          value={config.axisLabelConfig.fontConfig.color}
-          onChangeComplete={(color) => {
-            updateConfig((draft) => {
-              draft.axisLabelConfig.fontConfig.color = color.toHexString();
-            });
-          }}
+        <FontConfigPanel
+          label="文本"
+          colorValue={config.axisLabelConfig.fontConfig.color}
+          fontSizeValue={config.axisLabelConfig.fontConfig.fontSize}
+          boldButtonType={
+            config.axisLabelConfig.fontConfig.isBold ? "primary" : "text"
+          }
+          italicButtonType={
+            config.axisLabelConfig.fontConfig.isItalic ? "primary" : "text"
+          }
+          inputWidth={82}
+          isDisabled={isAxisLabelDisabled}
+          onColorChange={handleAxisLabelFontColorChange}
+          onFontSizeChange={handleAxisLabelFontSizeChange}
+          onBoldClick={handleAxisLabelBoldClick}
+          onItalicClick={handleAxisLabelItalicClick}
         />
-        <InputNumber
-          size="small"
-          addonAfter="px"
-          min={12}
-          max={20}
-          defaultValue={12}
-          step={1}
-          style={{ width: 100 }}
-          disabled={isAxisLabelDisabled}
-          value={config.axisLabelConfig.fontConfig.fontSize}
-          onChange={(value) => {
-            updateConfig((draft) => {
-              draft.axisLabelConfig.fontConfig.fontSize = value ?? 12;
-            });
-          }}
-        />
-        <Tooltip title="加粗">
-          <Button
-            type={config.axisLabelConfig.fontConfig.isBold ? "primary" : "text"}
-            icon={<BoldOutlined />}
-            size="small"
-            disabled={isAxisLabelDisabled}
-            onClick={() => {
-              updateConfig((draft) => {
-                draft.axisLabelConfig.fontConfig.isBold =
-                  !draft.axisLabelConfig.fontConfig.isBold;
-              });
-            }}
-          />
-        </Tooltip>
-        <Tooltip title="斜体">
-          <Button
-            type={
-              config.axisLabelConfig.fontConfig.isItalic ? "primary" : "text"
-            }
-            icon={<ItalicOutlined />}
-            size="small"
-            disabled={isAxisLabelDisabled}
-            onClick={() => {
-              updateConfig((draft) => {
-                draft.axisLabelConfig.fontConfig.isItalic =
-                  !draft.axisLabelConfig.fontConfig.isItalic;
-              });
-            }}
-          />
-        </Tooltip>
       </div>
       <div className="chart-axis-row">
         <Checkbox

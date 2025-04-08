@@ -1,23 +1,15 @@
 import {
-  BoldOutlined,
   DownSquareOutlined,
-  ItalicOutlined,
   LeftSquareOutlined,
   RightSquareOutlined,
   UpSquareOutlined,
 } from "@ant-design/icons";
-import {
-  Button,
-  Checkbox,
-  ColorPicker,
-  InputNumber,
-  Radio,
-  Tooltip,
-} from "antd";
+import { Button, Checkbox, Radio, Tooltip } from "antd";
 import React, { useCallback, useEffect } from "react";
 import { useImmer } from "use-immer";
 import "./index.scss";
 
+import FontConfigPanel from "@/components/common/FontConfigPanel";
 import { ChartTypeEnum } from "@/components/dashboard/utils";
 import useChartStore from "@/stores/useChartStore";
 import {
@@ -154,61 +146,38 @@ const ChartLegend: React.FC = () => {
         </div>
       )}
       <div className="chart-legend-row sub-content">
-        <span>文本</span>
-        <ColorPicker
-          size="small"
-          disabled={!config.isShowLegend}
-          value={config.legendFontConfig.color}
-          onChangeComplete={(color) =>
+        <FontConfigPanel
+          colorValue={config.legendFontConfig.color}
+          fontSizeValue={config.legendFontConfig.fontSize}
+          boldButtonType={config.legendFontConfig.isBold ? "primary" : "text"}
+          italicButtonType={
+            config.legendFontConfig.isItalic ? "primary" : "text"
+          }
+          inputWidth={82}
+          isDisabled={!config.isShowLegend}
+          onColorChange={(color) =>
             updateConfig((draft) => {
               draft.legendFontConfig.color = color.toHexString();
             })
           }
-        />
-        <InputNumber
-          size="small"
-          addonAfter="px"
-          min={12}
-          max={20}
-          defaultValue={12}
-          step={1}
-          style={{ width: 85 }}
-          disabled={!config.isShowLegend}
-          value={config.legendFontConfig.fontSize}
-          onChange={(value) =>
+          onFontSizeChange={(value) =>
             updateConfig((draft) => {
               console.log("value", value);
               draft.legendFontConfig.fontSize = Number(value);
             })
           }
+          onBoldClick={() =>
+            updateConfig((draft) => {
+              draft.legendFontConfig.isBold = !draft.legendFontConfig.isBold;
+            })
+          }
+          onItalicClick={() =>
+            updateConfig((draft) => {
+              draft.legendFontConfig.isItalic =
+                !draft.legendFontConfig.isItalic;
+            })
+          }
         />
-        <Tooltip title="加粗">
-          <Button
-            icon={<BoldOutlined />}
-            size="small"
-            type={config.legendFontConfig.isBold ? "primary" : "text"}
-            disabled={!config.isShowLegend}
-            onClick={() =>
-              updateConfig((draft) => {
-                draft.legendFontConfig.isBold = !draft.legendFontConfig.isBold;
-              })
-            }
-          />
-        </Tooltip>
-        <Tooltip title="斜体">
-          <Button
-            icon={<ItalicOutlined />}
-            size="small"
-            type={config.legendFontConfig.isItalic ? "primary" : "text"}
-            disabled={!config.isShowLegend}
-            onClick={() =>
-              updateConfig((draft) => {
-                draft.legendFontConfig.isItalic =
-                  !draft.legendFontConfig.isItalic;
-              })
-            }
-          />
-        </Tooltip>
       </div>
     </div>
   );

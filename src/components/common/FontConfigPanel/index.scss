@@ -1,0 +1,10 @@
+.font-config-panel {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  gap: 4px;
+
+  > span {
+    white-space: nowrap;
+  }
+}
