@@ -73,6 +73,7 @@ const ChartToolTip: React.FC = () => {
     (state) => state.getCurrentChartConfig
   );
   const curChartId = useChartStore((state) => state.curChartId);
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
   const [config, updataConfig] =
     useImmer<CoolBIToolTipConfig>(defaultToolTipConfig);
 
@@ -102,6 +103,11 @@ const ChartToolTip: React.FC = () => {
             updataConfig((draft) => {
               draft.isShowToolTip = e.target.checked;
             });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.tooltipConfig.isShowToolTip = e.target.checked;
+              }
+            });
           }}
         >
           是否显示工具提示
@@ -117,6 +123,11 @@ const ChartToolTip: React.FC = () => {
             onChange={(e) => {
               updataConfig((draft) => {
                 draft.displayMode = e.target.value;
+              });
+              setChartsConfig(curChartId!, (draft) => {
+                if (draft.type === ChartTypeEnum.line) {
+                  draft.tooltipConfig.displayMode = e.target.value;
+                }
               });
             }}
             style={{
@@ -137,6 +148,12 @@ const ChartToolTip: React.FC = () => {
               updataConfig((draft) => {
                 draft.tipContentConfig.isShowTotal = e.target.checked;
               });
+              setChartsConfig(curChartId!, (draft) => {
+                if (draft.type === ChartTypeEnum.line) {
+                  draft.tooltipConfig.tipContentConfig.isShowTotal =
+                    e.target.checked;
+                }
+              });
             }}
           >
             总计
@@ -148,6 +165,12 @@ const ChartToolTip: React.FC = () => {
           onChange={(e) => {
             updataConfig((draft) => {
               draft.tipContentConfig.isShowPercentage = e.target.checked;
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.tooltipConfig.tipContentConfig.isShowPercentage =
+                  e.target.checked;
+              }
             });
           }}
         >
@@ -164,6 +187,11 @@ const ChartToolTip: React.FC = () => {
             updataConfig((draft) => {
               draft.backgroundColor = color.toHexString();
             });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.tooltipConfig.backgroundColor = color.toHexString();
+              }
+            });
           }}
         />
       </div>
@@ -178,20 +206,42 @@ const ChartToolTip: React.FC = () => {
             updataConfig((draft) => {
               draft.fontConfig.color = color.toHexString();
             });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.tooltipConfig.fontConfig.color = color.toHexString();
+              }
+            });
           }}
           onFontSizeChange={(value) => {
             updataConfig((draft) => {
               draft.fontConfig.fontSize = Number(value);
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.tooltipConfig.fontConfig.fontSize = Number(value);
+              }
             });
           }}
           onBoldClick={() => {
             updataConfig((draft) => {
               draft.fontConfig.isBold = !draft.fontConfig.isBold;
             });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.tooltipConfig.fontConfig.isBold =
+                  !draft.tooltipConfig.fontConfig.isBold;
+              }
+            });
           }}
           onItalicClick={() => {
             updataConfig((draft) => {
               draft.fontConfig.isItalic = !draft.fontConfig.isItalic;
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.tooltipConfig.fontConfig.isItalic =
+                  !draft.tooltipConfig.fontConfig.isItalic;
+              }
             });
           }}
         />

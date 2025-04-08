@@ -62,6 +62,7 @@ const ChartLegend: React.FC = () => {
   const getCurrentChartConfig = useChartStore(
     (state) => state.getCurrentChartConfig
   );
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
   const [config, updateConfig] = useImmer<LegendConfig>(defaultLegendConfig);
   useEffect(() => {
     const curConfig = getCurrentChartConfig();
@@ -72,7 +73,7 @@ const ChartLegend: React.FC = () => {
     if (curConfig.type === ChartTypeEnum.line) {
       updateConfig(() => curConfig.legendConfig);
     }
-  }, [curChartId]);
+  }, [curChartId, getCurrentChartConfig, updateConfig]);
 
   const renderRadioOptions = useCallback((position: CoolBILegendPosition) => {
     if (position === "top" || position === "bottom") {
@@ -99,11 +100,16 @@ const ChartLegend: React.FC = () => {
       <div className="chart-legend-label">
         <Checkbox
           checked={config.isShowLegend}
-          onChange={(e) =>
+          onChange={(e) => {
             updateConfig((draft) => {
               draft.isShowLegend = e.target.checked;
-            })
-          }
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.legendConfig.isShowLegend = e.target.checked;
+              }
+            });
+          }}
         >
           显示图例
         </Checkbox>
@@ -124,6 +130,12 @@ const ChartLegend: React.FC = () => {
                   // 切换图例位置时，初始化对齐方式：居中
                   draft.legendAlign = "center";
                 });
+                setChartsConfig(curChartId!, (draft) => {
+                  if (draft.type === ChartTypeEnum.line) {
+                    draft.legendConfig.legendPosition = position;
+                    draft.legendConfig.legendAlign = "center";
+                  }
+                });
               }}
             />
           </Tooltip>
@@ -135,11 +147,16 @@ const ChartLegend: React.FC = () => {
             value={config.legendAlign}
             size="small"
             disabled={!config.isShowLegend}
-            onChange={(e) =>
+            onChange={(e) => {
               updateConfig((draft) => {
                 draft.legendAlign = e.target.value;
-              })
-            }
+              });
+              setChartsConfig(curChartId!, (draft) => {
+                if (draft.type === ChartTypeEnum.line) {
+                  draft.legendConfig.legendAlign = e.target.value;
+                }
+              });
+            }}
           >
             {renderRadioOptions(config.legendPosition)}
           </Radio.Group>
@@ -155,28 +172,49 @@ const ChartLegend: React.FC = () => {
           }
           inputWidth={82}
           isDisabled={!config.isShowLegend}
-          onColorChange={(color) =>
+          onColorChange={(color) => {
             updateConfig((draft) => {
               draft.legendFontConfig.color = color.toHexString();
-            })
-          }
-          onFontSizeChange={(value) =>
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.legendConfig.legendFontConfig.color = color.toHexString();
+              }
+            });
+          }}
+          onFontSizeChange={(value) => {
             updateConfig((draft) => {
-              console.log("value", value);
               draft.legendFontConfig.fontSize = Number(value);
-            })
-          }
-          onBoldClick={() =>
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.legendConfig.legendFontConfig.fontSize = Number(value);
+              }
+            });
+          }}
+          onBoldClick={() => {
             updateConfig((draft) => {
               draft.legendFontConfig.isBold = !draft.legendFontConfig.isBold;
-            })
-          }
-          onItalicClick={() =>
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.legendConfig.legendFontConfig.isBold =
+                  !draft.legendConfig.legendFontConfig.isBold;
+              }
+            });
+          }}
+          onItalicClick={() => {
             updateConfig((draft) => {
               draft.legendFontConfig.isItalic =
                 !draft.legendFontConfig.isItalic;
-            })
-          }
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.legendConfig.legendFontConfig.isItalic =
+                  !draft.legendConfig.legendFontConfig.isItalic;
+              }
+            });
+          }}
         />
       </div>
     </div>

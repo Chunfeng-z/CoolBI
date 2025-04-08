@@ -53,7 +53,6 @@ const FontConfigPanel: React.FC<FontConfigPanelProps> = memo((props) => {
     italicButtonType,
     onItalicClick,
   } = props;
-  console.log("re-render");
   return (
     <div className={prefixCls}>
       <span>{label}</span>

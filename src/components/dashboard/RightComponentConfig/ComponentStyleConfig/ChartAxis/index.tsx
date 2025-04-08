@@ -34,7 +34,7 @@ const ChartAxis: React.FC = () => {
       setXAxisConfig(curConfig.axisConfig.xAxisConfig);
       setYAxisConfig(curConfig.axisConfig.yAxisConfig);
     }
-  }, [curChartId]);
+  }, [curChartId, getCurrentChartConfig]);
 
   const items: TabsProps["items"] = [
     {

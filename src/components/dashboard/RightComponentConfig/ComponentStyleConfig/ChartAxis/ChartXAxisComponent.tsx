@@ -1,10 +1,13 @@
 import { Checkbox, ColorPicker, Input, InputNumber } from "antd";
 import { Color } from "antd/es/color-picker";
+import { set } from "lodash-es";
 import { memo, useCallback, useMemo } from "react";
 import { useImmer } from "use-immer";
 
 import FontConfigPanel from "@/components/common/FontConfigPanel";
 import LineStyleSelect from "@/components/common/LineStyleSelect";
+import { ChartTypeEnum } from "@/components/dashboard/utils";
+import useChartStore, { SupportedChartType } from "@/stores/useChartStore";
 import { LineXAxisConfig } from "@/types/chartConfigItems/lineItems";
 
 const ChartXAxisComponent: React.FC<{
@@ -12,6 +15,8 @@ const ChartXAxisComponent: React.FC<{
   xAxisConfig: LineXAxisConfig;
 }> = memo((props) => {
   const { xAxisConfig } = props;
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
+  const curChartId = useChartStore((state) => state.curChartId);
   const [config, updateConfig] = useImmer<LineXAxisConfig>(xAxisConfig);
 
   /** 标题和单位配置的禁用状态 */
@@ -31,35 +36,83 @@ const ChartXAxisComponent: React.FC<{
     return !config.isShowAxis || !config.axisGridConfig.isShowLine;
   }, [config.isShowAxis, config.axisGridConfig.isShowLine]);
 
+  /** 更新zustand当前图表配置
+   * paths: 更新路径
+   * value: 更新值
+   */
+  const updateChartsConfig = useCallback(
+    (
+      paths: string[],
+      value:
+        | string
+        | number
+        | boolean
+        | undefined
+        | ((draft: SupportedChartType) => unknown)
+    ) => {
+      const basePaths = ["axisConfig", "xAxisConfig"];
+      const newPaths = [...basePaths, ...paths];
+      setChartsConfig(curChartId!, (draft) => {
+        if (draft.type === ChartTypeEnum.line) {
+          const newValue = typeof value === "function" ? value(draft) : value;
+          set(draft, newPaths, newValue);
+        }
+      });
+    },
+    [curChartId, setChartsConfig]
+  );
+
   /** 标题和单位配置的更新 */
   const handleTitleUnitFontColorChange = useCallback(
     (color: Color) => {
       updateConfig((draft) => {
         draft.axisTitleConfig.fontConfig.color = color.toHexString();
       });
+      updateChartsConfig(
+        ["axisTitleConfig", "fontConfig", "color"],
+        color.toHexString()
+      );
     },
-    [updateConfig]
+    [updateChartsConfig, updateConfig]
   );
   const handleTitleUnitFontSizeChange = useCallback(
     (value: number | null) => {
       updateConfig((draft) => {
         draft.axisTitleConfig.fontConfig.fontSize = value ?? 12;
       });
+      updateChartsConfig(
+        ["axisTitleConfig", "fontConfig", "fontSize"],
+        value ?? 12
+      );
     },
-    [updateConfig]
+    [updateConfig, updateChartsConfig]
   );
   const handleTitleUnitBoldClick = useCallback(() => {
     updateConfig((draft) => {
       draft.axisTitleConfig.fontConfig.isBold =
         !draft.axisTitleConfig.fontConfig.isBold;
     });
-  }, [updateConfig]);
+    updateChartsConfig(["axisTitleConfig", "fontConfig", "isBold"], (draft) => {
+      if (draft.type === ChartTypeEnum.line) {
+        return !draft.axisConfig.xAxisConfig.axisTitleConfig.fontConfig.isBold;
+      }
+    });
+  }, [updateChartsConfig, updateConfig]);
   const handleTitleUnitItalicClick = useCallback(() => {
     updateConfig((draft) => {
       draft.axisTitleConfig.fontConfig.isItalic =
         !draft.axisTitleConfig.fontConfig.isItalic;
     });
-  }, [updateConfig]);
+    updateChartsConfig(
+      ["axisTitleConfig", "fontConfig", "isItalic"],
+      (draft) => {
+        if (draft.type === ChartTypeEnum.line) {
+          return !draft.axisConfig.xAxisConfig.axisTitleConfig.fontConfig
+            .isItalic;
+        }
+      }
+    );
+  }, [updateChartsConfig, updateConfig]);
 
   /** 坐标轴标签配置的更新 */
   const handleAxisLabelFontColorChange = useCallback(
@@ -67,29 +120,51 @@ const ChartXAxisComponent: React.FC<{
       updateConfig((draft) => {
         draft.axisLabelConfig.fontConfig.color = color.toHexString();
       });
+      updateChartsConfig(
+        ["axisLabelConfig", "fontConfig", "color"],
+        color.toHexString()
+      );
     },
-    [updateConfig]
+    [updateChartsConfig, updateConfig]
   );
   const handleAxisLabelFontSizeChange = useCallback(
     (value: number | null) => {
       updateConfig((draft) => {
         draft.axisLabelConfig.fontConfig.fontSize = value ?? 12;
       });
+      updateChartsConfig(
+        ["axisLabelConfig", "fontConfig", "fontSize"],
+        value ?? 12
+      );
     },
-    [updateConfig]
+    [updateChartsConfig, updateConfig]
   );
   const handleAxisLabelBoldClick = useCallback(() => {
     updateConfig((draft) => {
       draft.axisLabelConfig.fontConfig.isBold =
         !draft.axisLabelConfig.fontConfig.isBold;
     });
-  }, [updateConfig]);
+    updateChartsConfig(["axisLabelConfig", "fontConfig", "isBold"], (draft) => {
+      if (draft.type === ChartTypeEnum.line) {
+        return !draft.axisConfig.xAxisConfig.axisLabelConfig.fontConfig.isBold;
+      }
+    });
+  }, [updateChartsConfig, updateConfig]);
   const handleAxisLabelItalicClick = useCallback(() => {
     updateConfig((draft) => {
       draft.axisLabelConfig.fontConfig.isItalic =
         !draft.axisLabelConfig.fontConfig.isItalic;
     });
-  }, [updateConfig]);
+    updateChartsConfig(
+      ["axisLabelConfig", "fontConfig", "isItalic"],
+      (draft) => {
+        if (draft.type === ChartTypeEnum.line) {
+          return !draft.axisConfig.xAxisConfig.axisLabelConfig.fontConfig
+            .isItalic;
+        }
+      }
+    );
+  }, [updateChartsConfig, updateConfig]);
 
   return (
     <div className="chart-axis-x-content">
@@ -100,6 +175,7 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.isShowAxis = e.target.checked;
             });
+            updateChartsConfig(["isShowAxis"], e.target.checked);
           }}
         >
           显示X轴
@@ -113,6 +189,10 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisTitleConfig.isShowTitleAndUnit = e.target.checked;
             });
+            updateChartsConfig(
+              ["axisTitleConfig", "isShowTitleAndUnit"],
+              e.target.checked
+            );
           }}
         >
           显示标题和单位
@@ -130,6 +210,7 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisTitleConfig.title = e.target.value;
             });
+            updateChartsConfig(["axisTitleConfig", "title"], e.target.value);
           }}
         />
       </div>
@@ -145,6 +226,7 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisTitleConfig.unit = e.target.value;
             });
+            updateChartsConfig(["axisTitleConfig", "unit"], e.target.value);
           }}
         />
       </div>
@@ -175,6 +257,10 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisLabelConfig.isShowAxisLabel = e.target.checked;
             });
+            updateChartsConfig(
+              ["axisLabelConfig", "isShowAxisLabel"],
+              e.target.checked
+            );
           }}
         >
           显示坐标轴标签
@@ -207,6 +293,7 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.isShowTickLine = e.target.checked;
             });
+            updateChartsConfig(["isShowTickLine"], e.target.checked);
           }}
         >
           显示刻度线
@@ -220,6 +307,10 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisLineConfig.isShowLine = e.target.checked;
             });
+            updateChartsConfig(
+              ["axisLineConfig", "isShowLine"],
+              e.target.checked
+            );
           }}
         >
           显示坐标轴
@@ -233,6 +324,7 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisLineConfig.lineStyle = value;
             });
+            updateChartsConfig(["axisLineConfig", "lineStyle"], value);
           }}
           style={{ width: 80 }}
         />
@@ -250,6 +342,7 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisLineConfig.lineWidth = value ?? 1;
             });
+            updateChartsConfig(["axisLineConfig", "lineWidth"], value ?? 1);
           }}
         />
         <ColorPicker
@@ -260,6 +353,10 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisLineConfig.lineColor = color.toHexString();
             });
+            updateChartsConfig(
+              ["axisLineConfig", "lineColor"],
+              color.toHexString()
+            );
           }}
         />
       </div>
@@ -271,6 +368,10 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisGridConfig.isShowLine = e.target.checked;
             });
+            updateChartsConfig(
+              ["axisGridConfig", "isShowLine"],
+              e.target.checked
+            );
           }}
         >
           显示网格线
@@ -284,6 +385,7 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisGridConfig.lineStyle = value;
             });
+            updateChartsConfig(["axisGridConfig", "lineStyle"], value);
           }}
           style={{ width: 80 }}
         />
@@ -301,6 +403,7 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisGridConfig.lineWidth = value ?? 1;
             });
+            updateChartsConfig(["axisGridConfig", "lineWidth"], value ?? 1);
           }}
         />
         <ColorPicker
@@ -311,6 +414,10 @@ const ChartXAxisComponent: React.FC<{
             updateConfig((draft) => {
               draft.axisGridConfig.lineColor = color.toHexString();
             });
+            updateChartsConfig(
+              ["axisGridConfig", "lineColor"],
+              color.toHexString()
+            );
           }}
         />
       </div>

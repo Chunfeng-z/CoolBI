@@ -14,6 +14,7 @@ const ChartAuxiliary: React.FC = () => {
     (state) => state.getCurrentChartConfig
   );
   const curChartId = useChartStore((state) => state.curChartId);
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
   const [config, setConfig] = useState<AuxiliaryConfig>();
 
   useEffect(() => {
@@ -39,6 +40,11 @@ const ChartAuxiliary: React.FC = () => {
             setConfig({
               ...config,
               dataZoomDisplayMode: e.target.value,
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.auxiliaryConfig.dataZoomDisplayMode = e.target.value;
+              }
             });
           }}
           options={[

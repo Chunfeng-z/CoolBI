@@ -11,7 +11,7 @@ import {
 import { generateDefaultChartName } from "@/utils/hooks";
 
 // 当前系统支持的图表类型
-type SupportedChartType =
+export type SupportedChartType =
   | IndicatorCardChartConfig
   | IndicatorTrendChartConfig
   | LineChartConfig;

@@ -48,6 +48,7 @@ const DataLabel: React.FC = () => {
     (state) => state.getCurrentChartConfig
   );
   const curChartId = useChartStore((state) => state.curChartId);
+  const setChartsConfig = useChartStore((state) => state.setChartsConfig);
   const [config, updataConfig] = useImmer<DataLabelConfig>(
     defaultDataLabelConfig
   );
@@ -91,6 +92,11 @@ const DataLabel: React.FC = () => {
             updataConfig((draft) => {
               draft.isShowDataLabel = e.target.checked;
             });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.dataLabelConfig.isShowDataLabel = e.target.checked;
+              }
+            });
           }}
         >
           显示数据标签
@@ -106,6 +112,11 @@ const DataLabel: React.FC = () => {
           onChange={(e) => {
             updataConfig((draft) => {
               draft.showMode = e.target.value;
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.dataLabelConfig.showMode = e.target.value;
+              }
             });
           }}
           options={[
@@ -135,6 +146,11 @@ const DataLabel: React.FC = () => {
               updataConfig((draft) => {
                 draft.position = value;
               });
+              setChartsConfig(curChartId!, (draft) => {
+                if (draft.type === ChartTypeEnum.line) {
+                  draft.dataLabelConfig.position = value;
+                }
+              });
             }}
           />
         </div>
@@ -147,26 +163,48 @@ const DataLabel: React.FC = () => {
           italicButtonType={config.fontConfig.isItalic ? "primary" : "text"}
           inputWidth={82}
           isDisabled={!config.isShowDataLabel}
-          onColorChange={(color) =>
+          onColorChange={(color) => {
             updataConfig((draft) => {
               draft.fontConfig.color = color.toHexString();
-            })
-          }
-          onFontSizeChange={(value) =>
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.dataLabelConfig.fontConfig.color = color.toHexString();
+              }
+            });
+          }}
+          onFontSizeChange={(value) => {
             updataConfig((draft) => {
               draft.fontConfig.fontSize = Number(value);
-            })
-          }
-          onBoldClick={() =>
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.dataLabelConfig.fontConfig.fontSize = Number(value);
+              }
+            });
+          }}
+          onBoldClick={() => {
             updataConfig((draft) => {
               draft.fontConfig.isBold = !draft.fontConfig.isBold;
-            })
-          }
-          onItalicClick={() =>
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.dataLabelConfig.fontConfig.isBold =
+                  !draft.dataLabelConfig.fontConfig.isBold;
+              }
+            });
+          }}
+          onItalicClick={() => {
             updataConfig((draft) => {
               draft.fontConfig.isItalic = !draft.fontConfig.isItalic;
-            })
-          }
+            });
+            setChartsConfig(curChartId!, (draft) => {
+              if (draft.type === ChartTypeEnum.line) {
+                draft.dataLabelConfig.fontConfig.isItalic =
+                  !draft.dataLabelConfig.fontConfig.isItalic;
+              }
+            });
+          }}
         />
       </div>
     </div>
