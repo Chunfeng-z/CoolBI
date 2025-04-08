@@ -3,6 +3,7 @@ import {
   ChartLayout,
   CoolBIToolTipConfig,
   DataLabelConfig,
+  DataSourceConfig,
   LegendConfig,
   TitleCardConfig,
 } from "../chartConfigItems/common";
@@ -34,4 +35,6 @@ export interface LineChartConfig {
   tooltipConfig: CoolBIToolTipConfig;
   /** 辅助展示配置 */
   auxiliaryConfig: AuxiliaryConfig;
+  /** 图表使用的数据源配置 */
+  dataSourceConfig: DataSourceConfig;
 }

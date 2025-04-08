@@ -172,6 +172,27 @@ export const testData: (
     auxiliaryConfig: {
       dataZoomDisplayMode: "auto",
     },
+    dataSourceConfig: {
+      dataFromId: "dataSource2",
+      dimensionFields: [
+        {
+          id: "field3",
+          name: "订单日期",
+          type: "Dimension",
+          column: "time",
+          dataType: "datetime",
+        },
+      ],
+      measureFields: [
+        {
+          id: "field4",
+          name: "销售额",
+          type: "Measure",
+          column: "value",
+          dataType: "number",
+        },
+      ],
+    },
   },
   {
     chartId: "indicatorCard",

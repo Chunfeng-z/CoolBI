@@ -27,11 +27,12 @@ import CoolPieChart from "@/components/charts/CoolPieChart";
 import CoolPolyLineChart from "@/components/charts/CoolPolyLineChart";
 import CoolPolyLineStackChart from "@/components/charts/CoolPolyLineStackChart";
 import CoolPolyLineStackPercentChart from "@/components/charts/CoolPolyLineStackPercentChart";
-import useChartStore from "@/stores/useChartStore";
+import useChartStore, { SupportedChartType } from "@/stores/useChartStore";
 import useRasterStore from "@/stores/useRasterStore";
 import {
   IndicatorCardChartConfig,
   IndicatorTrendChartConfig,
+  LineChartConfig,
 } from "@/types/charts";
 import { resizeGrid } from "@/utils/hooks";
 import { generateUUID } from "@/utils/uuid";
@@ -226,20 +227,8 @@ const DashBoardDesign: React.FC = () => {
    * @returns 图表组件
    */
   const renderChart = useCallback(
-    (
-      chartType: ChartTypeEnum,
-      chartConfig: IndicatorTrendChartConfig | IndicatorCardChartConfig
-    ) => {
+    (chartType: ChartTypeEnum, chartConfig: SupportedChartType) => {
       // 提取通用配置
-      const commonProps = {
-        // 组件背景颜色填充,在展示自定义背景填充的时候才使用自定义背景颜色
-        backgroundColor: chartConfig.titleCardConfig.isShowBackgroundColor
-          ? chartConfig.titleCardConfig.backgroundColor
-          : "#fff",
-        /** 图表使用的数据源的配置 */
-        dataSourceConfig: chartConfig.dataSourceConfig,
-        // 其他通用配置...
-      };
 
       // 根据图表类型提供不同的配置
       switch (chartType) {
@@ -257,14 +246,28 @@ const DashBoardDesign: React.FC = () => {
           return <CoolBarStackPercentChart />;
         case ChartTypeEnum.pie:
           return <CoolPieChart />;
-        case ChartTypeEnum.line:
-          return <CoolLineChart />;
+        case ChartTypeEnum.line: {
+          const {
+            titleCardConfig,
+            dataSourceConfig,
+            drawAreaConfig,
+            axisConfig,
+          } = chartConfig as LineChartConfig;
+          return (
+            <CoolLineChart
+              backgroundColor={titleCardConfig.backgroundColor}
+              dataSourceConfig={dataSourceConfig}
+              drawAreaConfig={drawAreaConfig}
+              axisConfig={axisConfig}
+            />
+          );
+        }
         case ChartTypeEnum.indicatorCard: {
           const { indicatorLayout, indicatorContentConfig, seriesConfig } =
             chartConfig as IndicatorCardChartConfig;
           return (
             <CoolIndicatorCardChart
-              {...commonProps}
+              dataSourceConfig={chartConfig.dataSourceConfig}
               indicatorLayout={indicatorLayout}
               indicatorContentConfig={indicatorContentConfig}
               seriesConfig={seriesConfig}
@@ -278,7 +281,13 @@ const DashBoardDesign: React.FC = () => {
             trendConfig;
           return (
             <CoolIndicatorTrendChart
-              {...commonProps}
+              backgroundColor={
+                chartConfig.titleCardConfig.isShowBackgroundColor
+                  ? chartConfig.titleCardConfig.backgroundColor
+                  : "#fff"
+              }
+              /** 图表使用的数据源的配置 */
+              dataSourceConfig={chartConfig.dataSourceConfig}
               isShowTrendChart={trendChartConfig.isShowTrendChart}
               trendChartType={trendChartConfig.trendChartType}
               curveType={

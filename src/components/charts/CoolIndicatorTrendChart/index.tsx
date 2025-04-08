@@ -309,6 +309,7 @@ const CoolIndicatorTrendChart: React.FC<ICoolIndicatorTrendChartProps> = (
     // 添加数据标签配置
     label: {
       visible: showDataLabels,
+      position: "top",
       style: {
         fill: dataLabelConfig.fill,
         fontSize: dataLabelConfig.fontSize,

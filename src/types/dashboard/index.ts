@@ -1,5 +1,6 @@
 import { DataSourceField } from "../chartConfigItems/common";
-import { IndicatorCardChartConfig, IndicatorTrendChartConfig } from "../charts";
+
+import { SupportedChartType } from "@/stores/useChartStore";
 
 /** 通用API响应类型 */
 type ApiResponse<T> = {
@@ -9,9 +10,7 @@ type ApiResponse<T> = {
 };
 
 /** 仪表板数据 */
-export type DashboardDataResponse = ApiResponse<
-  (IndicatorTrendChartConfig | IndicatorCardChartConfig)[]
->;
+export type DashboardDataResponse = ApiResponse<SupportedChartType[]>;
 
 export type DataSourceValues = { v: string | number; r?: string | number }[][];
 

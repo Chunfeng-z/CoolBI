@@ -29,7 +29,7 @@ export const dashboardHandlers = [
   http.post(baseUrl + "api/dashboard/queryChartData", async ({ request }) => {
     const data = (await request.json()) as DataSourceConfig;
     if (data.dataFromId === "dataSource2") {
-      await delay(2000);
+      await delay(500);
       const respData: ChartDataResponse = {
         code: 200,
         message: "获取图表数据成功",
