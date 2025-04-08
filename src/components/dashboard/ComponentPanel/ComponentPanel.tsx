@@ -7,17 +7,9 @@ import {
   CloseSquareTwoTone,
 } from "@ant-design/icons";
 import { useKeyPress } from "ahooks";
-import {
-  Button,
-  Tooltip,
-  Dropdown,
-  MenuProps,
-  Select,
-  InputNumber,
-  InputNumberProps,
-} from "antd";
+import { Button, Tooltip, Select, InputNumber, InputNumberProps } from "antd";
 import classNames from "classnames";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 import LeftChartMenu from "../LeftChartMenu";
 import { pageRasterOptions as options } from "../utils";
@@ -27,30 +19,6 @@ import { useCompPanelStore } from "@/stores/useCompPanel";
 import useRasterStore from "@/stores/useRasterStore";
 import { useThemeStore } from "@/stores/useThemeStore";
 const prefixCls = "component-panel";
-enum ScaleValue {
-  "level1" = "25%",
-  "level2" = "50%",
-  "level3" = "75%",
-  "level4" = "100%",
-}
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: <span>{ScaleValue.level1}</span>,
-  },
-  {
-    key: "2",
-    label: <span>{ScaleValue.level2}</span>,
-  },
-  {
-    key: "3",
-    label: <span>{ScaleValue.level3}</span>,
-  },
-  {
-    key: "4",
-    label: <span>{ScaleValue.level4}</span>,
-  },
-];
 
 interface ComponentPanelProps {
   style?: React.CSSProperties;
@@ -80,14 +48,6 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
   const setChartMenuStatus = useCompPanelStore(
     (state) => state.setChartMenuStatus
   );
-  /** 当前菜单缩放倍率 */
-  const [scale, setScale] = useState<ScaleValue>(ScaleValue.level4);
-
-  const handleMenuClick: MenuProps["onClick"] = (e) => {
-    const selectedScale =
-      ScaleValue[`level${e.key}` as keyof typeof ScaleValue];
-    setScale(selectedScale);
-  };
   /** 页面栅格显隐设置 */
   const handlePageRasterClick = () => {
     setIsShowPageRaster(!isShowPageRaster);
@@ -243,19 +203,17 @@ const ComponentPanel: React.FC<ComponentPanelProps> = (props) => {
                 />
               </Tooltip>
               <Tooltip title="布局缩放">
-                <Dropdown
-                  menu={{ items, onClick: handleMenuClick }}
-                  trigger={["click"]}
-                >
-                  <Button
-                    type="text"
-                    size="small"
-                    icon={<DownOutlined />}
-                    iconPosition="end"
-                  >
-                    {scale}
-                  </Button>
-                </Dropdown>
+                <Select
+                  variant="filled"
+                  size="small"
+                  placeholder="100%"
+                  style={{ width: 80 }}
+                  options={[
+                    { value: "100", label: "100%" },
+                    { value: "75", label: "75%" },
+                    { value: "50", label: "50%" },
+                  ]}
+                />
               </Tooltip>
               <Tooltip title="页面栅格设置">
                 <Button

@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 
 import { ChartTypeEnum } from "../../utils";
 
+import LineStyleSelect from "@/components/common/LineStyleSelect";
 import useChartStore from "@/stores/useChartStore";
 import { DataSeriesConfig } from "@/types/chartConfigItems/common";
 
@@ -135,30 +136,10 @@ const SeriesConfig: React.FC = () => {
             <span>线条样式</span>
           </div>
           <div className="series-config-row sub-content">
-            <Select
-              size="small"
-              style={{ width: 110 }}
-              getPopupContainer={(triggerNode) => triggerNode.parentElement!}
+            <LineStyleSelect
               value={config?.lineStyle}
-              onChange={(value) => updateConfig({ lineStyle: value })}
-              options={[
-                {
-                  value: "solid",
-                  label: (
-                    <div className="series-config-line-style">
-                      <div className="series-config-line-style-solid" />
-                    </div>
-                  ),
-                },
-                {
-                  value: "dashed",
-                  label: (
-                    <div className="series-config-line-style">
-                      <div className="series-config-line-style-dashed" />
-                    </div>
-                  ),
-                },
-              ]}
+              onDataChange={(value) => updateConfig({ lineStyle: value })}
+              style={{ width: 110 }}
             />
             <InputNumber
               size="small"

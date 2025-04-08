@@ -45,7 +45,6 @@ const IndicatorItem: React.FC<IIndicatorItemProps> = memo((props) => {
     indicatorNameFontConfig,
     indicatorValueFontConfig,
   } = props;
-  console.log("IndicatorItem render");
   return (
     <div className={prefixCls} style={{ ...style }}>
       <div className="indicator-main">

@@ -9,7 +9,6 @@ import {
   InputNumber,
   InputNumberProps,
   Radio,
-  Select,
   Slider,
   Tooltip,
 } from "antd";
@@ -18,6 +17,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import "./index.scss";
 import { ChartTypeEnum } from "../../../utils";
 
+import LineStyleSelect from "@/components/common/LineStyleSelect";
 import useChartStore from "@/stores/useChartStore";
 import { LineDrawAreaConfig } from "@/types/chartConfigItems/lineItems";
 const prefixCls = "draw-area";
@@ -115,30 +115,10 @@ const DrawArea: React.FC = () => {
               <span>线条样式</span>
             </div>
             <div className="draw-area-row sub-content">
-              <Select
-                size="small"
-                style={{ width: 110 }}
+              <LineStyleSelect
                 value={config.lineStyle}
-                onChange={(value) => updateConfig({ lineStyle: value })}
-                getPopupContainer={(triggerNode) => triggerNode.parentElement!}
-                options={[
-                  {
-                    value: "solid",
-                    label: (
-                      <div className="draw-area-line-style">
-                        <div className="draw-area-line-style-solid" />
-                      </div>
-                    ),
-                  },
-                  {
-                    value: "dashed",
-                    label: (
-                      <div className="draw-area-line-style">
-                        <div className="draw-area-line-style-dashed" />
-                      </div>
-                    ),
-                  },
-                ]}
+                style={{ width: 110 }}
+                onDataChange={(value) => updateConfig({ lineStyle: value })}
               />
               <InputNumber
                 size="small"

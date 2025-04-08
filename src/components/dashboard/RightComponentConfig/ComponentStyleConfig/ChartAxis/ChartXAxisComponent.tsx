@@ -5,12 +5,12 @@ import {
   ColorPicker,
   Input,
   InputNumber,
-  Select,
   Tooltip,
 } from "antd";
 import { memo, useMemo } from "react";
 import { useImmer } from "use-immer";
 
+import LineStyleSelect from "@/components/common/LineStyleSelect";
 import { LineXAxisConfig } from "@/types/chartConfigItems/lineItems";
 
 const ChartXAxisComponent: React.FC<{
@@ -252,35 +252,15 @@ const ChartXAxisComponent: React.FC<{
         </Checkbox>
       </div>
       <div className="chart-axis-row sub-content">
-        <Select
-          size="small"
-          style={{ width: 80 }}
-          getPopupContainer={(triggerNode) => triggerNode.parentElement!}
+        <LineStyleSelect
           disabled={isAxisLineDisabled}
           value={config.axisLineConfig.lineStyle}
-          onChange={(value) => {
+          onDataChange={(value) => {
             updateConfig((draft) => {
               draft.axisLineConfig.lineStyle = value;
             });
           }}
-          options={[
-            {
-              value: "solid",
-              label: (
-                <div className="chart-axis-line-style">
-                  <div className="chart-axis-line-style-solid" />
-                </div>
-              ),
-            },
-            {
-              value: "dashed",
-              label: (
-                <div className="chart-axis-line-style">
-                  <div className="chart-axis-line-style-dashed" />
-                </div>
-              ),
-            },
-          ]}
+          style={{ width: 80 }}
         />
         <InputNumber
           size="small"
@@ -323,35 +303,15 @@ const ChartXAxisComponent: React.FC<{
         </Checkbox>
       </div>
       <div className="chart-axis-row sub-content">
-        <Select
-          size="small"
-          style={{ width: 80 }}
+        <LineStyleSelect
           disabled={isAxisGridDisabled}
           value={config.axisGridConfig.lineStyle}
-          onChange={(value) => {
+          onDataChange={(value) => {
             updateConfig((draft) => {
               draft.axisGridConfig.lineStyle = value;
             });
           }}
-          getPopupContainer={(triggerNode) => triggerNode.parentElement!}
-          options={[
-            {
-              value: "solid",
-              label: (
-                <div className="chart-axis-line-style">
-                  <div className="chart-axis-line-style-solid" />
-                </div>
-              ),
-            },
-            {
-              value: "dashed",
-              label: (
-                <div className="chart-axis-line-style">
-                  <div className="chart-axis-line-style-dashed" />
-                </div>
-              ),
-            },
-          ]}
+          style={{ width: 80 }}
         />
         <InputNumber
           size="small"
