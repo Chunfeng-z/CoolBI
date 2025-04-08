@@ -252,6 +252,7 @@ const DashBoardDesign: React.FC = () => {
             dataSourceConfig,
             drawAreaConfig,
             axisConfig,
+            legendConfig,
           } = chartConfig as LineChartConfig;
           return (
             <CoolLineChart
@@ -259,6 +260,7 @@ const DashBoardDesign: React.FC = () => {
               dataSourceConfig={dataSourceConfig}
               drawAreaConfig={drawAreaConfig}
               axisConfig={axisConfig}
+              legendConfig={legendConfig}
             />
           );
         }

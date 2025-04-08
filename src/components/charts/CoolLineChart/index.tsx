@@ -8,6 +8,7 @@ import { queryChartData } from "@/api/dashboard";
 import {
   DataSourceConfig,
   DataSourceField,
+  LegendConfig,
 } from "@/types/chartConfigItems/common";
 import {
   LineAxisConfig,
@@ -26,6 +27,8 @@ interface ICoolLineChartProps {
   drawAreaConfig: LineDrawAreaConfig;
   /** 坐标轴配置 */
   axisConfig: LineAxisConfig;
+  /** 图例配置 */
+  legendConfig: LegendConfig;
 }
 const areaGradient = {
   fill: {
@@ -48,7 +51,7 @@ const areaGradient = {
 };
 
 const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
-  const { dataSourceConfig, drawAreaConfig, axisConfig } = props;
+  const { dataSourceConfig, drawAreaConfig, axisConfig, legendConfig } = props;
   const [xField, setXField] = useState<string>("");
   const [yField, setYField] = useState<string>("");
   /** 格式化后的图表数据 */
@@ -113,6 +116,25 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
           lineWidth: drawAreaConfig.lineWidth,
           curveType:
             drawAreaConfig.lineType === "curve" ? "monotone" : "linear",
+        },
+      },
+      legends: {
+        visible: legendConfig.isShowLegend,
+        orient: legendConfig.legendPosition,
+        position: legendConfig.legendAlign,
+        item: {
+          label: {
+            style: {
+              fontSize: legendConfig.legendFontConfig.fontSize,
+              fontWeight: legendConfig.legendFontConfig.isBold
+                ? "bold"
+                : "normal",
+              fontStyle: legendConfig.legendFontConfig.isItalic
+                ? "italic"
+                : "normal",
+              fill: legendConfig.legendFontConfig.color,
+            },
+          },
         },
       },
       // https://visactor.com/vchart/guide/tutorial_docs/Chart_Concepts/Axes
@@ -260,7 +282,7 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
       animationAppear: false,
       padding: [5, 5, 5, 5],
     };
-  }, [drawAreaConfig, axisConfig, formattedData]);
+  }, [drawAreaConfig, axisConfig, formattedData, legendConfig]);
   if (error) {
     return (
       <Flex

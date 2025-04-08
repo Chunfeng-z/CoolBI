@@ -21,7 +21,7 @@ const prefixCls = "chart-legend";
 const defaultLegendConfig: LegendConfig = {
   isShowLegend: true,
   legendPosition: "top",
-  legendAlign: "center",
+  legendAlign: "middle",
   legendFontConfig: {
     color: "#000000",
     fontSize: 12,
@@ -80,7 +80,7 @@ const ChartLegend: React.FC = () => {
       return (
         <>
           <Radio.Button value="start">居左</Radio.Button>
-          <Radio.Button value="center">居中</Radio.Button>
+          <Radio.Button value="middle">居中</Radio.Button>
           <Radio.Button value="end">居右</Radio.Button>
         </>
       );
@@ -88,7 +88,7 @@ const ChartLegend: React.FC = () => {
       return (
         <>
           <Radio.Button value="start">顶部</Radio.Button>
-          <Radio.Button value="center">居中</Radio.Button>
+          <Radio.Button value="middle">居中</Radio.Button>
           <Radio.Button value="end">底部</Radio.Button>
         </>
       );
@@ -128,12 +128,12 @@ const ChartLegend: React.FC = () => {
                 updateConfig((draft) => {
                   draft.legendPosition = position;
                   // 切换图例位置时，初始化对齐方式：居中
-                  draft.legendAlign = "center";
+                  draft.legendAlign = "middle";
                 });
                 setChartsConfig(curChartId!, (draft) => {
                   if (draft.type === ChartTypeEnum.line) {
                     draft.legendConfig.legendPosition = position;
-                    draft.legendConfig.legendAlign = "center";
+                    draft.legendConfig.legendAlign = "middle";
                   }
                 });
               }}

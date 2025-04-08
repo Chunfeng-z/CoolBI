@@ -132,7 +132,7 @@ export type CoolBILegendPosition = "top" | "bottom" | "left" | "right";
  * - center: 居中对齐
  * - end: 右对齐
  */
-export type CoolBILegendAlign = "start" | "center" | "end";
+export type CoolBILegendAlign = "start" | "middle" | "end";
 
 /** 图表图例配置  */
 export interface LegendConfig {

@@ -135,7 +135,7 @@ export const testData: (
     legendConfig: {
       isShowLegend: true,
       legendPosition: "top",
-      legendAlign: "center",
+      legendAlign: "middle",
       legendFontConfig: {
         color: "#000000",
         fontSize: 12,
