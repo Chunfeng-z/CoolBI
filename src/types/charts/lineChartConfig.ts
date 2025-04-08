@@ -1,4 +1,11 @@
-import { ChartLayout, TitleCardConfig } from "../chartConfigItems/common";
+import {
+  AuxiliaryConfig,
+  ChartLayout,
+  CoolBIToolTipConfig,
+  DataLabelConfig,
+  LegendConfig,
+  TitleCardConfig,
+} from "../chartConfigItems/common";
 import {
   LineAxisConfig,
   LineDrawAreaConfig,
@@ -19,4 +26,12 @@ export interface LineChartConfig {
   drawAreaConfig: LineDrawAreaConfig;
   /** 坐标轴配置 */
   axisConfig: LineAxisConfig;
+  /** 图例配置 */
+  legendConfig: LegendConfig;
+  /** 数据标签配置 */
+  dataLabelConfig: DataLabelConfig;
+  /** 工具提示配置 */
+  tooltipConfig: CoolBIToolTipConfig;
+  /** 辅助展示配置 */
+  auxiliaryConfig: AuxiliaryConfig;
 }

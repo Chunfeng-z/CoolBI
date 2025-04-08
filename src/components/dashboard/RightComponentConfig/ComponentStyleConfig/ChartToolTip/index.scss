@@ -1,0 +1,14 @@
+.chart-tooltip-container {
+  .chart-tooltip-row {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    gap: 4px;
+  }
+
+  .chart-tooltip-row-vertical {
+    display: flex;
+    gap: 4px;
+    padding-block: 3px;
+  }
+}

@@ -9,11 +9,13 @@ import {
   Tooltip,
 } from "antd";
 import { Color } from "antd/es/color-picker";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useImmer } from "use-immer";
 
-import { DataLabelConfig } from "@/types/chartConfigItems/common";
 import "./index.scss";
+import { ChartTypeEnum } from "@/components/dashboard/utils";
+import useChartStore from "@/stores/useChartStore";
+import { DataLabelConfig } from "@/types/chartConfigItems/common";
 
 const prefixCls = "data-label";
 
@@ -32,6 +34,8 @@ const defaultDataLabelConfig: DataLabelConfig = {
 /** label的位置配置 */
 const positionOptions = [
   { value: "auto", label: "自动" },
+  { value: "lineTop", label: "线条顶部" },
+  { value: "lineBottom", label: "线条底部" },
   { value: "top", label: "顶部" },
   { value: "bottom", label: "底部" },
   { value: "inside", label: "内部" },
@@ -49,9 +53,43 @@ export interface DataLabelValues {
 }
 
 const DataLabel: React.FC = () => {
+  const getCurrentChartConfig = useChartStore(
+    (state) => state.getCurrentChartConfig
+  );
+  const curChartId = useChartStore((state) => state.curChartId);
   const [config, updataConfig] = useImmer<DataLabelConfig>(
     defaultDataLabelConfig
   );
+  const [chartType, setChartType] = useState<ChartTypeEnum>();
+  useEffect(() => {
+    const curConfig = getCurrentChartConfig();
+    if (!curConfig) {
+      console.error("数据标签获取图表配置失败");
+      return;
+    }
+    if (curConfig.type === ChartTypeEnum.line) {
+      setChartType(curConfig.type);
+      updataConfig(() => curConfig.dataLabelConfig);
+    }
+  }, [curChartId]);
+
+  // 是否展示数据标签选择组件
+  const isShowLabelPositionSelect = useMemo(() => {
+    if (chartType === ChartTypeEnum.line) {
+      return true;
+    }
+    return false;
+  }, [chartType]);
+
+  // 获取不同图表类型的label位置配置
+  const chartPositionOptions = useMemo(() => {
+    if (chartType === ChartTypeEnum.line) {
+      const supportPosition = ["auto", "lineTop", "lineBottom"];
+      return positionOptions.filter((item) =>
+        supportPosition.includes(item.value)
+      );
+    }
+  }, [chartType]);
 
   return (
     <div className={`${prefixCls}-container`}>
@@ -91,17 +129,25 @@ const DataLabel: React.FC = () => {
           ]}
         />
       </div>
-      {/* TODO:不同类型的图表的位置配置可能不一样，需要先获取图表的类型 */}
-      <div className="data-label-row sub-content">
-        <span>位置</span>
-        <Select
-          size="small"
-          placement="bottomRight"
-          disabled={!config.isShowDataLabel}
-          style={{ width: 160 }}
-          options={positionOptions}
-        />
-      </div>
+
+      {isShowLabelPositionSelect && (
+        <div className="data-label-row sub-content">
+          <span>位置</span>
+          <Select
+            size="small"
+            placement="bottomRight"
+            disabled={!config.isShowDataLabel}
+            style={{ width: 160 }}
+            options={chartPositionOptions}
+            value={config.position}
+            onSelect={(value) => {
+              updataConfig((draft) => {
+                draft.position = value;
+              });
+            }}
+          />
+        </div>
+      )}
       <div className="data-label-row sub-content">
         <span>文本</span>
         <ColorPicker

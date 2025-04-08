@@ -1,4 +1,4 @@
-import AuxiliaryConfig from "./AuxiliaryConfig";
+import ChartAuxiliary from "./ChartAuxiliary";
 import ChartAxis from "./ChartAxis";
 import ChartLegend from "./ChartLegend";
 import ChartToolTip from "./ChartToolTip";
@@ -53,7 +53,7 @@ const BASE_STYLE_ITEMS: Record<string, styleConfigItem> = {
   auxiliaryConfig: {
     key: "7",
     label: "辅助展示",
-    component: AuxiliaryConfig,
+    component: ChartAuxiliary,
   },
   chartTrend: {
     key: "8",

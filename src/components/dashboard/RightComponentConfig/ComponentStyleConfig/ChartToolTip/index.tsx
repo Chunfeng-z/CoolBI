@@ -1,0 +1,238 @@
+import {
+  BoldOutlined,
+  InfoCircleOutlined,
+  ItalicOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Checkbox,
+  ColorPicker,
+  InputNumber,
+  Radio,
+  Tooltip,
+} from "antd";
+import React, { useEffect, useMemo } from "react";
+import { useImmer } from "use-immer";
+
+import { ChartTypeEnum } from "@/components/dashboard/utils";
+import useChartStore from "@/stores/useChartStore";
+import { CoolBIToolTipConfig } from "@/types/chartConfigItems/common";
+
+import "./index.scss";
+const prefixCls = "chart-tooltip";
+
+const defaultToolTipConfig: CoolBIToolTipConfig = {
+  isShowToolTip: true,
+  displayMode: "singlePoint",
+  tipContentConfig: {
+    isShowPercentage: true,
+    isShowTotal: true,
+  },
+  backgroundColor: "#ffffff",
+  fontConfig: {
+    color: "#000000",
+    fontSize: 12,
+    isBold: false,
+    isItalic: false,
+  },
+};
+
+const displayModeOptions = [
+  {
+    value: "singlePoint",
+    label: (
+      <div>
+        <span>按照单数据点</span>
+        <Tooltip
+          title="展示鼠标浮选的数据点所关联的数据"
+          styles={{
+            root: {
+              width: 150,
+            },
+          }}
+        >
+          <InfoCircleOutlined style={{ marginLeft: 4 }} />
+        </Tooltip>
+      </div>
+    ),
+  },
+  {
+    value: "dimension",
+    label: (
+      <div>
+        <span>按照系列</span>
+        <Tooltip
+          title="展示鼠标浮选的数据点所在维值的数据"
+          styles={{
+            root: {
+              width: 150,
+            },
+          }}
+        >
+          <InfoCircleOutlined style={{ marginLeft: 4 }} />
+        </Tooltip>
+      </div>
+    ),
+  },
+];
+
+/** 图表的提示配置 */
+const ChartToolTip: React.FC = () => {
+  const getCurrentChartConfig = useChartStore(
+    (state) => state.getCurrentChartConfig
+  );
+  const curChartId = useChartStore((state) => state.curChartId);
+  const [config, updataConfig] =
+    useImmer<CoolBIToolTipConfig>(defaultToolTipConfig);
+
+  /** 工具提示配置禁用状态 */
+  const isTooltipConfigDisabled = useMemo(
+    () => !config.isShowToolTip,
+    [config.isShowToolTip]
+  );
+
+  useEffect(() => {
+    const curConfig = getCurrentChartConfig();
+    if (!curConfig) {
+      console.error("工具提示获取图表配置失败");
+      return;
+    }
+    if (curConfig.type === ChartTypeEnum.line) {
+      updataConfig(() => curConfig.tooltipConfig);
+    }
+  }, [curChartId]);
+
+  return (
+    <div className={`${prefixCls}-container`}>
+      <div className="chart-tooltip-row">
+        <Checkbox
+          checked={config.isShowToolTip}
+          onChange={(e) => {
+            updataConfig((draft) => {
+              draft.isShowToolTip = e.target.checked;
+            });
+          }}
+        >
+          是否显示工具提示
+        </Checkbox>
+      </div>
+      <div className="chart-tooltip-row-vertical">
+        <span>展示方式</span>
+        <div className="chart-tooltip-right">
+          <Radio.Group
+            disabled={isTooltipConfigDisabled}
+            value={config.displayMode}
+            options={displayModeOptions}
+            onChange={(e) => {
+              updataConfig((draft) => {
+                draft.displayMode = e.target.value;
+              });
+            }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+            }}
+          />
+        </div>
+      </div>
+      <div className="chart-tooltip-row">
+        <span>内容</span>
+        {config.displayMode === "dimension" && (
+          <Checkbox
+            disabled={isTooltipConfigDisabled}
+            checked={config.tipContentConfig.isShowTotal}
+            onChange={(e) => {
+              updataConfig((draft) => {
+                draft.tipContentConfig.isShowTotal = e.target.checked;
+              });
+            }}
+          >
+            总计
+          </Checkbox>
+        )}
+        <Checkbox
+          disabled={isTooltipConfigDisabled}
+          checked={config.tipContentConfig.isShowPercentage}
+          onChange={(e) => {
+            updataConfig((draft) => {
+              draft.tipContentConfig.isShowPercentage = e.target.checked;
+            });
+          }}
+        >
+          占比
+        </Checkbox>
+      </div>
+      <div className="chart-tooltip-row">
+        <span>背景色</span>
+        <ColorPicker
+          size="small"
+          disabled={isTooltipConfigDisabled}
+          value={config.backgroundColor}
+          onChangeComplete={(color) => {
+            updataConfig((draft) => {
+              draft.backgroundColor = color.toHexString();
+            });
+          }}
+        />
+      </div>
+      <div className="chart-tooltip-row">
+        <span>文本</span>
+        <ColorPicker
+          size="small"
+          disabled={isTooltipConfigDisabled}
+          value={config.fontConfig.color}
+          onChangeComplete={(color) => {
+            updataConfig((draft) => {
+              draft.fontConfig.color = color.toHexString();
+            });
+          }}
+        />
+        <InputNumber
+          size="small"
+          addonAfter="px"
+          min={12}
+          max={20}
+          defaultValue={12}
+          step={1}
+          style={{ width: 90 }}
+          disabled={isTooltipConfigDisabled}
+          value={config.fontConfig.fontSize}
+          onChange={(value) => {
+            updataConfig((draft) => {
+              draft.fontConfig.fontSize = Number(value);
+            });
+          }}
+        />
+        <Tooltip title="加粗">
+          <Button
+            type={config.fontConfig.isBold ? "primary" : "text"}
+            icon={<BoldOutlined />}
+            size="small"
+            disabled={isTooltipConfigDisabled}
+            onClick={() => {
+              updataConfig((draft) => {
+                draft.fontConfig.isBold = !draft.fontConfig.isBold;
+              });
+            }}
+          />
+        </Tooltip>
+        <Tooltip title="斜体">
+          <Button
+            type={config.fontConfig.isItalic ? "primary" : "text"}
+            icon={<ItalicOutlined />}
+            size="small"
+            disabled={isTooltipConfigDisabled}
+            onClick={() => {
+              updataConfig((draft) => {
+                draft.fontConfig.isItalic = !draft.fontConfig.isItalic;
+              });
+            }}
+          />
+        </Tooltip>
+      </div>
+    </div>
+  );
+};
+
+export default ChartToolTip;

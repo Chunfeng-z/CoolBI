@@ -132,6 +132,46 @@ export const testData: (
         },
       },
     },
+    legendConfig: {
+      isShowLegend: true,
+      legendPosition: "top",
+      legendAlign: "center",
+      legendFontConfig: {
+        color: "#000000",
+        fontSize: 12,
+        isBold: false,
+        isItalic: false,
+      },
+    },
+    dataLabelConfig: {
+      isShowDataLabel: true,
+      showMode: "auto",
+      fontConfig: {
+        color: "#000000",
+        fontSize: 12,
+        isBold: false,
+        isItalic: false,
+      },
+      position: "auto",
+    },
+    tooltipConfig: {
+      isShowToolTip: true,
+      displayMode: "singlePoint",
+      tipContentConfig: {
+        isShowPercentage: true,
+        isShowTotal: true,
+      },
+      backgroundColor: "#ffffff",
+      fontConfig: {
+        color: "#000000",
+        fontSize: 12,
+        isBold: false,
+        isItalic: false,
+      },
+    },
+    auxiliaryConfig: {
+      dataZoomDisplayMode: "auto",
+    },
   },
   {
     chartId: "indicatorCard",

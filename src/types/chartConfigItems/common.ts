@@ -158,5 +158,44 @@ export interface DataLabelConfig {
   /** 数据标签的字体配置 */
   fontConfig: FontConfig;
   /** 数据标签的位置 */
-  position?: "auto" | "top" | "bottom" | "inside" | "outside";
+  position?:
+    | "auto"
+    | "lineTop"
+    | "lineBottom"
+    | "top"
+    | "bottom"
+    | "inside"
+    | "outside";
+}
+
+/** 工具提示配置 */
+export interface CoolBIToolTipConfig {
+  /** 是否显示tooltip */
+  isShowToolTip: boolean;
+  /** 展示方式
+   * - singlePoint: 单数据点
+   * - dimension: 按维度
+   */
+  displayMode: "singlePoint" | "dimension";
+  /** 内容展示配置 */
+  tipContentConfig: {
+    /** 显示占比 */
+    isShowPercentage: boolean;
+    /** 显示总计 */
+    isShowTotal: boolean;
+  };
+  /** 背景色 */
+  backgroundColor: string;
+  /** 字体配置 */
+  fontConfig: FontConfig;
+}
+
+/** 图表辅助展示配置 */
+export interface AuxiliaryConfig {
+  /** 缩略轴显示方式
+   * - auto: 智能适配
+   * - show: 显示
+   * - hidden: 不显示
+   */
+  dataZoomDisplayMode: "auto" | "show" | "hidden";
 }

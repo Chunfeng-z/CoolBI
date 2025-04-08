@@ -14,10 +14,11 @@ import {
   Radio,
   Tooltip,
 } from "antd";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useImmer } from "use-immer";
 import "./index.scss";
 
+import { ChartTypeEnum } from "@/components/dashboard/utils";
 import useChartStore from "@/stores/useChartStore";
 import {
   CoolBILegendPosition,
@@ -70,6 +71,16 @@ const ChartLegend: React.FC = () => {
     (state) => state.getCurrentChartConfig
   );
   const [config, updateConfig] = useImmer<LegendConfig>(defaultLegendConfig);
+  useEffect(() => {
+    const curConfig = getCurrentChartConfig();
+    if (!curConfig) {
+      console.error("图例获取图表配置失败");
+      return;
+    }
+    if (curConfig.type === ChartTypeEnum.line) {
+      updateConfig(() => curConfig.legendConfig);
+    }
+  }, [curChartId]);
 
   const renderRadioOptions = useCallback((position: CoolBILegendPosition) => {
     if (position === "top" || position === "bottom") {
