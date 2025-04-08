@@ -1,14 +1,10 @@
-import {
-  AlignCenterOutlined,
-  AlignLeftOutlined,
-  BoldOutlined,
-  ItalicOutlined,
-} from "@ant-design/icons";
-import { Button, ColorPicker, InputNumber, Radio, Switch, Tooltip } from "antd";
+import { AlignCenterOutlined, AlignLeftOutlined } from "@ant-design/icons";
+import { Radio, Switch } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { ChartTypeEnum } from "../../../utils";
 
+import FontConfigPanel from "@/components/common/FontConfigPanel";
 import useChartStore from "@/stores/useChartStore";
 import { IndicatorContentConfig } from "@/types/chartConfigItems/indicatorTrendItems";
 import "./index.scss";
@@ -246,106 +242,72 @@ const IndicatorContent: React.FC = () => {
           <span>指标</span>
         </div>
         <div className="indicator-content-row sub-content">
-          <span>名称</span>
-          <ColorPicker
-            size="small"
-            value={config.indicatorNameFontConfig.color}
-            onChange={(color) =>
+          <FontConfigPanel
+            label="名称"
+            colorValue={config.indicatorNameFontConfig.color}
+            fontSizeValue={config.indicatorNameFontConfig.fontSize}
+            boldButtonType={
+              config.indicatorNameFontConfig.isBold ? "primary" : "text"
+            }
+            italicButtonType={
+              config.indicatorNameFontConfig.isItalic ? "primary" : "text"
+            }
+            compact={true}
+            isDisabled={!config.enableFontSetting}
+            inputWidth={50}
+            minInputValue={12}
+            maxInputValue={30}
+            onColorChange={(color) =>
               updateNameStyle({ color: color.toHexString() })
             }
-            disabled={!config.enableFontSetting}
+            onFontSizeChange={(value) =>
+              updateNameStyle({ fontSize: value as number })
+            }
+            onBoldClick={() =>
+              updateNameStyle({
+                isBold: !config.indicatorNameFontConfig.isBold,
+              })
+            }
+            onItalicClick={() =>
+              updateNameStyle({
+                isItalic: !config.indicatorNameFontConfig.isItalic,
+              })
+            }
           />
-          <InputNumber
-            size="small"
-            min={12}
-            max={30}
-            value={config.indicatorNameFontConfig.fontSize}
-            onChange={(value) => updateNameStyle({ fontSize: value as number })}
-            step={1}
-            style={{ width: 50 }}
-            disabled={!config.enableFontSetting}
-          />
-          px
-          <Tooltip title="加粗">
-            <Button
-              type={config.indicatorNameFontConfig.isBold ? "primary" : "text"}
-              icon={<BoldOutlined />}
-              size="small"
-              onClick={() =>
-                updateNameStyle({
-                  isBold: !config.indicatorNameFontConfig.isBold,
-                })
-              }
-              disabled={!config.enableFontSetting}
-            />
-          </Tooltip>
-          <Tooltip title="斜体">
-            <Button
-              type={
-                config.indicatorNameFontConfig.isItalic ? "primary" : "text"
-              }
-              icon={<ItalicOutlined />}
-              size="small"
-              onClick={() =>
-                updateNameStyle({
-                  isItalic: !config.indicatorNameFontConfig.isItalic,
-                })
-              }
-              disabled={!config.enableFontSetting}
-            />
-          </Tooltip>
         </div>
         <div className="indicator-content-row sub-content">
-          <span>数值</span>
-          <ColorPicker
-            size="small"
-            value={config.indicatorValueFontConfig.color}
-            onChange={(color) =>
+          <FontConfigPanel
+            label="数值"
+            colorValue={config.indicatorValueFontConfig.color}
+            fontSizeValue={config.indicatorValueFontConfig.fontSize}
+            boldButtonType={
+              config.indicatorValueFontConfig.isBold ? "primary" : "text"
+            }
+            italicButtonType={
+              config.indicatorValueFontConfig.isItalic ? "primary" : "text"
+            }
+            compact={true}
+            isDisabled={!config.enableFontSetting}
+            inputWidth={50}
+            minInputValue={12}
+            maxInputValue={40}
+            onColorChange={(color) =>
               updateValueStyle({ color: color.toHexString() })
             }
-            disabled={!config.enableFontSetting}
-          />
-          <InputNumber
-            size="small"
-            min={12}
-            max={40}
-            value={config.indicatorValueFontConfig.fontSize}
-            onChange={(value) =>
+            onFontSizeChange={(value) =>
               updateValueStyle({ fontSize: value as number })
             }
-            step={1}
-            style={{ width: 50 }}
-            disabled={!config.enableFontSetting}
+            onBoldClick={() =>
+              updateValueStyle({
+                isBold: !config.indicatorValueFontConfig.isBold,
+              })
+            }
+            onItalicClick={() =>
+              updateValueStyle({
+                isItalic: !config.indicatorValueFontConfig.isItalic,
+              })
+            }
           />
-          px
-          <Tooltip title="加粗">
-            <Button
-              type={config.indicatorValueFontConfig.isBold ? "primary" : "text"}
-              icon={<BoldOutlined />}
-              size="small"
-              onClick={() =>
-                updateValueStyle({
-                  isBold: !config.indicatorValueFontConfig.isBold,
-                })
-              }
-              disabled={!config.enableFontSetting}
-            />
-          </Tooltip>
-          <Tooltip title="斜体">
-            <Button
-              type={
-                config.indicatorValueFontConfig.isItalic ? "primary" : "text"
-              }
-              icon={<ItalicOutlined />}
-              size="small"
-              onClick={() =>
-                updateValueStyle({
-                  isItalic: !config.indicatorValueFontConfig.isItalic,
-                })
-              }
-              disabled={!config.enableFontSetting}
-            />
-          </Tooltip>
         </div>
       </div>
       {/* !TODO:当前版本暂不支持指标修饰图的配置 */}

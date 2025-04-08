@@ -18,6 +18,12 @@ interface FontConfigPanelProps {
   italicButtonType: "primary" | "text";
   /** 字体大小输入框的宽度 */
   inputWidth?: number;
+  /** 开启输入框紧凑模式 */
+  compact?: boolean;
+  /** 输入框的最大值 */
+  maxInputValue?: number;
+  /** 输入框的最小值 */
+  minInputValue?: number;
   /** 字体配置面板禁用状态 */
   isDisabled?: boolean;
   /** 颜色选择器更新函数 */
@@ -29,7 +35,6 @@ interface FontConfigPanelProps {
   /** 斜体按钮的点击事件 */
   onItalicClick?: () => void;
 }
-
 /** 字体配置面板 */
 const FontConfigPanel: React.FC<FontConfigPanelProps> = memo((props) => {
   const {
@@ -39,6 +44,9 @@ const FontConfigPanel: React.FC<FontConfigPanelProps> = memo((props) => {
     onColorChange,
     fontSizeValue,
     inputWidth = 90,
+    compact = false,
+    maxInputValue = 20,
+    minInputValue = 12,
     onFontSizeChange,
     boldButtonType,
     onBoldClick,
@@ -57,9 +65,9 @@ const FontConfigPanel: React.FC<FontConfigPanelProps> = memo((props) => {
       />
       <InputNumber
         size="small"
-        addonAfter="px"
-        min={12}
-        max={20}
+        addonAfter={compact ? undefined : "px"}
+        min={minInputValue}
+        max={maxInputValue}
         defaultValue={12}
         step={1}
         style={{ width: inputWidth }}
@@ -67,6 +75,7 @@ const FontConfigPanel: React.FC<FontConfigPanelProps> = memo((props) => {
         value={fontSizeValue}
         onChange={onFontSizeChange}
       />
+      {compact && "px"}
       <Tooltip title="加粗">
         <Button
           type={boldButtonType}
