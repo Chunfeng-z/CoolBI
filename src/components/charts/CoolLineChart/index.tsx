@@ -6,6 +6,9 @@ import React, { useMemo, useState } from "react";
 
 import { queryChartData } from "@/api/dashboard";
 import {
+  AuxiliaryConfig,
+  CoolBIToolTipConfig,
+  DataLabelConfig,
   DataSourceConfig,
   DataSourceField,
   LegendConfig,
@@ -29,6 +32,12 @@ interface ICoolLineChartProps {
   axisConfig: LineAxisConfig;
   /** 图例配置 */
   legendConfig: LegendConfig;
+  /** 数据标签配置 */
+  dataLabelConfig: DataLabelConfig;
+  /** 工具提示配置 */
+  tooltipConfig: CoolBIToolTipConfig;
+  /** 辅助展示配置 */
+  auxiliaryConfig: AuxiliaryConfig;
 }
 const areaGradient = {
   fill: {
@@ -51,11 +60,32 @@ const areaGradient = {
 };
 
 const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
-  const { dataSourceConfig, drawAreaConfig, axisConfig, legendConfig } = props;
+  const {
+    dataSourceConfig,
+    drawAreaConfig,
+    axisConfig,
+    legendConfig,
+    dataLabelConfig,
+    tooltipConfig,
+    auxiliaryConfig,
+  } = props;
   const [xField, setXField] = useState<string>("");
   const [yField, setYField] = useState<string>("");
   /** 格式化后的图表数据 */
   const [formattedData, setFormattedData] = useState<unknown[]>([]);
+  /** 折线图label的位置配置 */
+  const labelPosition = useMemo(() => {
+    switch (dataLabelConfig.position) {
+      case "auto":
+        return "top";
+      case "lineTop":
+        return "top";
+      case "lineBottom":
+        return "bottom";
+      default:
+        return "top";
+    }
+  }, [dataLabelConfig.position]);
 
   // 获取图表数据
   const { data, error, loading } = useRequest(
@@ -108,6 +138,13 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
         type: "line",
       };
     }
+    const isShowPercentage = tooltipConfig.tipContentConfig.isShowPercentage;
+    // tooltip的字体配置
+    const tooltipFontConfig = {
+      fontSize: tooltipConfig.fontConfig.fontSize,
+      fill: tooltipConfig.fontConfig.color,
+      fontWeight: tooltipConfig.fontConfig.isBold ? "bold" : "normal",
+    };
     return {
       ...partConfig,
       line: {
@@ -116,6 +153,56 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
           lineWidth: drawAreaConfig.lineWidth,
           curveType:
             drawAreaConfig.lineType === "curve" ? "monotone" : "linear",
+        },
+      },
+      tooltip: {
+        visible: tooltipConfig.isShowToolTip,
+        // TODO:百分比和总计的设置，参考：https://visactor.io/vchart/demo/label/label-mark-tooltip
+        mark: {
+          visible: tooltipConfig.displayMode === "singlePoint",
+          content: {
+            key: "数值",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            value: (datum: any) => {
+              return isShowPercentage ? datum.value + "(100%)" : datum.value;
+            },
+          },
+        },
+        dimension: {
+          visible: tooltipConfig.displayMode === "dimension",
+        },
+        style: {
+          panel: {
+            backgroundColor: tooltipConfig.backgroundColor,
+          },
+          titleLabel: { ...tooltipFontConfig, fontWeight: "bold" },
+          keyLabel: tooltipFontConfig,
+          valueLabel: tooltipFontConfig,
+        },
+      },
+      dataZoom: {
+        visible: auxiliaryConfig.dataZoomDisplayMode === "show",
+        orient: "bottom",
+        height: 15,
+        // 消除数据缩放轴的间距
+        padding: [2, 0, 0, 0],
+      },
+      label: {
+        visible: dataLabelConfig.isShowDataLabel,
+        offset: 3,
+        // 标签的防重叠配置
+        overlap: {
+          // 是否约束标签必须在绘图区域内。
+          clampForce: false,
+          // 检测到标签发生重叠后，是否隐藏放不下的标签。
+          hideOnHit: dataLabelConfig.showMode === "auto" ? true : false,
+        },
+        position: labelPosition,
+        style: {
+          fontSize: dataLabelConfig.fontConfig.fontSize,
+          fontWeight: dataLabelConfig.fontConfig.isBold ? "bold" : "normal",
+          fontStyle: dataLabelConfig.fontConfig.isItalic ? "italic" : "normal",
+          fill: dataLabelConfig.fontConfig.color,
         },
       },
       legends: {
@@ -199,6 +286,8 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
                 ? "italic"
                 : "normal",
             },
+            // 标题距离坐标轴(轴线、刻度、标签共同构成的包围盒)的距离
+            space: 2,
           },
         },
         {
@@ -254,8 +343,6 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
           },
           title: {
             visible: yAxisConfig.axisTitleConfig.isShowTitleAndUnit,
-            // position: "end",
-            // angle: 0,
             text:
               yAxisConfig.axisTitleConfig.title +
               " (" +
@@ -271,6 +358,7 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
                 ? "italic"
                 : "normal",
             },
+            space: 2,
           },
         },
       ],
@@ -282,7 +370,18 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
       animationAppear: false,
       padding: [5, 5, 5, 5],
     };
-  }, [drawAreaConfig, axisConfig, formattedData, legendConfig]);
+  }, [
+    drawAreaConfig,
+    axisConfig,
+    formattedData,
+    legendConfig,
+    dataLabelConfig,
+    labelPosition,
+    tooltipConfig,
+    auxiliaryConfig,
+    xField,
+    yField,
+  ]);
   if (error) {
     return (
       <Flex
@@ -314,7 +413,7 @@ const CoolLineChart: React.FC<ICoolLineChartProps> = (props) => {
   }
 
   return (
-    <div className={prefixCls} style={{ height: "100%" }}>
+    <div className={`${prefixCls} chart-no-drag`} style={{ height: "100%" }}>
       <VChart spec={spec} />
     </div>
   );

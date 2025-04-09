@@ -244,6 +244,7 @@ const ChartToolTip: React.FC = () => {
               }
             });
           }}
+          disabledConfigList={["italicBtn"]}
         />
       </div>
     </div>

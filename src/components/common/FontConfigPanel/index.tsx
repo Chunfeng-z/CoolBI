@@ -34,6 +34,8 @@ interface FontConfigPanelProps {
   onBoldClick?: () => void;
   /** 斜体按钮的点击事件 */
   onItalicClick?: () => void;
+  /** 需要单独禁用的配置 */
+  disabledConfigList?: "italicBtn"[];
 }
 /** 字体配置面板 */
 const FontConfigPanel: React.FC<FontConfigPanelProps> = memo((props) => {
@@ -52,6 +54,7 @@ const FontConfigPanel: React.FC<FontConfigPanelProps> = memo((props) => {
     onBoldClick,
     italicButtonType,
     onItalicClick,
+    disabledConfigList = [],
   } = props;
   return (
     <div className={prefixCls}>
@@ -89,7 +92,7 @@ const FontConfigPanel: React.FC<FontConfigPanelProps> = memo((props) => {
           type={italicButtonType}
           icon={<ItalicOutlined />}
           size="small"
-          disabled={isDisabled}
+          disabled={isDisabled || disabledConfigList.includes("italicBtn")}
           onClick={onItalicClick}
         />
       </Tooltip>

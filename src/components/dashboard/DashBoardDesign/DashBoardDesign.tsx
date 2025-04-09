@@ -253,6 +253,9 @@ const DashBoardDesign: React.FC = () => {
             drawAreaConfig,
             axisConfig,
             legendConfig,
+            dataLabelConfig,
+            tooltipConfig,
+            auxiliaryConfig,
           } = chartConfig as LineChartConfig;
           return (
             <CoolLineChart
@@ -261,6 +264,9 @@ const DashBoardDesign: React.FC = () => {
               drawAreaConfig={drawAreaConfig}
               axisConfig={axisConfig}
               legendConfig={legendConfig}
+              dataLabelConfig={dataLabelConfig}
+              tooltipConfig={tooltipConfig}
+              auxiliaryConfig={auxiliaryConfig}
             />
           );
         }
@@ -368,6 +374,8 @@ const DashBoardDesign: React.FC = () => {
               cols={rasterNum}
               rowHeight={rowHeight}
               useCSSTransforms={true}
+              // 设置元素类型禁止触发拖动
+              draggableCancel=".chart-no-drag"
               // 使用动态宽度
               width={containerWidth}
               isDraggable={true}

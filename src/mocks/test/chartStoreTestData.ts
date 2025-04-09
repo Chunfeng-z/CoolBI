@@ -156,7 +156,7 @@ export const testData: (
     },
     tooltipConfig: {
       isShowToolTip: true,
-      displayMode: "singlePoint",
+      displayMode: "dimension",
       tipContentConfig: {
         isShowPercentage: true,
         isShowTotal: true,
