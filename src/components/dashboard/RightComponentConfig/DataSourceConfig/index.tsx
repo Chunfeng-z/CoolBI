@@ -1,4 +1,9 @@
 import {
+  ApartmentOutlined,
+  CalendarOutlined,
+  EnvironmentOutlined,
+  FieldNumberOutlined,
+  FieldStringOutlined,
   FileSearchOutlined,
   LeftOutlined,
   MenuFoldOutlined,
@@ -28,6 +33,7 @@ const prefixCls = "data-source-config";
 import "./index.scss";
 import DataPreviewModal from "./DataPreviewModal";
 
+import CoolFieldList from "@/components/common/CoolFieldList";
 import CoolTree from "@/components/common/CoolTree";
 import EllipsisText from "@/components/common/EllipsisText";
 import DataConnectConfig from "@/components/datacenter/DataConnectConfig/DataConnectConfig";
@@ -37,6 +43,16 @@ enum DSSwitchOptionEnum {
   "edit_data" = "编辑当前数据集",
   "replace_data" = "替换当前数据集",
 }
+
+/** 字段类型图标 */
+const fieldTypeIconMap = {
+  string: <FieldStringOutlined style={{ color: "#488BF7" }} />,
+  number: <FieldNumberOutlined style={{ color: "#2BC048" }} />,
+  date: <CalendarOutlined style={{ color: "#488BF7" }} />,
+  address: <EnvironmentOutlined style={{ color: "#488BF7" }} />,
+  split: <ApartmentOutlined style={{ color: "#488BF7" }} />,
+};
+
 /** 组件数据源配置 */
 const DataSourceConfig: React.FC = () => {
   /** 数据源配置的展开收起状态 */
@@ -260,7 +276,7 @@ const DataSourceConfig: React.FC = () => {
                       setIsFieldSearchVisible(true);
                     }}
                   />
-                </div>{" "}
+                </div>
               </div>
             )}
             <div className="tree-wrapper">
@@ -269,7 +285,7 @@ const DataSourceConfig: React.FC = () => {
                   <span>维度</span>
                 </div>
                 <div className="dimension-tree-container">
-                  <CoolTree />
+                  <CoolFieldList />
                 </div>
               </div>
               <div className="data-source-measure-tree-wrapper">
@@ -277,7 +293,7 @@ const DataSourceConfig: React.FC = () => {
                   <span>度量</span>
                 </div>
                 <div className="measure-tree-container">
-                  {/* <CoolTree /> */}
+                  <CoolFieldList />
                 </div>
               </div>
             </div>

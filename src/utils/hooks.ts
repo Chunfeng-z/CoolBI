@@ -7,6 +7,7 @@ import * as XLSX from "xlsx";
 import { FieldType } from "./type";
 
 import { DataSourceField } from "@/types/chartConfigItems/common";
+import { CoolListNode } from "@/types/commonComp";
 import { DataSourceValues } from "@/types/dashboard";
 const base = import.meta.env.VITE_BASE;
 /** 出现异常返回主页，返回/,自动定位到主页 */
@@ -328,4 +329,21 @@ export const convertDataToVisactorFormat = (
   const columnNames = columns.map((column) => column.column);
   // zipObject([ 'time', 'value' ], [ '2:00', 8 ]) => { time: '2:00', value: 8 }
   return map(values, (row) => zipObject(columnNames, map(row, "v")));
+};
+
+/** 扁平化树状数据 */
+export const flattenListData = (
+  data: CoolListNode[],
+  parentKey: string = "",
+  level: number = 0
+): CoolListNode[] => {
+  return data.reduce((acc: CoolListNode[], item) => {
+    const flatItem = { ...item, parentKey, level };
+    acc.push(flatItem);
+    if (item.children && item.children.length > 0) {
+      const children = flattenListData(item.children, item.key, level + 1);
+      return [...acc, ...children];
+    }
+    return acc;
+  }, []);
 };

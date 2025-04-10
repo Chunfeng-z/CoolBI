@@ -94,7 +94,10 @@ interface DataItem {
   [key: string]: string | number;
 }
 
-/** 字段类型对应的图标映射 */
+/** 字段类型对应的图标映射
+ * -文件上传解析默认只能解析当前三种数据类型
+ * 对于地理类型需要前往编辑数据集的时候手动修改
+ */
 const fieldTypeIconMap = {
   string: <FieldStringOutlined style={{ color: "#488BF7" }} />,
   number: <FieldNumberOutlined style={{ color: "#2BC048" }} />,

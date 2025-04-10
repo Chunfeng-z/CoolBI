@@ -1,8 +1,14 @@
-import { LeftOutlined, RollbackOutlined, StarFilled } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  RollbackOutlined,
+  SettingOutlined,
+  StarFilled,
+} from "@ant-design/icons";
 import { Button, Divider, Space, Tooltip } from "antd";
 import React, { useState } from "react";
 
 import DashBoardIcon from "@/assets/dashboard/dashboard-icon.svg";
+import useChartStore from "@/stores/useChartStore";
 // import useChartStore from "@/stores/useChartStore";
 
 const prefixCls = "action-panel";
@@ -14,6 +20,8 @@ interface ActionPanelProps {
 /** 仪表板操作栏 */
 const ActionPanel: React.FC<ActionPanelProps> = (props) => {
   const { style } = props;
+  /** 更新当前选中的图表id */
+  const setCurChartId = useChartStore((state) => state.setCurChartId);
   // 暂时不支持redo和undo
   // const undo = useChartStore((state) => state.undo);
   // const redo = useChartStore((state) => state.redo);
@@ -92,6 +100,15 @@ const ActionPanel: React.FC<ActionPanelProps> = (props) => {
       </div>
       <div className={`${prefixCls}-right`}>
         <Space>
+          <Button
+            icon={<SettingOutlined />}
+            type="text"
+            onClick={() => {
+              setCurChartId(null);
+            }}
+          >
+            页面设置
+          </Button>
           <Button style={{ borderColor: "#1890FF", color: "#1890FF" }}>
             预览
           </Button>
