@@ -105,6 +105,8 @@ const DataSourceConfig: React.FC = () => {
   /** 数据源检索输入框展示状态 */
   const [isFieldSearchVisible, setIsFieldSearchVisible] =
     useState<boolean>(false);
+  /** 输入框的数据 */
+  const [inputValue, setInputValue] = useState<string>();
 
   /** 上传本地数据源Modal的显示状态 */
   const [isUploadModalVisible, setIsUploadModalVisible] =
@@ -243,6 +245,10 @@ const DataSourceConfig: React.FC = () => {
                     size="middle"
                     placeholder="请输入关键字检索"
                     allowClear
+                    value={inputValue}
+                    onChange={(e) => {
+                      setInputValue(e.target.value);
+                    }}
                     prefix={
                       <LeftOutlined
                         onClick={() => {
@@ -285,7 +291,7 @@ const DataSourceConfig: React.FC = () => {
                   <span>维度</span>
                 </div>
                 <div className="dimension-tree-container">
-                  <CoolFieldList />
+                  <CoolFieldList searchValue={inputValue} />
                 </div>
               </div>
               <div className="data-source-measure-tree-wrapper">
@@ -293,7 +299,7 @@ const DataSourceConfig: React.FC = () => {
                   <span>度量</span>
                 </div>
                 <div className="measure-tree-container">
-                  <CoolFieldList />
+                  <CoolFieldList searchValue={inputValue} />
                 </div>
               </div>
             </div>

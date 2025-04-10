@@ -1,7 +1,7 @@
 import { useKeyPress } from "ahooks";
 import { List } from "antd";
 import { findLastIndex } from "lodash-es";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import FieldListItem from "./FieldListItem";
 import { data as originListData } from "./test";
@@ -22,7 +22,7 @@ interface CoolFieldListProps {
 }
 
 /** 字段列表 */
-const CoolFieldList: React.FC<CoolFieldListProps> = (props) => {
+const CoolFieldList: React.FC<CoolFieldListProps> = memo((props) => {
   const {
     dataSource = originListData,
     defaultExpandAll = true,
@@ -162,6 +162,8 @@ const CoolFieldList: React.FC<CoolFieldListProps> = (props) => {
         return item.title.includes(searchValue);
       });
       setDisplayData(filteredData);
+    } else {
+      setDisplayData(flattenedData);
     }
   }, [flattenedData, searchValue]);
 
@@ -206,6 +208,6 @@ const CoolFieldList: React.FC<CoolFieldListProps> = (props) => {
       />
     </div>
   );
-};
+});
 
 export default CoolFieldList;
