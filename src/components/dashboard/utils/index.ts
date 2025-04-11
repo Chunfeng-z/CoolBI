@@ -77,10 +77,10 @@ export enum Theme {
  * @param large 大圆角
  */
 export enum CardRadius {
-  noRadius = "noRadius",
-  small = "small",
-  middle = "middle",
-  large = "large",
+  noRadius = 0,
+  small = 2,
+  middle = 4,
+  large = 8,
 }
 
 /**

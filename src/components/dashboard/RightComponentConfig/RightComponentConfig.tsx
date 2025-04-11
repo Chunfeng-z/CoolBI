@@ -131,6 +131,9 @@ const RightComponentConfig: React.FC<RightComponentConfigProps> = ({
               variant="filled"
               value={componentName}
               maxLength={100}
+              style={{
+                width: 185,
+              }}
               onChange={(e) => setComponentName(e.target.value)}
               onPressEnter={(e) => {
                 updateChartCardTitle((e.target as HTMLInputElement).value);
