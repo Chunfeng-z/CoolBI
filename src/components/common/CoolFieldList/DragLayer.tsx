@@ -28,6 +28,7 @@ const DragLayer: React.FC<DragLayerProps> = memo((props) => {
         return (
           <div
             className="field-dragging-item"
+            key={fieldItem.key}
             style={{
               position: "fixed",
               pointerEvents: "none",
