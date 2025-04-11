@@ -3,6 +3,7 @@ import { Tooltip, Typography } from "antd";
 import classNames from "classnames";
 import React, { useEffect, useRef } from "react";
 import { useDrag } from "react-dnd";
+import { getEmptyImage } from "react-dnd-html5-backend";
 const { Text } = Typography;
 const prefixCls = "cool-field-list-item";
 interface IFieldListItemProps {
@@ -14,6 +15,7 @@ interface IFieldListItemProps {
   isExpanded: boolean;
   icon: React.ReactNode;
   title: string;
+  itemKey?: string;
 }
 
 const FieldListItem: React.FC<IFieldListItemProps> = (props) => {
@@ -26,16 +28,20 @@ const FieldListItem: React.FC<IFieldListItemProps> = (props) => {
     isExpanded,
     icon,
     title,
+    itemKey,
   } = props;
   const ref = useRef<HTMLDivElement | null>(null);
-  const [, drag] = useDrag({
+  const [, drag, dragPreview] = useDrag({
     type: "field",
     item: {
       field: title,
+      key: itemKey,
     },
   });
   useEffect(() => {
     drag(ref);
+    // 第二个参数 captureDraggingState: true 可以在 IE 下也隐藏预览
+    dragPreview(getEmptyImage(), { captureDraggingState: true });
   }, []);
   return (
     // tooltip在移出后销毁避免列表项过多导致创建过多tooltip
@@ -54,7 +60,10 @@ const FieldListItem: React.FC<IFieldListItemProps> = (props) => {
             "is-show": hasChildren,
           })}
         >
-          <CaretRightOutlined rotate={isExpanded ? 90 : 0} />
+          <CaretRightOutlined
+            rotate={isExpanded ? 90 : 0}
+            style={{ color: "#7A7A7A" }}
+          />
         </div>
         <span className="field-icon">{icon}</span>
         <Text ellipsis style={{ marginLeft: 5 }}>

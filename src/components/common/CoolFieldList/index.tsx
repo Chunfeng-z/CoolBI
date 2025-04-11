@@ -3,6 +3,7 @@ import { List } from "antd";
 import { findLastIndex } from "lodash-es";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
+import DragLayer from "./DragLayer";
 import FieldListItem from "./FieldListItem";
 import { data as originListData } from "./test";
 
@@ -34,6 +35,8 @@ const CoolFieldList: React.FC<CoolFieldListProps> = memo((props) => {
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());
   /** 点击选中的节点 */
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
+  /** 选中的字段列表 */
+  const [selectedFields, setSelectedFields] = useState<CoolListNode[]>([]);
   /** 是否按下了 Command 键 */
   const [cmdPressed, setCmdPressed] = useState<boolean>(false);
   /** 是否按下shift键 */
@@ -158,6 +161,11 @@ const CoolFieldList: React.FC<CoolFieldListProps> = memo((props) => {
         newSelectedKeys.add(key);
       }
       setSelectedKeys(newSelectedKeys);
+      // 根据选中的节点，更新selectedFields
+      const newSelectedFields = flattenedData.filter((item) =>
+        newSelectedKeys.has(item.key)
+      );
+      setSelectedFields(newSelectedFields);
     },
     [selectedKeys, cmdPressed, shiftPressed, flattenedData]
   );
@@ -210,10 +218,12 @@ const CoolFieldList: React.FC<CoolFieldListProps> = memo((props) => {
               isExpanded={isExpanded}
               icon={item.icon}
               title={item.title}
+              itemKey={item.key}
             />
           );
         }}
       />
+      <DragLayer fieldList={selectedFields} />
     </div>
   );
 });
