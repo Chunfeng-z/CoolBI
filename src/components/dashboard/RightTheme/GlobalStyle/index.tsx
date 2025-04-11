@@ -1,10 +1,5 @@
+import { InfoCircleOutlined } from "@ant-design/icons";
 import {
-  InfoCircleOutlined,
-  LockOutlined,
-  UnlockOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
   InputNumber,
   Radio,
   RadioChangeEvent,
@@ -18,6 +13,9 @@ import { useImmer } from "use-immer";
 import { CardRadius, CardSpace, Theme } from "../../utils";
 
 import "./index.scss";
+import CombinePanel, {
+  CardPaddingValues,
+} from "@/components/common/CombinePanel";
 import CoolIcon from "@/components/common/CoolIcon";
 
 const prefixCls = "right-theme-global-style";
@@ -84,13 +82,11 @@ const GlobalStyle: React.FC = () => {
   });
 
   /** 卡片内边距状态 */
-  const [cardPadding, setCardPadding] = useImmer({
+  const [cardPadding, setCardPadding] = useState<CardPaddingValues>({
     top: 12,
     bottom: 12,
     left: 12,
     right: 12,
-    verticalLocked: false,
-    horizontalLocked: false,
   });
 
   /** 处理卡片间间距的变化 */
@@ -103,49 +99,6 @@ const GlobalStyle: React.FC = () => {
         draft[type] = value;
       });
     }
-  };
-
-  /** 处理卡片内边距的变化 */
-  const handleCardPaddingChange = (
-    position: "top" | "bottom" | "left" | "right",
-    value: number | null
-  ) => {
-    if (value === null) return;
-
-    setCardPadding((draft) => {
-      // 如果垂直方向锁定，改变任一值会同时改变两个
-      if (
-        draft.verticalLocked &&
-        (position === "top" || position === "bottom")
-      ) {
-        draft.top = value;
-        draft.bottom = value;
-      }
-      // 如果水平方向锁定，改变任一值会同时改变两个
-      else if (
-        draft.horizontalLocked &&
-        (position === "left" || position === "right")
-      ) {
-        draft.left = value;
-        draft.right = value;
-      } else {
-        draft[position] = value;
-      }
-    });
-  };
-
-  /** 切换垂直方向锁定状态 */
-  const toggleVerticalLock = () => {
-    setCardPadding((draft) => {
-      draft.verticalLocked = !draft.verticalLocked;
-    });
-  };
-
-  /** 切换水平方向锁定状态 */
-  const toggleHorizontalLock = () => {
-    setCardPadding((draft) => {
-      draft.horizontalLocked = !draft.horizontalLocked;
-    });
   };
 
   return (
@@ -224,94 +177,12 @@ const GlobalStyle: React.FC = () => {
             <div className="inner-padding-icon">
               <CoolIcon name="icon-inner-padding" size={34} />
             </div>
-            <div className="inner-padding-panel">
-              <div className="left-panel">
-                <div className="lock-wrapper left-lock-wrapper">
-                  <Button
-                    size="small"
-                    type="text"
-                    style={{
-                      zIndex: 1,
-                      backgroundColor: token.colorBgContainer,
-                    }}
-                    icon={
-                      cardPadding.verticalLocked ? (
-                        <LockOutlined style={{ fontSize: 16 }} />
-                      ) : (
-                        <UnlockOutlined style={{ fontSize: 16 }} />
-                      )
-                    }
-                    onClick={toggleVerticalLock}
-                  />
-                  <div className="left-link-line"></div>
-                </div>
-                <div className="panel-wrapper">
-                  <InputNumber
-                    size="small"
-                    min={0}
-                    max={20}
-                    value={cardPadding.top}
-                    onChange={(value) => handleCardPaddingChange("top", value)}
-                    style={{ width: 100 }}
-                    addonBefore="上"
-                  />
-                  <InputNumber
-                    size="small"
-                    min={0}
-                    max={20}
-                    value={cardPadding.bottom}
-                    onChange={(value) =>
-                      handleCardPaddingChange("bottom", value)
-                    }
-                    style={{ width: 100 }}
-                    addonBefore="下"
-                  />
-                </div>
-              </div>
-              <div className="right-panel">
-                <div className="panel-wrapper">
-                  <InputNumber
-                    size="small"
-                    min={0}
-                    max={20}
-                    value={cardPadding.left}
-                    onChange={(value) => handleCardPaddingChange("left", value)}
-                    style={{ width: 100 }}
-                    addonBefore="左"
-                  />
-                  <InputNumber
-                    size="small"
-                    min={0}
-                    max={20}
-                    value={cardPadding.right}
-                    onChange={(value) =>
-                      handleCardPaddingChange("right", value)
-                    }
-                    style={{ width: 100 }}
-                    addonBefore="右"
-                  />
-                </div>
-                <div className="lock-wrapper right-lock-wrapper">
-                  <Button
-                    size="small"
-                    type="text"
-                    style={{
-                      zIndex: 1,
-                      backgroundColor: token.colorBgContainer,
-                    }}
-                    icon={
-                      cardPadding.horizontalLocked ? (
-                        <LockOutlined style={{ fontSize: 16 }} />
-                      ) : (
-                        <UnlockOutlined style={{ fontSize: 16 }} />
-                      )
-                    }
-                    onClick={toggleHorizontalLock}
-                  />
-                  <div className="right-link-line"></div>
-                </div>
-              </div>
-            </div>
+            <CombinePanel
+              paddingValues={cardPadding}
+              onChange={(padding) => {
+                setCardPadding(padding);
+              }}
+            />
           </div>
         </div>
       )}

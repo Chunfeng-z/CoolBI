@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import "./index.scss";
+import { DesktopOutlined, FormOutlined } from "@ant-design/icons";
 import {
   Button,
   Checkbox,
@@ -11,7 +10,8 @@ import {
   Select,
   Slider,
 } from "antd";
-import { DesktopOutlined, FormOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import "./index.scss";
 const prefixCls = "right-theme-page-layout";
 const layoutItem = "page-layout-item";
 const itemTitle = "page-layout-item-title";
@@ -134,15 +134,7 @@ const PageLayout: React.FC = () => {
           <Popover>
             <Button size="small">背景图片选择</Button>
           </Popover>
-          <div className="picked-image">
-            <img
-              src="https://picsum.photos/id/2/40/20"
-              alt=""
-              width={40}
-              height={40}
-              style={{ objectFit: "cover" }}
-            />
-          </div>
+          <div className="picked-image"></div>
         </div>
       </div>
     </div>
