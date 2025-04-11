@@ -7,7 +7,7 @@ import {
   theme,
   Tooltip,
 } from "antd";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useImmer } from "use-immer";
 
 import { CardRadius, CardSpace, Theme } from "../../utils";
@@ -101,6 +101,11 @@ const GlobalStyle: React.FC = () => {
     }
   };
 
+  /** 处理card内边距变化 */
+  const handlePaddingChange = useCallback((padding: CardPaddingValues) => {
+    setCardPadding(padding);
+  }, []);
+
   return (
     <div className={`${prefixCls}-container`}>
       <div className="global-style-row">
@@ -179,9 +184,7 @@ const GlobalStyle: React.FC = () => {
             </div>
             <CombinePanel
               paddingValues={cardPadding}
-              onChange={(padding) => {
-                setCardPadding(padding);
-              }}
+              onChange={handlePaddingChange}
             />
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { LockOutlined, UnlockOutlined } from "@ant-design/icons";
 import { Button, InputNumber, theme } from "antd";
 import { pick } from "lodash-es";
-import React, { memo, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import "./index.scss";
 
 const prefixCls = "combine-panel";
@@ -49,55 +49,55 @@ const CombinePanel: React.FC<CombinePanelProps> = memo((props) => {
   );
 
   /** 处理卡片内边距的变化 */
-  const handleCardPaddingChange = (
-    position: "top" | "bottom" | "left" | "right",
-    value: number | null
-  ) => {
-    if (value === null) return;
-    const newPadding: CardPadding = {
-      ...cardPadding,
-    };
-    // 如果垂直方向锁定，改变任一值会同时改变两个
-    if (
-      newPadding.verticalLocked &&
-      (position === "top" || position === "bottom")
-    ) {
-      newPadding.top = value;
-      newPadding.bottom = value;
-    } else if (
-      newPadding.horizontalLocked &&
-      (position === "left" || position === "right")
-    ) {
-      // 如果水平方向锁定，改变任一值会同时改变两个
-      newPadding.left = value;
-      newPadding.right = value;
-    } else {
-      newPadding[position] = value;
-    }
-    setCardPadding(newPadding);
-    // 触发回调函数,外界获取到最新的padding值
-    onChange?.(pick(newPadding, ["top", "right", "bottom", "left"]));
-  };
+  const handleCardPaddingChange = useCallback(
+    (position: "top" | "bottom" | "left" | "right", value: number | null) => {
+      if (value === null) return;
+      const newPadding: CardPadding = {
+        ...cardPadding,
+      };
+      // 如果垂直方向锁定，改变任一值会同时改变两个
+      if (
+        newPadding.verticalLocked &&
+        (position === "top" || position === "bottom")
+      ) {
+        newPadding.top = value;
+        newPadding.bottom = value;
+      } else if (
+        newPadding.horizontalLocked &&
+        (position === "left" || position === "right")
+      ) {
+        // 如果水平方向锁定，改变任一值会同时改变两个
+        newPadding.left = value;
+        newPadding.right = value;
+      } else {
+        newPadding[position] = value;
+      }
+      setCardPadding(newPadding);
+      // 触发回调函数,外界获取到最新的padding值
+      onChange?.(pick(newPadding, ["top", "right", "bottom", "left"]));
+    },
+    [cardPadding, onChange]
+  );
 
   /** 切换垂直方向锁定状态 */
-  const toggleVerticalLock = () => {
+  const toggleVerticalLock = useCallback(() => {
     setCardPadding((prev) => {
       return {
         ...prev,
         verticalLocked: !prev.verticalLocked,
       };
     });
-  };
+  }, []);
 
   /** 切换水平方向锁定状态 */
-  const toggleHorizontalLock = () => {
+  const toggleHorizontalLock = useCallback(() => {
     setCardPadding((prev) => {
       return {
         ...prev,
         horizontalLocked: !prev.horizontalLocked,
       };
     });
-  };
+  }, []);
 
   return (
     <div className={prefixCls}>
