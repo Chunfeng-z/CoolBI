@@ -1,44 +1,21 @@
 .right-theme-page-layout-container {
-  display: flex;
-  flex-direction: column;
-  font-size: 13px;
-  gap: 2px;
-
-  // 修改页面布局下面的多选框的字号
-  .ant-checkbox-wrapper {
-    span {
-      font-size: 13px;
-    }
-  }
-
-  .page-layout-item {
+  .page-layout-row {
     display: flex;
     align-items: center;
     height: 32px;
     gap: 4px;
 
-    .page-layout-item-title {
-      min-width: 80px;
+    .page-layout-row-label {
+      min-width: 70px;
     }
   }
 
-  .page-info {
-    .page-info-checkbox {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+  .page-info-checkbox {
+    display: flex;
+    gap: 15px;
+  }
 
-      .page-info-checkbox-icon {
-        margin-right: 4px;
-      }
-
-      .page-info-title {
-        display: flex;
-      }
-
-      .page-info-tail {
-        display: flex;
-      }
-    }
+  .page-background-image-picker {
+    margin-left: 15px;
   }
 }

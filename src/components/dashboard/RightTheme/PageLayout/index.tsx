@@ -91,12 +91,12 @@ const PageLayout: React.FC = () => {
   );
   return (
     <div className={`${prefixCls}-container`}>
-      <div className={`${layoutItem} page-info`}>
-        <div className={itemTitle}>页面信息</div>
+      <div className="page-layout-row">
+        <div className="page-layout-row-label">页面信息</div>
         <div className="page-info-checkbox">
           <div className="page-info-title">
             <Checkbox checked={isShowTitle} onChange={handleShowTitle}>
-              <DesktopOutlined className="page-info-checkbox-icon" />
+              <DesktopOutlined />
               标题区域
             </Checkbox>
             <Popover content={popoverContent} title="Title" trigger="click">
@@ -110,7 +110,7 @@ const PageLayout: React.FC = () => {
           </div>
           <div className="page-info-tail">
             <Checkbox checked={isShowTail} onChange={handleShowTail}>
-              <DesktopOutlined className="page-info-checkbox-icon" />
+              <DesktopOutlined />
               页尾区域
             </Checkbox>
             <Button
@@ -122,19 +122,16 @@ const PageLayout: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className={`${layoutItem} page-background`}>
-        <div className={itemTitle}>页面背景</div>
+      <div className="page-layout-row">
+        <div className="page-layout-row-label">页面背景</div>
         <div className="page-background-color-picker">
           <ColorPicker defaultValue="#1677ff" size="small" />
         </div>
-      </div>
-      <div className={`${layoutItem} page-background-image`}>
-        <div className={itemTitle}>页面背景图片</div>
         <div className="page-background-image-picker">
+          <Checkbox>叠加背景图片</Checkbox>
           <Popover>
             <Button size="small">背景图片选择</Button>
           </Popover>
-          <div className="picked-image"></div>
         </div>
       </div>
     </div>
