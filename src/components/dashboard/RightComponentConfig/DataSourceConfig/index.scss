@@ -90,7 +90,6 @@ $size-32: 32px;
         border-bottom: 1px solid #f0f0f0;
 
         .dimension-tree-container {
-          overflow-y: auto;
           height: calc(100% - 32px);
         }
       }
@@ -102,7 +101,6 @@ $size-32: 32px;
         border-bottom: 1px solid #f0f0f0;
 
         .measure-tree-container {
-          overflow-y: auto;
           height: calc(100% - 32px);
         }
       }

@@ -1,4 +1,9 @@
 .cool-field-list {
+  overflow-y: auto;
+  height: 100%;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+
   .cool-field-list-item {
     display: flex;
     align-items: center;

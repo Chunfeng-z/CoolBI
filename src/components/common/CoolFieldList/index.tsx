@@ -73,11 +73,19 @@ const CoolFieldList: React.FC<CoolFieldListProps> = memo((props) => {
 
   useEffect(() => {
     /** 是否展开全部节点 */
-    setDisplayData(
-      defaultExpandAll
-        ? flattenedData
-        : flattenedData.filter((item) => !item.parentKey)
-    );
+    if (defaultExpandAll) {
+      setDisplayData(flattenedData);
+      // 默认展开全部节点，设置展开的节点
+      const expandedKeysSet = new Set<string>();
+      flattenedData.forEach((item) => {
+        if (item.parentKey) {
+          expandedKeysSet.add(item.parentKey);
+        }
+      });
+      setExpandedKeys(expandedKeysSet);
+    } else {
+      setDisplayData(flattenedData.filter((item) => !item.parentKey));
+    }
   }, [defaultExpandAll, flattenedData]);
 
   /** 折叠状态切换 */
@@ -171,7 +179,7 @@ const CoolFieldList: React.FC<CoolFieldListProps> = memo((props) => {
     <div className={prefixCls}>
       <List
         size="small"
-        bordered
+        // bordered
         dataSource={displayData}
         renderItem={(item: CoolListNode) => {
           // 当前节点是否存在子节点
