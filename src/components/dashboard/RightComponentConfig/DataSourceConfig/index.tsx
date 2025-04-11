@@ -34,7 +34,6 @@ import "./index.scss";
 import DataPreviewModal from "./DataPreviewModal";
 
 import CoolFieldList from "@/components/common/CoolFieldList";
-import CoolTree from "@/components/common/CoolTree";
 import EllipsisText from "@/components/common/EllipsisText";
 import DataConnectConfig from "@/components/datacenter/DataConnectConfig/DataConnectConfig";
 
